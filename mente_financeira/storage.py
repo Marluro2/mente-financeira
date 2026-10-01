@@ -14,7 +14,9 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass, fields
 import json
 import os
+from collections.abc import Callable
 from pathlib import Path
+from typing import Any
 
 from mente_financeira.admin import admin_ativo
 
@@ -38,6 +40,9 @@ class Settings:
 class SettingsStore:
     def __init__(self, data_dir: Path | None = None) -> None:
         self.path = (data_dir or default_data_dir()) / SETTINGS_FILE
+        # No site, cada gravação também vai para o armazenamento do navegador
+        # (veja connect_browser_storage).
+        self.on_save: Callable[[str], None] | None = None
 
     def load(self) -> Settings:
         """Lê as preferências; arquivo ausente ou corrompido gera o padrão."""
@@ -59,11 +64,44 @@ class SettingsStore:
     def save(self, settings: Settings) -> bool:
         """Grava as preferências. Uma falha de disco não interrompe o jogo."""
 
+        text = json.dumps(asdict(settings), ensure_ascii=False, indent=2)
         try:
             self.path.parent.mkdir(parents=True, exist_ok=True)
             tmp = self.path.with_suffix(".tmp")
-            tmp.write_text(json.dumps(asdict(settings), ensure_ascii=False, indent=2), encoding="utf-8")
+            tmp.write_text(text, encoding="utf-8")
             tmp.replace(self.path)
         except OSError:
             return False
+        if self.on_save is not None:
+            try:
+                self.on_save(text)
+            except Exception:
+                pass  # preferência é conforto: nunca interrompe o jogo
         return True
+
+
+BROWSER_KEY = "mente_financeira.settings"
+
+
+async def connect_browser_storage(store: SettingsStore, preferences: Any, run_task: Callable[..., Any]) -> None:
+    """Liga as preferências ao armazenamento do navegador (jogo publicado na web).
+
+    No site, o Python roda dentro da página e o arquivo de preferências existe
+    só na memória: some ao fechar a aba. Aqui o conteúdo salvo no navegador é
+    restaurado para o arquivo e, a cada gravação, enviado de volta.
+
+    ``preferences`` é o serviço ``ft.SharedPreferences()``; ``run_task`` é
+    ``page.run_task``.
+    """
+
+    try:
+        saved = await preferences.get(BROWSER_KEY)
+    except Exception:
+        saved = None
+    if isinstance(saved, str) and saved.strip():
+        try:
+            store.path.parent.mkdir(parents=True, exist_ok=True)
+            store.path.write_text(saved, encoding="utf-8")
+        except OSError:
+            pass
+    store.on_save = lambda text: run_task(preferences.set, BROWSER_KEY, text)

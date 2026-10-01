@@ -13,6 +13,7 @@ import sys
 
 import flet as ft
 
+from mente_financeira.storage import SettingsStore, connect_browser_storage
 from mente_financeira.ui.shell import GameShell
 
 # Ilustrações das cartas (assets/cartas). Caminho absoluto: funciona mesmo
@@ -20,8 +21,18 @@ from mente_financeira.ui.shell import GameShell
 ASSETS_DIR = str(Path(__file__).resolve().parent / "assets")
 
 
-def main(page: ft.Page) -> None:
-    GameShell(page)
+def running_in_browser() -> bool:
+    """True no jogo publicado como site (o Python roda dentro da página)."""
+
+    return sys.platform == "emscripten"
+
+
+async def main(page: ft.Page) -> None:
+    store = SettingsStore()
+    if running_in_browser():
+        # No site, as preferências (som, paleta) ficam no navegador do jogador.
+        await connect_browser_storage(store, ft.SharedPreferences(), page.run_task)
+    GameShell(page, store=store)
 
 
 def select_app_view(
@@ -56,5 +67,7 @@ def run_app() -> None:
     ft.run(main, view=view, host=host, assets_dir=ASSETS_DIR)
 
 
-if __name__ == "__main__":
+# No site (flet build web) este arquivo pode ser carregado como módulo, e não
+# como programa principal; por isso o jogo também inicia quando está no navegador.
+if __name__ == "__main__" or running_in_browser():
     run_app()

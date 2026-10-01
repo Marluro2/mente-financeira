@@ -2,6 +2,21 @@
 
 Registro das alterações do software (seção 5.10 do projeto — rastreabilidade).
 
+## 3.8.0 — 01/10/2026
+
+### Repositório no GitHub e publicação na web
+- Código versionado com Git e publicado em
+  https://github.com/Marluro2/mentte-financeira (seção 5.10 do projeto).
+- `.github/workflows/publicar-site.yml`: a cada envio, o GitHub roda os testes,
+  constrói o site estático (`flet build web`, Python 3.14 no navegador) e
+  publica no GitHub Pages.
+- Preferências (som, paleta) guardadas no **armazenamento do navegador** quando
+  o jogo roda como site (`storage.connect_browser_storage`).
+- `pyproject.toml`: dependências do site sem o servidor local (que virou o
+  extra `desktop`), e lista do que não entra no pacote publicado.
+- O modo administrador existe só na versão de computador (no site público os
+  gabaritos ficariam expostos).
+
 ## 3.7.0 — 30/09/2026
 
 ### Efeitos sonoros

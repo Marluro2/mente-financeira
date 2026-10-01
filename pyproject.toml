@@ -1,16 +1,22 @@
 [project]
 name = "mente-financeira-flet"
-version = "3.7.0"
-description = "Jogo educativo de memória financeira para dois jogadores."
+version = "3.8.0"
+description = "Jogo educacional de educação financeira: memória, desafios de porcentagem e questões de matemática financeira."
 readme = "README.md"
 requires-python = ">=3.14,<3.15"
+# Dependências usadas também pelo site (flet build web). O servidor local da
+# versão de computador fica no extra "desktop" (e no requirements.txt).
 dependencies = [
-    "flet[web]==0.86.5",
+    "flet==0.86.5",
     "flet-audio==0.86.5",
 ]
 
 [project.optional-dependencies]
+desktop = [
+    "flet[web]==0.86.5",
+]
 dev = [
+    "flet[web]==0.86.5",
     "pytest>=9.0,<10",
 ]
 
@@ -18,3 +24,35 @@ dev = [
 pythonpath = ["."]
 testpaths = ["tests"]
 addopts = "-q"
+
+# ---------------------------------------------------------------- flet build
+[tool.flet]
+product = "Mente Financeira"
+org = "br.edu.ifsp"
+
+[tool.flet.app]
+# Não vão para o pacote do jogo publicado (site, Android, iOS):
+exclude = [
+    ".venv",
+    ".github",
+    ".pytest_cache",
+    "tests",
+    "docs",
+    "ferramentas",
+    "registros",
+    "mente_financeira_flet.egg-info",
+    "iniciar_janela_app.py",
+    "criar_atalhos.ps1",
+    "INSTALAR.bat",
+    "JOGAR.bat",
+    "JOGAR_ADMIN.bat",
+    "JOGAR_COM_DIAGNOSTICO.bat",
+    "CRIAR_ATALHOS.bat",
+    "CHANGELOG.md",
+    "README.md",
+    "requirements.txt",
+]
+
+[tool.flet.web]
+# "hash": as rotas ficam depois do # e o site funciona em qualquer subpasta.
+route_url_strategy = "hash"
