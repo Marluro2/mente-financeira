@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Videogame -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8F88FF"/>
+      <stop offset="1" stop-color="#3A1C9C"/>
+    </linearGradient>
+    <clipPath id="clip"><rect width="200" height="200" rx="36"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+  <rect width="200" height="200" rx="36" fill="url(#bg)"/>
+  <circle cx="168" cy="32" r="50" fill="#FFFFFF" opacity="0.13"/>
+  <circle cx="26" cy="178" r="40" fill="#FFFFFF" opacity="0.09"/>
+
+  <path d="M52 78 H148 C170 78 180 100 182 124 C184 146 172 156 160 150 L136 132 H64 L40 150 C28 156 16 146 18 124 C20 100 30 78 52 78 Z" fill="#1B2A3A"/>
+  <path d="M58 98 v28 M44 112 h28" stroke="#FFFFFF" stroke-width="9" stroke-linecap="round"/>
+  <circle cx="140" cy="100" r="8" fill="#FFD23F"/>
+  <circle cx="156" cy="116" r="8" fill="#FF3D8B"/>
+  <circle cx="124" cy="116" r="8" fill="#2EE59D"/>
+  <circle cx="140" cy="132" r="8" fill="#3AE0FF"/>
+  <rect x="88" y="94" width="24" height="7" rx="3" fill="#6B7A8A"/>
+  </g>
+</svg>

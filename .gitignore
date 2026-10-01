@@ -1,0 +1,9 @@
+__pycache__/
+.pytest_cache/
+.venv/
+.flet/
+*.py[cod]
+registros/
+*.egg-info/
+*.lnk
+build/

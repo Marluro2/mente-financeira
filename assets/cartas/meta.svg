@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FF8A8A"/>
+      <stop offset="1" stop-color="#D62839"/>
+    </linearGradient>
+    <clipPath id="clip"><rect width="200" height="200" rx="36"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+  <rect width="200" height="200" rx="36" fill="url(#bg)"/>
+  <circle cx="170" cy="32" r="48" fill="#FFFFFF" opacity="0.14"/>
+  <!-- alvo -->
+  <circle cx="92" cy="110" r="66" fill="#FFFFFF"/>
+  <circle cx="92" cy="110" r="52" fill="#E63946"/>
+  <circle cx="92" cy="110" r="38" fill="#FFFFFF"/>
+  <circle cx="92" cy="110" r="24" fill="#E63946"/>
+  <circle cx="92" cy="110" r="10" fill="#FFD23F"/>
+  <!-- flecha -->
+  <path d="M96 106 L166 36" stroke="#2B2D42" stroke-width="7" stroke-linecap="round"/>
+  <path d="M92 110 l14 -2 l-12 -12 z" fill="#2B2D42"/>
+  <path d="M160 42 l4 -22 l10 10 z M160 42 l22 -4 l-10 -10 z" fill="#FFD23F" stroke="#2B2D42" stroke-width="3" stroke-linejoin="round"/>
+  <!-- brilho -->
+  <path d="M40 40 v14 M33 47 h14" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+  </g>
+</svg>

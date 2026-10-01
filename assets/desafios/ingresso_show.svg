@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Ingresso de show -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2A0E61"/>
+      <stop offset="1" stop-color="#E4336F"/>
+    </linearGradient>
+    <clipPath id="clip"><rect width="200" height="200" rx="36"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+  <rect width="200" height="200" rx="36" fill="url(#bg)"/>
+  <circle cx="168" cy="32" r="50" fill="#FFFFFF" opacity="0.13"/>
+  <circle cx="26" cy="178" r="40" fill="#FFFFFF" opacity="0.09"/>
+
+  <g opacity="0.35" fill="#FFD23F">
+    <path d="M40 0 L70 0 L110 120 L90 120 Z"/><path d="M150 0 L170 0 L120 120 L100 120 Z"/>
+  </g>
+  <g transform="rotate(-10 100 120)">
+    <path d="M30 90 h140 v18 a12 12 0 0 0 0 24 v18 h-140 v-18 a12 12 0 0 0 0 -24 z" fill="#FFD23F"/>
+    <path d="M128 94 v52" stroke="#B88A00" stroke-width="3" stroke-dasharray="6 5"/>
+    <path d="M52 108 h56 M52 120 h44 M52 132 h50" stroke="#6B2A00" stroke-width="5" stroke-linecap="round"/>
+    <path d="M150 110 l4 9 l10 1 l-7 7 l2 10 l-9 -5 l-9 5 l2 -10 l-7 -7 l10 -1 z" fill="#E4336F"/>
+  </g>
+  </g>
+</svg>

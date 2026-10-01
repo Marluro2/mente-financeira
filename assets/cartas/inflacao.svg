@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#C88BFF"/>
+      <stop offset="1" stop-color="#7B1FD6"/>
+    </linearGradient>
+    <radialGradient id="balloon" cx="0.35" cy="0.3" r="0.8">
+      <stop offset="0" stop-color="#FFF08A"/>
+      <stop offset="1" stop-color="#FFB000"/>
+    </radialGradient>
+    <clipPath id="clip"><rect width="200" height="200" rx="36"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+  <rect width="200" height="200" rx="36" fill="url(#bg)"/>
+  <circle cx="30" cy="170" r="46" fill="#FFFFFF" opacity="0.12"/>
+  <!-- balão -->
+  <ellipse cx="96" cy="78" rx="52" ry="58" fill="url(#balloon)"/>
+  <path d="M90 134 l6 10 l6 -10 z" fill="#FFB000"/>
+  <ellipse cx="76" cy="54" rx="12" ry="18" fill="#FFFFFF" opacity="0.55" transform="rotate(25 76 54)"/>
+  <!-- cordão -->
+  <path d="M96 144 C86 156 108 164 98 178" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+  <!-- etiqueta de preço -->
+  <g transform="rotate(-14 138 132)">
+    <path d="M118 112 h40 a6 6 0 0 1 6 6 v28 a6 6 0 0 1 -6 6 h-40 l-14 -20 z" fill="#FFFFFF"/>
+    <circle cx="116" cy="132" r="4" fill="#7B1FD6"/>
+    <path d="M128 132 h26 M128 142 h18" stroke="#7B1FD6" stroke-width="5" stroke-linecap="round"/>
+    <path d="M128 122 h14" stroke="#E63946" stroke-width="5" stroke-linecap="round"/>
+  </g>
+  <!-- setas para cima -->
+  <g fill="#FFFFFF">
+    <path d="M160 70 l12 -16 l12 16 h-8 v16 h-8 v-16 z"/>
+    <path d="M24 108 l10 -13 l10 13 h-6 v12 h-8 v-12 z" opacity="0.85"/>
+  </g>
+  </g>
+</svg>

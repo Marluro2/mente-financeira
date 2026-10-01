@@ -1,0 +1,20 @@
+[project]
+name = "mente-financeira-flet"
+version = "3.7.0"
+description = "Jogo educativo de memória financeira para dois jogadores."
+readme = "README.md"
+requires-python = ">=3.14,<3.15"
+dependencies = [
+    "flet[web]==0.86.5",
+    "flet-audio==0.86.5",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=9.0,<10",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "-q"

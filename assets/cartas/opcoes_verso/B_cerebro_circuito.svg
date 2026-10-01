@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Opção B — Cérebro-circuito: trilhas douradas que terminam em moedas -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0B1E3F"/>
+      <stop offset="1" stop-color="#1B3F8C"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFE98A"/>
+      <stop offset="1" stop-color="#FFB000"/>
+    </linearGradient>
+    <clipPath id="clip"><rect width="200" height="200" rx="36"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+  <rect width="200" height="200" rx="36" fill="url(#bg)"/>
+  <!-- grade de fundo -->
+  <g stroke="#FFFFFF" stroke-width="1" opacity="0.07">
+    <path d="M0 40 H200 M0 80 H200 M0 120 H200 M0 160 H200 M40 0 V200 M80 0 V200 M120 0 V200 M160 0 V200"/>
+  </g>
+  <!-- cérebro -->
+  <path d="M100 42 C86 34 64 36 56 48 C42 48 32 62 36 76 C26 84 28 104 40 110 C40 126 56 136 70 132 C78 142 96 142 100 134 C104 142 122 142 130 132 C144 136 160 126 160 110 C172 104 174 84 164 76 C168 62 158 48 144 48 C136 36 114 34 100 42 Z" fill="#FFFFFF" fill-opacity="0.06" stroke="url(#gold)" stroke-width="5" stroke-linejoin="round"/>
+  <!-- trilhas do circuito -->
+  <g fill="none" stroke="url(#gold)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M100 48 V128"/>
+    <path d="M100 64 H80 V56 H64"/>
+    <path d="M100 84 H72 V96 H50"/>
+    <path d="M100 108 H84 V122 H70"/>
+    <path d="M100 72 H124 V58 H138"/>
+    <path d="M100 96 H130 V86 H152"/>
+    <path d="M100 116 H118 V126 H134"/>
+  </g>
+  <!-- terminais (moedas) -->
+  <g fill="url(#gold)" stroke="#B88A00" stroke-width="2">
+    <circle cx="64" cy="56" r="6"/>
+    <circle cx="50" cy="96" r="6"/>
+    <circle cx="70" cy="122" r="6"/>
+    <circle cx="138" cy="58" r="6"/>
+    <circle cx="152" cy="86" r="6"/>
+    <circle cx="134" cy="126" r="6"/>
+  </g>
+  <!-- chip central -->
+  <rect x="88" y="78" width="24" height="24" rx="6" fill="#0B1E3F" stroke="url(#gold)" stroke-width="3"/>
+  <circle cx="100" cy="90" r="6" fill="url(#gold)"/>
+  <!-- nome -->
+  <text x="100" y="170" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="900" font-size="25" fill="#FFD23F" letter-spacing="2">MENTE</text>
+  <text x="100" y="188" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="13" fill="#CFE6FF" letter-spacing="3">FINANCEIRA</text>
+  </g>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Conta de luz -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFE66D"/>
+      <stop offset="1" stop-color="#F2A900"/>
+    </linearGradient>
+    <clipPath id="clip"><rect width="200" height="200" rx="36"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+  <rect width="200" height="200" rx="36" fill="url(#bg)"/>
+  <circle cx="168" cy="32" r="50" fill="#FFFFFF" opacity="0.13"/>
+  <circle cx="26" cy="178" r="40" fill="#FFFFFF" opacity="0.09"/>
+
+  <rect x="30" y="52" width="80" height="112" rx="8" fill="#FFFFFF"/>
+  <path d="M42 72 h56 M42 88 h44 M42 104 h52 M42 120 h36" stroke="#C9CED6" stroke-width="5" stroke-linecap="round"/>
+  <rect x="42" y="134" width="56" height="16" rx="4" fill="#FF7A1A"/>
+  <ellipse cx="140" cy="84" rx="30" ry="32" fill="#FFF8D6" stroke="#2B2D42" stroke-width="4"/>
+  <path d="M132 110 h16 v14 h-16 z" fill="#9AA1AC"/>
+  <path d="M130 128 h20" stroke="#2B2D42" stroke-width="4" stroke-linecap="round"/>
+  <path d="M144 64 L130 88 H142 L136 104 L154 80 H142 Z" fill="#FF7A1A"/>
+  </g>
+</svg>

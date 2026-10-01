@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5CC8FF"/>
+      <stop offset="1" stop-color="#1459D9"/>
+    </linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#CFE6FF"/>
+    </linearGradient>
+    <clipPath id="clip"><rect width="200" height="200" rx="36"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+  <rect width="200" height="200" rx="36" fill="url(#bg)"/>
+  <circle cx="168" cy="168" r="52" fill="#FFFFFF" opacity="0.12"/>
+  <!-- grade -->
+  <g stroke="#FFFFFF" stroke-width="2" opacity="0.25">
+    <path d="M28 60 h144 M28 95 h144 M28 130 h144"/>
+  </g>
+  <!-- barras -->
+  <rect x="36" y="130" width="24" height="40" rx="6" fill="url(#bar)"/>
+  <rect x="70" y="108" width="24" height="62" rx="6" fill="url(#bar)"/>
+  <rect x="104" y="86" width="24" height="84" rx="6" fill="url(#bar)"/>
+  <rect x="138" y="58" width="24" height="112" rx="6" fill="url(#bar)"/>
+  <path d="M26 172 h150" stroke="#0B3B8C" stroke-width="5" stroke-linecap="round"/>
+  <!-- seta de alta -->
+  <path d="M34 116 L70 92 L98 104 L152 44" fill="none" stroke="#FFD23F" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M130 40 L160 34 L156 64 Z" fill="#FFD23F" stroke="#FFD23F" stroke-width="4" stroke-linejoin="round"/>
+  <!-- moeda -->
+  <circle cx="48" cy="44" r="16" fill="#FFD23F" stroke="#D99400" stroke-width="4"/>
+  <circle cx="48" cy="44" r="7" fill="none" stroke="#D99400" stroke-width="2.5"/>
+  </g>
+</svg>

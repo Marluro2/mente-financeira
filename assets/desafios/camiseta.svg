@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Camiseta -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7BE495"/>
+      <stop offset="1" stop-color="#1F9E8C"/>
+    </linearGradient>
+    <clipPath id="clip"><rect width="200" height="200" rx="36"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+  <rect width="200" height="200" rx="36" fill="url(#bg)"/>
+  <circle cx="168" cy="32" r="50" fill="#FFFFFF" opacity="0.13"/>
+  <circle cx="26" cy="178" r="40" fill="#FFFFFF" opacity="0.09"/>
+
+  <path d="M72 50 L48 60 L26 88 L50 104 L60 94 L60 164 L140 164 L140 94 L150 104 L174 88 L152 60 L128 50 C122 64 112 70 100 70 C88 70 78 64 72 50 Z" fill="#FFFFFF"/>
+  <path d="M72 50 C78 64 88 70 100 70 C112 70 122 64 128 50" fill="none" stroke="#C9CED6" stroke-width="5"/>
+  <path d="M100 96 l7 15 l16 2 l-12 11 l3 16 l-14 -8 l-14 8 l3 -16 l-12 -11 l16 -2 z" fill="#FF3D8B"/>
+  <path d="M60 150 h80" stroke="#E6EAF0" stroke-width="4"/>
+  </g>
+</svg>

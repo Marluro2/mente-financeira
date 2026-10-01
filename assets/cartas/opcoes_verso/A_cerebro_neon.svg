@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Opção A — Cérebro neon: contorno luminoso ciano/rosa sobre fundo escuro -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#12082E"/>
+      <stop offset="0.6" stop-color="#2A0E61"/>
+      <stop offset="1" stop-color="#4A0C6E"/>
+    </linearGradient>
+    <clipPath id="clip"><rect width="200" height="200" rx="36"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+  <rect width="200" height="200" rx="36" fill="url(#bg)"/>
+  <circle cx="100" cy="92" r="70" fill="#3AE0FF" opacity="0.08"/>
+  <circle cx="100" cy="92" r="52" fill="#FF3D8B" opacity="0.08"/>
+  <!-- brilho (traço largo e transparente) -->
+  <path d="M100 42 C86 34 64 36 56 48 C42 48 32 62 36 76 C26 84 28 104 40 110 C40 126 56 136 70 132 C78 142 96 142 100 134 C104 142 122 142 130 132 C144 136 160 126 160 110 C172 104 174 84 164 76 C168 62 158 48 144 48 C136 36 114 34 100 42 Z" fill="none" stroke="#3AE0FF" stroke-width="14" opacity="0.18"/>
+  <!-- cérebro -->
+  <path d="M100 42 C86 34 64 36 56 48 C42 48 32 62 36 76 C26 84 28 104 40 110 C40 126 56 136 70 132 C78 142 96 142 100 134 C104 142 122 142 130 132 C144 136 160 126 160 110 C172 104 174 84 164 76 C168 62 158 48 144 48 C136 36 114 34 100 42 Z" fill="#3AE0FF" fill-opacity="0.12" stroke="#3AE0FF" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M100 44 V132" stroke="#3AE0FF" stroke-width="4" stroke-linecap="round"/>
+  <g fill="none" stroke="#FF5CA8" stroke-width="4.5" stroke-linecap="round">
+    <path d="M58 62 C68 58 78 64 80 74"/>
+    <path d="M44 88 C56 84 66 90 66 100"/>
+    <path d="M62 116 C72 108 84 112 86 122"/>
+    <path d="M76 88 C84 80 94 84 94 94"/>
+    <path d="M142 62 C132 58 122 64 120 74"/>
+    <path d="M156 88 C144 84 134 90 134 100"/>
+    <path d="M138 116 C128 108 116 112 114 122"/>
+    <path d="M124 88 C116 80 106 84 106 94"/>
+  </g>
+  <!-- faíscas -->
+  <path d="M28 30 v12 M22 36 h12" stroke="#FFD23F" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M172 140 v10 M167 145 h10" stroke="#FFD23F" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="176" cy="34" r="4" fill="#3AE0FF"/>
+  <!-- nome -->
+  <text x="100" y="170" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="900" font-size="25" fill="#FFD23F" letter-spacing="2">MENTE</text>
+  <text x="100" y="188" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="13" fill="#FFFFFF" letter-spacing="3">FINANCEIRA</text>
+  </g>
+</svg>

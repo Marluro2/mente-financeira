@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Opção D — Meio cérebro, meio gráfico: raciocínio (esquerda) + resultado (direita) -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0FB5A3"/>
+      <stop offset="1" stop-color="#4331D6"/>
+    </linearGradient>
+    <clipPath id="clip"><rect width="200" height="200" rx="36"/></clipPath>
+    <clipPath id="brainclip"><path d="M100 42 C86 34 64 36 56 48 C42 48 32 62 36 76 C26 84 28 104 40 110 C40 126 56 136 70 132 C78 142 96 142 100 134 C104 142 122 142 130 132 C144 136 160 126 160 110 C172 104 174 84 164 76 C168 62 158 48 144 48 C136 36 114 34 100 42 Z"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+  <rect width="200" height="200" rx="36" fill="url(#bg)"/>
+  <circle cx="170" cy="30" r="48" fill="#FFFFFF" opacity="0.12"/>
+  <!-- contorno do cérebro -->
+  <path d="M100 42 C86 34 64 36 56 48 C42 48 32 62 36 76 C26 84 28 104 40 110 C40 126 56 136 70 132 C78 142 96 142 100 134 C104 142 122 142 130 132 C144 136 160 126 160 110 C172 104 174 84 164 76 C168 62 158 48 144 48 C136 36 114 34 100 42 Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="5" stroke-linejoin="round"/>
+  <!-- metade esquerda: dobras do cérebro -->
+  <g fill="none" stroke="#7B61FF" stroke-width="4.5" stroke-linecap="round">
+    <path d="M58 62 C68 58 78 64 80 74"/>
+    <path d="M44 88 C56 84 66 90 66 100"/>
+    <path d="M62 116 C72 108 84 112 86 122"/>
+    <path d="M76 88 C84 80 94 84 94 94"/>
+  </g>
+  <!-- metade direita: gráfico em alta -->
+  <g clip-path="url(#brainclip)">
+    <rect x="100" y="0" width="100" height="200" fill="#0B1E3F"/>
+  </g>
+  <path d="M100 42 C114 34 136 36 144 48 C158 48 168 62 164 76 C174 84 172 104 160 110 C160 126 144 136 130 132 C122 142 104 142 100 134" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linejoin="round"/>
+  <g fill="#2EE59D">
+    <rect x="108" y="108" width="10" height="16" rx="2"/>
+    <rect x="122" y="96" width="10" height="28" rx="2"/>
+    <rect x="136" y="82" width="10" height="42" rx="2"/>
+  </g>
+  <path d="M106 100 L124 84 L136 90 L154 64" fill="none" stroke="#FFD23F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M146 60 L158 58 L156 70 Z" fill="#FFD23F" stroke="#FFD23F" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M100 44 V132" stroke="#FFFFFF" stroke-width="4"/>
+  <!-- nome -->
+  <text x="100" y="170" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="900" font-size="25" fill="#FFFFFF" letter-spacing="2">MENTE</text>
+  <text x="100" y="188" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="13" fill="#FFD23F" letter-spacing="3">FINANCEIRA</text>
+  </g>
+</svg>

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4FE3D1"/>
+      <stop offset="1" stop-color="#0B9486"/>
+    </linearGradient>
+    <clipPath id="clip"><rect width="200" height="200" rx="36"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+  <rect width="200" height="200" rx="36" fill="url(#bg)"/>
+  <circle cx="30" cy="30" r="46" fill="#FFFFFF" opacity="0.12"/>
+  <!-- prancheta -->
+  <rect x="44" y="30" width="112" height="150" rx="14" fill="#8A5A36"/>
+  <rect x="54" y="44" width="92" height="128" rx="8" fill="#FFFFFF"/>
+  <rect x="78" y="22" width="44" height="22" rx="8" fill="#C9CED6"/>
+  <rect x="88" y="16" width="24" height="12" rx="6" fill="#9AA1AC"/>
+  <!-- itens da lista -->
+  <g stroke-linecap="round" stroke-linejoin="round">
+    <rect x="64" y="58" width="16" height="16" rx="4" fill="#E6FBF8" stroke="#0B9486" stroke-width="3"/>
+    <path d="M67 66 l4 4 l7 -9" fill="none" stroke="#12B886" stroke-width="4"/>
+    <path d="M88 66 h46" stroke="#94A3B8" stroke-width="5"/>
+    <rect x="64" y="84" width="16" height="16" rx="4" fill="#E6FBF8" stroke="#0B9486" stroke-width="3"/>
+    <path d="M67 92 l4 4 l7 -9" fill="none" stroke="#12B886" stroke-width="4"/>
+    <path d="M88 92 h36" stroke="#94A3B8" stroke-width="5"/>
+    <rect x="64" y="110" width="16" height="16" rx="4" fill="#E6FBF8" stroke="#0B9486" stroke-width="3"/>
+    <path d="M88 118 h42" stroke="#94A3B8" stroke-width="5"/>
+  </g>
+  <!-- gráfico de pizza -->
+  <circle cx="100" cy="150" r="16" fill="#FFB547"/>
+  <path d="M100 150 L100 134 A16 16 0 0 1 115.2 155 Z" fill="#FF5C8A"/>
+  <path d="M100 150 L115.2 155 A16 16 0 0 1 92 164 Z" fill="#6C63FF"/>
+  <!-- lápis -->
+  <g transform="rotate(35 160 120)">
+    <rect x="152" y="80" width="14" height="62" rx="3" fill="#FFD23F"/>
+    <rect x="152" y="80" width="14" height="10" rx="3" fill="#FF7FA8"/>
+    <path d="M152 142 l7 14 l7 -14 z" fill="#F4D6A0"/>
+    <path d="M156.5 151 l2.5 5 l2.5 -5 z" fill="#3A2E24"/>
+  </g>
+  </g>
+</svg>

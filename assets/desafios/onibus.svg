@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Passe de ônibus -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5CC8FF"/>
+      <stop offset="1" stop-color="#1459D9"/>
+    </linearGradient>
+    <clipPath id="clip"><rect width="200" height="200" rx="36"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+  <rect width="200" height="200" rx="36" fill="url(#bg)"/>
+  <circle cx="168" cy="32" r="50" fill="#FFFFFF" opacity="0.13"/>
+  <circle cx="26" cy="178" r="40" fill="#FFFFFF" opacity="0.09"/>
+
+  <rect x="42" y="34" width="116" height="130" rx="20" fill="#FFD23F"/>
+  <rect x="54" y="46" width="92" height="14" rx="4" fill="#1B2A3A"/>
+  <path d="M60 53 h40" stroke="#2EE59D" stroke-width="4" stroke-linecap="round"/>
+  <rect x="54" y="68" width="92" height="50" rx="8" fill="#BFE9FF"/>
+  <path d="M100 68 v50" stroke="#FFD23F" stroke-width="4"/>
+  <circle cx="64" cy="138" r="8" fill="#FFFFFF"/><circle cx="136" cy="138" r="8" fill="#FFFFFF"/>
+  <rect x="84" y="132" width="32" height="10" rx="4" fill="#1B2A3A"/>
+  <rect x="52" y="160" width="20" height="16" rx="4" fill="#1B2A3A"/><rect x="128" y="160" width="20" height="16" rx="4" fill="#1B2A3A"/>
+  <g transform="rotate(12 160 150)">
+    <rect x="132" y="128" width="54" height="36" rx="6" fill="#FFFFFF"/>
+    <rect x="138" y="136" width="14" height="10" rx="2" fill="#FFB000"/>
+    <path d="M140 154 h36" stroke="#1459D9" stroke-width="4" stroke-linecap="round"/>
+  </g>
+  </g>
+</svg>

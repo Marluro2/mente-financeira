@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Tênis -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FF9AD0"/>
+      <stop offset="1" stop-color="#E4336F"/>
+    </linearGradient>
+    <clipPath id="clip"><rect width="200" height="200" rx="36"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+  <rect width="200" height="200" rx="36" fill="url(#bg)"/>
+  <circle cx="168" cy="32" r="50" fill="#FFFFFF" opacity="0.13"/>
+  <circle cx="26" cy="178" r="40" fill="#FFFFFF" opacity="0.09"/>
+
+  <g stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" opacity="0.7">
+    <path d="M14 96 h22 M8 112 h24 M16 128 h16"/>
+  </g>
+  <path d="M40 130 C44 100 64 82 88 82 L106 82 C114 96 128 104 146 106 C166 108 178 118 178 134 L40 134 Z" fill="#3A1C9C"/>
+  <path d="M62 120 C90 116 120 100 150 110" fill="none" stroke="#FFD23F" stroke-width="8" stroke-linecap="round"/>
+  <g stroke="#FFFFFF" stroke-width="4" stroke-linecap="round">
+    <path d="M90 88 l12 8 M84 96 l12 8 M78 104 l12 8"/>
+  </g>
+  <rect x="34" y="130" width="148" height="20" rx="9" fill="#FFFFFF"/>
+  <path d="M40 146 h136" stroke="#C9CED6" stroke-width="4" stroke-linecap="round"/>
+  </g>
+</svg>

@@ -1,0 +1,112 @@
+# Baralho da Memória Financeira (jogo da memória tradicional)
+#
+# Cada [[concepts]] vira um par de cartas iguais. A cada partida são sorteados
+# `pairs` conceitos; ter mais conceitos que pares faz as partidas variarem.
+#
+# - image: arquivo em assets/cartas/ (SVG de 200 × 200)
+# - color: cor de destaque usada na moldura e no painel "Você sabia?"
+# - tip:     curiosidade exibida quando o par é encontrado (1 ou 2 frases curtas)
+# - example: situação do dia a dia com números, exibida no painel
+#            "Conceitos descobertos" (confira as contas!)
+#
+# Depois de editar, rode `python -m pytest`: os testes conferem se as imagens
+# existem e se os textos estão preenchidos.
+
+pairs = 8
+back_image = "cartas/verso.svg"
+
+[[concepts]]
+id = "poupanca"
+name = "Poupança"
+image = "cartas/poupanca.svg"
+color = "#FF3D8B"
+tip = "Guardar R$ 5 por dia soma R$ 1.825 em um ano — e isso sem contar os rendimentos."
+example = "Ana guarda R$ 20 por semana da mesada. Em 6 meses (26 semanas), junta R$ 520 e compra um fone novo à vista, sem parcelar."
+
+[[concepts]]
+id = "orcamento"
+name = "Orçamento"
+image = "cartas/orcamento.svg"
+color = "#0B9486"
+tip = "Anotar os gastos de um mês mostra para onde o dinheiro vai. Uma regra conhecida é a 50-30-20: necessidades, desejos e poupança."
+example = "Com R$ 200 por mês: R$ 100 para transporte e lanche (necessidades), R$ 60 para lazer (desejos) e R$ 40 guardados (poupança)."
+
+[[concepts]]
+id = "juros_compostos"
+name = "Juros compostos"
+image = "cartas/juros_compostos.svg"
+color = "#1FA45C"
+tip = "São juros sobre juros: R$ 1.000 a 1% ao mês viram cerca de R$ 1.127 em um ano. O tempo é o melhor aliado de quem investe."
+example = "R$ 100 rendendo 1% ao mês viram R$ 101 no 1º mês e R$ 102,01 no 2º: o juro do 2º mês incide também sobre o R$ 1 ganho antes."
+
+[[concepts]]
+id = "cartao_credito"
+name = "Cartão de crédito"
+image = "cartas/cartao_credito.svg"
+color = "#4331D6"
+tip = "O rotativo do cartão está entre os juros mais altos do Brasil. Pague sempre o valor total da fatura."
+example = "Numa fatura de R$ 500, pagar só o mínimo deixa o restante no rotativo, com juros altíssimos. No mês seguinte a dívida já é maior que os R$ 500."
+
+[[concepts]]
+id = "investimento"
+name = "Investimento"
+image = "cartas/investimento.svg"
+color = "#1459D9"
+tip = "Investir é colocar o dinheiro para trabalhar por você. Quanto antes começar, mais tempo os juros compostos têm para agir."
+example = "Guardando R$ 50 por mês num investimento que rende 0,8% ao mês, você tem cerca de R$ 627 em um ano: R$ 27 a mais do que deixando o dinheiro parado."
+
+[[concepts]]
+id = "reserva_emergencia"
+name = "Reserva de emergência"
+image = "cartas/reserva_emergencia.svg"
+color = "#FF7A1A"
+tip = "É o dinheiro guardado para imprevistos. Costuma-se recomendar de 3 a 6 meses do custo de vida."
+example = "Se uma família gasta R$ 3.000 por mês, a reserva de emergência fica entre R$ 9.000 (3 meses) e R$ 18.000 (6 meses)."
+
+[[concepts]]
+id = "meta"
+name = "Meta financeira"
+image = "cartas/meta.svg"
+color = "#D62839"
+tip = "Metas claras funcionam melhor: juntar R$ 600 em 10 meses significa guardar R$ 60 por mês."
+example = "Quer um celular de R$ 1.200 daqui a 1 ano? Divida a meta: R$ 100 por mês, ou cerca de R$ 23 por semana."
+
+[[concepts]]
+id = "inflacao"
+name = "Inflação"
+image = "cartas/inflacao.svg"
+color = "#7B1FD6"
+tip = "É a alta geral dos preços. Com inflação de 5% ao ano, o que custa R$ 100 passa a custar R$ 105."
+example = "Um lanche de R$ 20, com inflação de 10% no ano, passa a custar R$ 22. Com os mesmos R$ 20, você já não compra o lanche."
+
+[[concepts]]
+id = "divida"
+name = "Dívida"
+image = "cartas/divida.svg"
+color = "#3F4460"
+tip = "Parcelar com juros encarece a compra. Antes de assumir uma dívida, some o valor de todas as parcelas."
+example = "Um celular de R$ 1.000 em 10 parcelas de R$ 130 custa R$ 1.300 no total: R$ 300 só de juros."
+
+[[concepts]]
+id = "consumo_consciente"
+name = "Consumo consciente"
+image = "cartas/consumo_consciente.svg"
+color = "#3E9A1E"
+tip = "Antes de comprar, espere 24 horas e pergunte: eu preciso ou só quero? Muitas compras por impulso perdem a graça."
+example = "O mesmo tênis custa R$ 400 numa loja e R$ 360 em outra. Comparar antes de comprar economiza R$ 40, ou 10% do preço."
+
+[[concepts]]
+id = "renda"
+name = "Renda"
+image = "cartas/renda.svg"
+color = "#F2A900"
+tip = "Renda é todo dinheiro que entra: salário, mesada, bicos. Gastar menos do que se ganha é o primeiro passo para poupar."
+example = "Mesada de R$ 150 mais um bico de R$ 50: sua renda do mês é R$ 200. Gastando R$ 170, sobram R$ 30 para guardar."
+
+[[concepts]]
+id = "seguranca"
+name = "Segurança digital"
+image = "cartas/seguranca.svg"
+color = "#00798C"
+tip = "Desconfie de dinheiro fácil e nunca compartilhe senhas ou códigos recebidos por mensagem. Na dúvida, pergunte a alguém de confiança."
+example = "\"Você ganhou R$ 1.000! Envie o código que chegou por SMS.\" É golpe: nenhum prêmio de verdade pede senha ou código."

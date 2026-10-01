@@ -1,0 +1,197 @@
+# Banco de questões — Trilha do Ensino Médio
+#
+# Como editar:
+# - Cada [[phases]] é uma fase do jogo. Em cada partida são sorteados
+#   `pairs_per_phase` cenários da lista `scenarios` (é preciso ter pelo menos
+#   esse número de cenários).
+# - `calculator` indica qual cálculo será feito (veja content/calculators.py).
+# - Os modelos de texto (`templates`) usam {campo}. Os campos disponíveis são os
+#   do próprio cenário (ex.: {context}) e os devolvidos pelo calculador
+#   (ex.: {base}, {rate}, {final}).
+# - Cenários com `kind` usam o modelo de mesmo nome; os demais usam `default`.
+# - Escreva taxas entre aspas ("0.15" = 15%) para evitar erros de arredondamento.
+# - Depois de editar, rode `python -m pytest`: os testes geram todas as
+#   questões e acusam campos faltando ou contas inconsistentes.
+
+id = "medio"
+name = "Ensino Médio"
+description = "Porcentagem, juros, inflação, crédito e financiamentos."
+pairs_per_phase = 4
+
+# --------------------------------------------------------------------------
+[[phases]]
+id = "f1"
+title = "Fase 1 — Porcentagem aplicada"
+short_title = "Porcentagem"
+objective = "Calcule descontos, aumentos, gorjetas e comissões."
+calculator = "percentage"
+scenarios = [
+    { id = "game", kind = "discount", context = "Um videogame em promoção", base = 250, rate = "0.15" },
+    { id = "food", kind = "tip", context = "A conta do restaurante", base = 80, rate = "0.10" },
+    { id = "school", kind = "increase", context = "O valor da mensalidade do curso", base = 120, rate = "0.05" },
+    { id = "phone", kind = "commission", context = "venda de um celular", base = 1500, rate = "0.04" },
+    { id = "shirt", kind = "discount", context = "Uma blusa na liquidação", base = 75, rate = "0.20" },
+    { id = "ticket", kind = "increase", context = "O valor do ingresso para um espetáculo", base = 40, rate = "0.10" },
+    { id = "ride", kind = "tip", context = "A corrida de aplicativo", base = 30, rate = "0.15" },
+    { id = "book", kind = "discount", context = "Um livro com cupom", base = 50, rate = "0.10" },
+]
+
+[phases.templates.discount]
+question = "{context} custa {base}. Com {rate} de desconto, qual é o preço final?"
+resolution = "Preço final: {final}"
+explanation = "Desconto = {base} × {rate} = {amount}.\nPreço final = {base} − {amount} = {final}."
+
+[phases.templates.tip]
+question = "{context} foi de {base}. Com gorjeta de {rate}, qual é o total?"
+resolution = "Total: {final}"
+explanation = "Gorjeta = {base} × {rate} = {amount}.\nTotal = {base} + {amount} = {final}."
+
+[phases.templates.increase]
+question = "{context} é {base} e terá aumento de {rate}. Qual será o novo valor?"
+resolution = "Novo valor: {final}"
+explanation = "Aumento = {base} × {rate} = {amount}.\nNovo valor = {base} + {amount} = {final}."
+
+[phases.templates.commission]
+question = "Um vendedor recebe {rate} de comissão pela {context}, no valor de {base}. Quanto ele ganha?"
+resolution = "Comissão: {final}"
+explanation = "Comissão = {base} × {rate} = {final}."
+
+# --------------------------------------------------------------------------
+[[phases]]
+id = "f2"
+title = "Fase 2 — Juros simples"
+short_title = "Juros simples"
+objective = "Encontre o montante usando crescimento linear."
+calculator = "simple_interest"
+scenarios = [
+    { id = "materials", context = "o material escolar", capital = 500, rate = "0.02", periods = 6 },
+    { id = "bike", context = "uma bicicleta", capital = 800, rate = "0.03", periods = 4 },
+    { id = "notebook", context = "o conserto do notebook", capital = 1000, rate = "0.015", periods = 10 },
+    { id = "course", context = "um curso rápido", capital = 1200, rate = "0.025", periods = 8 },
+    { id = "room", context = "a reforma do quarto", capital = 700, rate = "0.018", periods = 12 },
+]
+
+[phases.templates.default]
+question = "Um financiamento para {context} é de {capital}, a {rate} ao mês, por {periods} {months}. Qual é o montante em juros simples?"
+resolution = "Montante: {amount}"
+explanation = "M = C × (1 + i × n)\nM = {capital} × (1 + {rate_decimal} × {periods}) = {amount}."
+
+# --------------------------------------------------------------------------
+[[phases]]
+id = "f3"
+title = "Fase 3 — Juros compostos"
+short_title = "Juros compostos"
+objective = "Use o crescimento exponencial dos juros sobre juros."
+calculator = "compound_interest"
+scenarios = [
+    { id = "trip", context = "uma poupança para uma viagem", capital = 300, rate = "0.02", periods = 6 },
+    { id = "reserve", context = "uma reserva para um notebook", capital = 700, rate = "0.015", periods = 12 },
+    { id = "cdb", context = "um investimento em CDB", capital = 1000, rate = "0.025", periods = 8 },
+    { id = "monthly", context = "uma aplicação financeira", capital = 900, rate = "0.03", periods = 4 },
+    { id = "fund", context = "um fundo de investimento", capital = 1200, rate = "0.018", periods = 10 },
+]
+
+[phases.templates.default]
+question = "Em {context}, aplicam-se {capital} a {rate} ao mês durante {periods} {months}. Qual é o montante composto?"
+resolution = "Montante: {amount}"
+explanation = "M = C × (1 + i)ⁿ\nM = {capital} × (1 + {rate_decimal})^{periods} = {amount}."
+
+# --------------------------------------------------------------------------
+[[phases]]
+id = "f4"
+title = "Fase 4 — Desconto comercial simples"
+short_title = "Desconto simples"
+objective = "Determine o valor líquido após o desconto antecipado."
+calculator = "commercial_discount"
+scenarios = [
+    { id = "bond", context = "uma antecipação de título", nominal = 1000, rate = "0.02", periods = 2 },
+    { id = "cash", context = "um desconto à vista", nominal = 1500, rate = "0.03", periods = 1 },
+    { id = "deal", context = "uma negociação comercial", nominal = 2000, rate = "0.04", periods = 3 },
+    { id = "early", context = "um pagamento adiantado", nominal = 1200, rate = "0.025", periods = 2 },
+    { id = "trade", context = "um desconto de duplicata", nominal = 1800, rate = "0.015", periods = 4 },
+]
+
+[phases.templates.default]
+question = "Em {context}, o valor nominal é {nominal}, com desconto simples de {rate} ao mês por {periods} {months}. Qual é o valor líquido?"
+resolution = "Valor líquido: {net}"
+explanation = "VL = N × (1 − d × t)\nVL = {nominal} × (1 − {rate_decimal} × {periods}) = {net}."
+
+# --------------------------------------------------------------------------
+[[phases]]
+id = "f5"
+title = "Fase 5 — Equivalência de taxas"
+short_title = "Taxas equivalentes"
+objective = "Converta uma taxa efetiva mensal em anual."
+calculator = "rate_equivalence"
+scenarios = [
+    { id = "store", context = "Um cartão de loja", rate = "0.01" },
+    { id = "micro", context = "Um microcrédito", rate = "0.015" },
+    { id = "group", context = "Um consórcio", rate = "0.02" },
+    { id = "loan", context = "Um empréstimo", rate = "0.025" },
+    { id = "finance", context = "Um financiamento", rate = "0.03" },
+]
+
+[phases.templates.default]
+question = "{context} cobra taxa efetiva de {monthly} ao mês. Qual é a taxa efetiva anual equivalente?"
+resolution = "Taxa anual: {annual} a.a."
+explanation = "iₐ = (1 + iₘ)¹² − 1\niₐ = (1 + {monthly_decimal})¹² − 1 = {annual} ao ano."
+
+# --------------------------------------------------------------------------
+[[phases]]
+id = "f6"
+title = "Fase 6 — Reajuste por inflação"
+short_title = "Inflação"
+objective = "Atualize preços por um índice percentual."
+calculator = "inflation"
+scenarios = [
+    { id = "gym", context = "de um plano anual de academia", price = 1000, inflation = "0.05" },
+    { id = "cinema", context = "de um pacote de ingressos de cinema", price = 450, inflation = "0.08" },
+    { id = "supplies", context = "do material escolar", price = 800, inflation = "0.03" },
+    { id = "food", context = "de uma cesta de alimentos", price = 1500, inflation = "0.04" },
+    { id = "mobile", context = "de um plano anual de celular", price = 1200, inflation = "0.025" },
+]
+
+[phases.templates.default]
+question = "O preço {context} é {price}. Após reajuste de {inflation}, qual será o preço corrigido?"
+resolution = "Preço corrigido: {corrected}"
+explanation = "P₁ = P₀ × (1 + π)\nP₁ = {price} × (1 + {inflation_decimal}) = {corrected}."
+
+# --------------------------------------------------------------------------
+[[phases]]
+id = "f7"
+title = "Fase 7 — Prestação no sistema PRICE"
+short_title = "Parcela PRICE"
+objective = "Calcule a prestação constante de um financiamento."
+calculator = "price_installment"
+scenarios = [
+    { id = "phone", context = "Um celular", principal = 300, rate = "0.02", periods = 6 },
+    { id = "notebook", context = "Um notebook", principal = 800, rate = "0.025", periods = 12 },
+    { id = "bike", context = "Uma bicicleta", principal = 1200, rate = "0.03", periods = 9, feminine = true },
+    { id = "course", context = "Um curso preparatório", principal = 600, rate = "0.015", periods = 10 },
+    { id = "console", context = "Um console de videogame", principal = 1000, rate = "0.018", periods = 8 },
+]
+
+[phases.templates.default]
+question = "{context} de {principal} será {financed} pelo sistema PRICE em {periods} parcelas, a {rate} ao mês. Qual é a prestação?"
+resolution = "Prestação: {payment}"
+explanation = "PMT = P × [i(1+i)ⁿ] ÷ [(1+i)ⁿ−1]\nCom P={principal}, i={rate_decimal} e n={periods}, PMT = {payment}."
+
+# --------------------------------------------------------------------------
+[[phases]]
+id = "f8"
+title = "Fase 8 — Total pago no sistema PRICE"
+short_title = "Total no PRICE"
+objective = "Compare o principal com o custo total financiado."
+calculator = "price_total"
+scenarios = [
+    { id = "headset", context = "Um fone premium", principal = 300, rate = "0.02", periods = 6 },
+    { id = "notebook", context = "Um notebook intermediário", principal = 900, rate = "0.025", periods = 12 },
+    { id = "bike", context = "Uma bicicleta de trilha", principal = 1500, rate = "0.03", periods = 9, feminine = true },
+    { id = "course", context = "Um curso técnico", principal = 700, rate = "0.018", periods = 10 },
+    { id = "tv", context = "Uma smart TV", principal = 1100, rate = "0.015", periods = 8, feminine = true },
+]
+
+[phases.templates.default]
+question = "{context} de {principal} será {financed} pelo PRICE em {periods} parcelas, a {rate} ao mês. Qual será o total pago?"
+resolution = "Total pago: {total}"
+explanation = "Primeiro, PMT = {payment} (arredondada ao centavo).\nTotal = PMT × n = {payment} × {periods} = {total}."

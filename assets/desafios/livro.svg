@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Livro -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4FE3D1"/>
+      <stop offset="1" stop-color="#0B6FA4"/>
+    </linearGradient>
+    <clipPath id="clip"><rect width="200" height="200" rx="36"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+  <rect width="200" height="200" rx="36" fill="url(#bg)"/>
+  <circle cx="168" cy="32" r="50" fill="#FFFFFF" opacity="0.13"/>
+  <circle cx="26" cy="178" r="40" fill="#FFFFFF" opacity="0.09"/>
+
+  <path d="M100 62 C80 50 50 50 30 58 V152 C50 144 80 144 100 156 Z" fill="#FFFFFF"/>
+  <path d="M100 62 C120 50 150 50 170 58 V152 C150 144 120 144 100 156 Z" fill="#EAF6FF"/>
+  <path d="M100 62 V156" stroke="#9AA1AC" stroke-width="3"/>
+  <g stroke="#9AA1AC" stroke-width="4" stroke-linecap="round">
+    <path d="M44 78 h40 M44 94 h40 M44 110 h32"/>
+    <path d="M116 78 h40 M116 94 h36 M116 110 h40"/>
+  </g>
+  <path d="M136 50 v34 l8 -6 l8 6 v-34" fill="#FF3D8B"/>
+  </g>
+</svg>

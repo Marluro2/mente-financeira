@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Presente de aniversário -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FF8A8A"/>
+      <stop offset="1" stop-color="#B01F6B"/>
+    </linearGradient>
+    <clipPath id="clip"><rect width="200" height="200" rx="36"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+  <rect width="200" height="200" rx="36" fill="url(#bg)"/>
+  <circle cx="168" cy="32" r="50" fill="#FFFFFF" opacity="0.13"/>
+  <circle cx="26" cy="178" r="40" fill="#FFFFFF" opacity="0.09"/>
+
+  <rect x="40" y="90" width="120" height="80" rx="10" fill="#FFD23F"/>
+  <rect x="32" y="72" width="136" height="26" rx="8" fill="#FFB000"/>
+  <rect x="90" y="72" width="20" height="98" fill="#E4336F"/>
+  <path d="M100 72 C84 44 56 50 66 66 C72 76 92 74 100 72 Z" fill="#FF3D8B"/>
+  <path d="M100 72 C116 44 144 50 134 66 C128 76 108 74 100 72 Z" fill="#FF3D8B"/>
+  <circle cx="100" cy="72" r="8" fill="#E4336F"/>
+  </g>
+</svg>
