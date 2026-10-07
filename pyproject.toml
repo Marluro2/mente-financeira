@@ -1,6 +1,6 @@
 [project]
 name = "mente-financeira-flet"
-version = "3.8.0"
+version = "3.9.0"
 description = "Jogo educacional de educação financeira: memória, desafios de porcentagem e questões de matemática financeira."
 readme = "README.md"
 requires-python = ">=3.14,<3.15"

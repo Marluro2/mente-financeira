@@ -8,7 +8,7 @@ from types import SimpleNamespace
 import flet as ft
 import pytest
 
-from fakes import FakePage, walk
+from fakes import FakePage, started_shell, walk
 from mente_financeira.admin import admin_ativo
 from mente_financeira.core.memory_game import Mode
 from mente_financeira.storage import SettingsStore, default_data_dir
@@ -34,7 +34,7 @@ def admin(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def _shell(tmp_path: Path, size=DESKTOP) -> GameShell:
-    return GameShell(FakePage(*size), store=SettingsStore(tmp_path), rng=random.Random(4))  # type: ignore[arg-type]
+    return started_shell(FakePage(*size), store=SettingsStore(tmp_path), rng=random.Random(4))  # type: ignore[arg-type]
 
 
 def _texts(control: ft.Control) -> list[str]:

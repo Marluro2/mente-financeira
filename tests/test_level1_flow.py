@@ -8,7 +8,7 @@ from types import SimpleNamespace
 import flet as ft
 import pytest
 
-from fakes import FakePage, press, walk
+from fakes import FakePage, press, started_shell, walk
 from mente_financeira.core.memory_game import Mode
 from mente_financeira.core.percent_challenge import ENCOURAGEMENTS
 from mente_financeira.storage import SettingsStore
@@ -29,7 +29,7 @@ def _no_delays(monkeypatch: pytest.MonkeyPatch) -> None:
 
 @pytest.fixture(params=[PHONE, DESKTOP], ids=["celular", "computador"])
 def shell(request: pytest.FixtureRequest, tmp_path: Path) -> GameShell:
-    return GameShell(FakePage(*request.param), store=SettingsStore(tmp_path), rng=random.Random(4))  # type: ignore[arg-type]
+    return started_shell(FakePage(*request.param), store=SettingsStore(tmp_path), rng=random.Random(4))  # type: ignore[arg-type]
 
 
 def _tap(screen: MemoryScreen, index: int) -> None:
@@ -58,7 +58,7 @@ def test_opens_on_the_home_screen(shell: GameShell) -> None:
     assert "MENTE" in texts and "FINANCEIRA" in texts
     assert "Desafio dos Cálculos" in texts
     assert home.mode is Mode.SOLO
-    assert len(shell.page.tasks) == 1  # animação dos ícones flutuantes
+    assert shell.page.tasks[-1][0] == home._float_loop  # animação dos ícones flutuantes
 
 
 def test_duel_mode_asks_for_two_names(shell: GameShell) -> None:
@@ -72,7 +72,7 @@ def test_duel_mode_asks_for_two_names(shell: GameShell) -> None:
 
 
 def test_home_compacts_on_short_desktop_screens(tmp_path: Path) -> None:
-    shell = GameShell(FakePage(1536, 1000), store=SettingsStore(tmp_path), rng=random.Random(4))  # type: ignore[arg-type]
+    shell = started_shell(FakePage(1536, 1000), store=SettingsStore(tmp_path), rng=random.Random(4))  # type: ignore[arg-type]
     home = _home(shell)
     assert not home.short
     shell.page.resize(1536, 785)  # type: ignore[attr-defined]
@@ -152,7 +152,7 @@ def test_tapping_a_discovered_concept_brings_it_back(shell: GameShell) -> None:
 
 
 def test_desktop_panel_fills_the_right_side(tmp_path: Path) -> None:
-    shell = GameShell(FakePage(*DESKTOP), store=SettingsStore(tmp_path), rng=random.Random(4))  # type: ignore[arg-type]
+    shell = started_shell(FakePage(*DESKTOP), store=SettingsStore(tmp_path), rng=random.Random(4))  # type: ignore[arg-type]
     _home(shell)._play()
     screen = _memory(shell)
     panel = next(

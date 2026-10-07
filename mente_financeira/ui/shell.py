@@ -17,6 +17,7 @@ from mente_financeira.ui.app import DEFAULT_TRACK, MemoryFinanceApp
 from mente_financeira.ui.home import HomeScreen
 from mente_financeira.ui.memory_screen import MemoryScreen
 from mente_financeira.ui.sounds import SoundEffects
+from mente_financeira.ui.tracks import FUNDAMENTAL, TracksScreen
 
 
 class Screen(Protocol):
@@ -46,7 +47,7 @@ class GameShell:
         self.page.padding = 0
         self.page.spacing = 0
         self.page.on_disconnect = self._stop_current
-        self.show_home()
+        self.show_tracks()
 
     def _stop_current(self, _: Any = None) -> None:
         if self.current is not None:
@@ -59,13 +60,29 @@ class GameShell:
         self.page.on_resize = screen.on_resize
         self.page.on_disconnect = self._stop_current
 
+    def show_tracks(self) -> None:
+        """Página inicial: escolha da trilha (Fundamental, Médio, Engenharia)."""
+
+        tracks = TracksScreen(self.page, self.deck, on_select=self.open_track, rng=self.rng)
+        self._activate(tracks)
+        tracks.show()
+
+    def open_track(self, key: str) -> None:
+        # Por enquanto só o Ensino Fundamental está disponível; as demais
+        # trilhas aparecem como "Em breve" na página inicial.
+        if key == FUNDAMENTAL:
+            self.show_home()
+
     def show_home(self) -> None:
+        """Abertura da trilha do Ensino Fundamental (Nível 1 e Nível 2)."""
+
         home = HomeScreen(
             self.page,
             self.deck,
             on_play=self.play_memory,
             on_level2=self.open_level2,
             on_admin=self.open_admin if admin_ativo() else None,
+            on_tracks=self.show_tracks,
         )
         self._activate(home)
         home.show()
