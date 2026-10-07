@@ -4,7 +4,7 @@ Versão reconstruída em Python 3.14 e Flet 0.86.5 a partir do projeto HTML/CSS/
 
 ## Jogar pela web
 
-Site (GitHub Pages): https://marluro2.github.io/mentte-financeira/
+Site (GitHub Pages): https://marluro2.github.io/mente-financeira/
 
 Abre em qualquer computador ou celular, sem instalar nada. Na primeira vez o
 navegador baixa o jogo (alguns segundos a mais); depois fica em cache. O site
