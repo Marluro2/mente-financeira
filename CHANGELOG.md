@@ -6,7 +6,7 @@ Registro das alterações do software (seção 5.10 do projeto — rastreabilida
 
 ### Repositório no GitHub e publicação na web
 - Código versionado com Git e publicado em
-  https://github.com/Marluro2/mentte-financeira (seção 5.10 do projeto).
+  https://github.com/Marluro2/mente-financeira (seção 5.10 do projeto).
 - `.github/workflows/publicar-site.yml`: a cada envio, o GitHub roda os testes,
   constrói o site estático (`flet build web`, Python 3.14 no navegador) e
   publica no GitHub Pages.
