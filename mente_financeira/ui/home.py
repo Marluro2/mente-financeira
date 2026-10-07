@@ -47,12 +47,14 @@ class HomeScreen:
         on_play: Callable[[Mode, tuple[str | None, str | None]], None],
         on_level2: Callable[[], None],
         on_admin: Callable[[], None] | None = None,
+        on_tracks: Callable[[], None] | None = None,
     ) -> None:
         self.page = page
         self.deck = deck
         self.on_play = on_play
         self.on_level2 = on_level2
         self.on_admin = on_admin  # só no modo administrador
+        self.on_tracks = on_tracks  # volta à página das trilhas
         self.mode = Mode.SOLO
         self.layout = layout_for(page.width)
         self.generation = 0
@@ -243,10 +245,31 @@ class HomeScreen:
 
     # ------------------------------------------------------------ peças
     def _badge(self) -> ft.Control:
+        if self.on_tracks is None:
+            label = "PROJETO IFSP • EDUCAÇÃO FINANCEIRA"
+            controls: list[ft.Control] = []
+        else:
+            # Dentro de uma trilha: botão para voltar à escolha das trilhas.
+            label = "TRILHA • ENSINO FUNDAMENTAL"
+            controls = [
+                ft.TextButton(
+                    "Trilhas",
+                    icon=ft.Icons.ARROW_BACK_ROUNDED,
+                    on_click=self._back_to_tracks,
+                    style=ft.ButtonStyle(color=s.CYAN),
+                )
+            ]
+        controls.append(s.chip(label, icon=ft.Icons.AUTO_AWESOME, color=s.YELLOW, size=11))
         return ft.Row(
-            [s.chip("PROJETO IFSP • EDUCAÇÃO FINANCEIRA", icon=ft.Icons.AUTO_AWESOME, color=s.YELLOW, size=11)],
+            controls,
+            spacing=8,
             alignment=ft.MainAxisAlignment.CENTER if self.compact else ft.MainAxisAlignment.START,
         )
+
+    def _back_to_tracks(self, _: Any = None) -> None:
+        self.stop()
+        if self.on_tracks is not None:
+            self.on_tracks()
 
     def _title(self) -> ft.Control:
         big, small = (50, 34) if self.compact else ((62, 40) if self.short else (78, 50))

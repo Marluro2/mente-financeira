@@ -56,3 +56,14 @@ def walk(control: Any):
 def press(dialog: ft.AlertDialog, label: str) -> None:
     button = next(b for b in dialog.actions if b.content == label)
     button.on_click(None)
+
+
+def started_shell(*args: Any, **kwargs: Any):
+    """Abre o jogo e entra na trilha do Ensino Fundamental (abertura do jogo)."""
+
+    from mente_financeira.ui.shell import GameShell
+    from mente_financeira.ui.tracks import FUNDAMENTAL
+
+    shell = GameShell(*args, **kwargs)
+    shell.open_track(FUNDAMENTAL)
+    return shell

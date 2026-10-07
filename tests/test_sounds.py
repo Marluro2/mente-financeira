@@ -8,7 +8,7 @@ import wave
 
 import pytest
 
-from fakes import FakePage
+from fakes import FakePage, started_shell
 from mente_financeira.core.memory_game import Mode
 from mente_financeira.storage import Settings, SettingsStore
 from mente_financeira.ui import app as app_module
@@ -29,7 +29,7 @@ def _no_delays(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def _shell(tmp_path: Path) -> GameShell:
-    return GameShell(FakePage(), store=SettingsStore(tmp_path), rng=random.Random(4))  # type: ignore[arg-type]
+    return started_shell(FakePage(), store=SettingsStore(tmp_path), rng=random.Random(4))  # type: ignore[arg-type]
 
 
 def _tap(screen: MemoryScreen, index: int) -> None:
@@ -135,7 +135,7 @@ def test_level2_sounds(tmp_path: Path) -> None:
 def test_toggle_mutes_and_is_remembered_without_losing_theme(tmp_path: Path) -> None:
     store = SettingsStore(tmp_path)
     store.save(Settings(palette="neon", dark_mode=True))
-    shell = GameShell(FakePage(), store=store, rng=random.Random(1))  # type: ignore[arg-type]
+    shell = started_shell(FakePage(), store=store, rng=random.Random(1))  # type: ignore[arg-type]
     shell.play_memory(Mode.SOLO, (None, None))
     screen: MemoryScreen = shell.current  # type: ignore[assignment]
 
@@ -146,7 +146,7 @@ def test_toggle_mutes_and_is_remembered_without_losing_theme(tmp_path: Path) -> 
     _tap(screen, 0)
     assert shell.sounds.history == []  # silêncio
 
-    again = GameShell(FakePage(), store=store)  # type: ignore[arg-type]
+    again = started_shell(FakePage(), store=store)  # type: ignore[arg-type]
     assert not again.sounds.enabled  # lembrado na próxima vez
     again.sounds.toggle()
     assert store.load().sound and again.sounds.history == ["virar"]
