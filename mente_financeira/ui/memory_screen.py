@@ -22,6 +22,7 @@ from mente_financeira.ui.whiteboard import Whiteboard
 COLUMNS = 4
 MISMATCH_DELAY_SECONDS = 0.9
 RESULT_DELAY_SECONDS = 0.6
+SCROLL_DELAY_SECONDS = 0.6
 FLIP_MS = 260
 CONCEPT_PANEL_MIN_WIDTH = 420
 COMPACT_TIP_HEIGHT = 150
@@ -810,16 +811,28 @@ class MemoryScreen:
                 horizontal_alignment=ft.CrossAxisAlignment.STRETCH,
             )
 
-        # Tela inteira, com fundo próprio (o tabuleiro fica escondido).
+        # Tela inteira, com fundo próprio (o tabuleiro fica escondido). Rola
+        # quando não cabe: no celular, a correção empurra as alternativas e o
+        # botão de seguir para baixo da tela.
+        self.overlay_scroll = ft.Column(
+            [
+                ft.Container(
+                    padding=ft.Padding.symmetric(horizontal=14, vertical=14) if compact else 32,
+                    content=ft.Container(content=body, width=None if compact else 1180),
+                )
+            ],
+            scroll=ft.ScrollMode.AUTO,
+            expand=True,
+            alignment=ft.MainAxisAlignment.CENTER,
+            horizontal_alignment=ft.CrossAxisAlignment.STRETCH if compact else ft.CrossAxisAlignment.CENTER,
+        )
         self.overlay.content = ft.Container(
             gradient=ft.LinearGradient(
                 begin=ft.Alignment.TOP_LEFT,
                 end=ft.Alignment.BOTTOM_RIGHT,
                 colors=["#12082E", "#2A0E61", "#4A0C6E"],
             ),
-            padding=ft.Padding.symmetric(horizontal=14, vertical=14) if compact else 32,
-            alignment=ft.Alignment.CENTER,
-            content=ft.Container(content=body, width=None if compact else 1180),
+            content=self.overlay_scroll,
         )
         self.overlay.visible = True
         self._apply_challenge_state()
@@ -918,6 +931,14 @@ class MemoryScreen:
             self.sounds.play("erro")
         self._apply_challenge_state()
         self.page.update()
+        if self.compact:
+            # No celular o botão de seguir aparece lá embaixo: rola até ele.
+            self.page.run_task(self._scroll_to_continue)
+
+    async def _scroll_to_continue(self) -> None:
+        await asyncio.sleep(SCROLL_DELAY_SECONDS)  # espera a correção "pular" e ocupar seu espaço
+        if self.challenge is not None:
+            await self.overlay_scroll.scroll_to(offset=-1, duration=450)
 
     def _toggle_challenge_board(self, _: Any = None) -> None:
         self.challenge_board_visible = not self.challenge_board_visible
