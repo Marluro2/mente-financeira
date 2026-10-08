@@ -272,6 +272,18 @@ def test_wrong_answer_shows_solution_and_passes_turn(shell: GameShell) -> None:
     assert screen.game.scores == [1, 0]
 
 
+def test_challenge_scrolls_when_it_does_not_fit(shell: GameShell) -> None:
+    screen = _duel(shell)
+    page: FakePage = shell.page  # type: ignore[assignment]
+    _find_pair(screen)
+    assert screen.overlay.content.content is screen.overlay_scroll
+    assert screen.overlay_scroll.scroll == ft.ScrollMode.AUTO and screen.overlay_scroll.expand
+    _choose(screen, correct=False)
+    # No celular, a tela rola sozinha até o botão de seguir, que fica embaixo.
+    scrolls = [task for task in page.tasks if task[0] == screen._scroll_to_continue]
+    assert len(scrolls) == (1 if screen.compact else 0)
+
+
 def test_challenge_covers_the_whole_screen(shell: GameShell) -> None:
     screen = _duel(shell)
     _find_pair(screen)
