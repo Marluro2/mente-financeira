@@ -43,7 +43,7 @@ TRACKS: tuple[TrackOption, ...] = (
         "Dinheiro, troco, compras e primeiras economias",
         ft.Icons.TOYS_ROUNDED,
         (s.YELLOW, s.ORANGE),
-        available=False,
+        available=True,
     ),
     TrackOption(
         FUNDAMENTAL,

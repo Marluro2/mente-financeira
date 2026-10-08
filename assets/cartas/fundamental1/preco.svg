@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Preço: etiqueta para comparar -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#A79BFF"/>
+      <stop offset="1" stop-color="#4331D6"/>
+    </linearGradient>
+    <clipPath id="clip"><rect width="200" height="200" rx="36"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+  <rect width="200" height="200" rx="36" fill="url(#bg)"/>
+  <circle cx="170" cy="32" r="48" fill="#FFFFFF" opacity="0.14"/>
+  <g transform="rotate(-20 100 100)">
+    <path d="M46 70 h82 l34 30 l-34 30 h-82 a10 10 0 0 1 -10 -10 v-40 a10 10 0 0 1 10 -10 Z" fill="#FFFFFF" stroke="#2B2D42" stroke-width="5" stroke-linejoin="round"/>
+    <circle cx="136" cy="100" r="7" fill="#4331D6" stroke="#2B2D42" stroke-width="3"/>
+    <rect x="54" y="88" width="56" height="9" rx="4" fill="#FF3D8B"/>
+    <rect x="54" y="104" width="38" height="9" rx="4" fill="#A79BFF"/>
+  </g>
+  <path d="M150 74 C168 60 176 40 166 28" fill="none" stroke="#2B2D42" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="60" cy="158" r="18" fill="#FFD23F" stroke="#C98A00" stroke-width="3"/>
+  <circle cx="60" cy="158" r="9.9" fill="none" stroke="#C98A00" stroke-width="2.5"/>
+  </g>
+</svg>

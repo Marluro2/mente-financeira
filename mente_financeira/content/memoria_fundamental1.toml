@@ -1,0 +1,109 @@
+# Baralho do jogo da memória do Ensino Fundamental 1 (7 a 10 anos)
+#
+# Mesmo formato de memoria.toml (Ensino Fundamental 2): cada [[concepts]]
+# vira um par de cartas iguais e, a cada partida, são sorteados `pairs`
+# conceitos. Textos curtos, valores pequenos e inteiros, só soma e subtração.
+#
+# - image: arquivo em assets/cartas/fundamental1/ (SVG de 200 × 200)
+# - color: cor de destaque usada na moldura e no painel "Você sabia?"
+# - tip:     curiosidade exibida quando o par é encontrado
+# - example: situação do dia a dia com números ("Na prática")
+
+pairs = 8
+back_image = "cartas/verso.svg"
+
+[[concepts]]
+id = "dinheiro"
+name = "Dinheiro"
+image = "cartas/fundamental1/dinheiro.svg"
+color = "#1FA45C"
+tip = "Moedas e notas servem para trocar por coisas. Antigamente as pessoas trocavam objetos, como um saco de feijão por uma galinha."
+example = "Uma nota de R$ 10 vale o mesmo que duas notas de R$ 5."
+
+[[concepts]]
+id = "necessidade"
+name = "Necessidade"
+image = "cartas/fundamental1/necessidade.svg"
+color = "#FF7A1A"
+tip = "Necessidade é o que a gente precisa para viver bem: comida, água, casa, escola e remédio."
+example = "Lucas tem R$ 10. Ele compra o caderno da escola de R$ 8 e deixa o adesivo de R$ 5 para depois, porque não dá para levar os dois."
+
+[[concepts]]
+id = "desejo"
+name = "Desejo"
+image = "cartas/fundamental1/desejo.svg"
+color = "#E4336F"
+tip = "Desejo é algo que a gente quer, mas pode esperar. Não é errado querer, só precisa caber no dinheiro."
+example = "Pedro quer um boné de R$ 30. Ele espera e junta o dinheiro antes."
+
+[[concepts]]
+id = "cofrinho"
+name = "Cofrinho"
+image = "cartas/poupanca.svg"
+color = "#FF3D8B"
+tip = "Guardar um pouco de cada vez faz o dinheiro crescer no cofrinho."
+example = "Guardando R$ 2 por semana, em 5 semanas Lia tem R$ 10."
+
+[[concepts]]
+id = "troco"
+name = "Troco"
+image = "cartas/fundamental1/troco.svg"
+color = "#F2A900"
+tip = "Troco é o dinheiro que volta quando você paga com mais do que o preço. Sempre confira!"
+example = "O suco custa R$ 3. Você paga com R$ 5 e recebe R$ 2 de troco."
+
+[[concepts]]
+id = "esperar"
+name = "Esperar vale a pena"
+image = "cartas/fundamental1/esperar.svg"
+color = "#7B1FD6"
+tip = "Às vezes, esperar um pouco deixa você comprar algo melhor ou mais barato."
+example = "Hoje dá para comprar 1 figurinha de R$ 2. Esperando uma semana, dá para comprar um pacote de R$ 6."
+
+[[concepts]]
+id = "tres_potes"
+name = "Guardar, gastar e doar"
+image = "cartas/fundamental1/tres_potes.svg"
+color = "#1459D9"
+tip = "Dá para dividir a mesada em três potes: um para guardar, um para gastar e um para ajudar alguém."
+example = "Com R$ 10: R$ 5 para guardar, R$ 4 para gastar e R$ 1 para doar."
+
+[[concepts]]
+id = "orcamento"
+name = "Orçamento"
+image = "cartas/orcamento.svg"
+color = "#0B9486"
+tip = "Orçamento é planejar antes de gastar: quanto tenho e no que vou usar."
+example = "Com R$ 8 no passeio: R$ 5 para o lanche e R$ 3 para a pipoca. Sobra R$ 0."
+
+[[concepts]]
+id = "objetivo"
+name = "Objetivo"
+image = "cartas/meta.svg"
+color = "#D62839"
+tip = "Um objetivo é saber para que você está guardando. Fica mais fácil não gastar à toa."
+example = "Bia quer uma bola de R$ 24. Guardando R$ 4 por semana, compra em 6 semanas."
+
+[[concepts]]
+id = "preco"
+name = "Preço"
+image = "cartas/fundamental1/preco.svg"
+color = "#4331D6"
+tip = "O mesmo produto pode ter preços diferentes em lojas diferentes. Comparar ajuda a economizar."
+example = "O lápis custa R$ 4 numa loja e R$ 3 na outra. Comprando na segunda, sobra R$ 1."
+
+[[concepts]]
+id = "trabalho"
+name = "Trabalho"
+image = "cartas/fundamental1/trabalho.svg"
+color = "#3F4460"
+tip = "O dinheiro da família vem do trabalho de alguém. Por isso vale cuidar bem dele."
+example = "A mãe da Ana trabalha 8 horas por dia para pagar as contas da casa."
+
+[[concepts]]
+id = "cuidar"
+name = "Cuidar das coisas"
+image = "cartas/fundamental1/cuidar.svg"
+color = "#00798C"
+tip = "Cuidar do que já temos é uma forma de economizar, porque não precisamos comprar de novo."
+example = "Guardar o estojo direitinho evita comprar canetas novas de R$ 12."

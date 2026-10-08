@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Guardar, gastar e doar: três potes -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8EB8FF"/>
+      <stop offset="1" stop-color="#1459D9"/>
+    </linearGradient>
+    <clipPath id="clip"><rect width="200" height="200" rx="36"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+  <rect width="200" height="200" rx="36" fill="url(#bg)"/>
+  <circle cx="170" cy="32" r="48" fill="#FFFFFF" opacity="0.14"/>
+  <rect x="20" y="70" width="48" height="90" rx="12" fill="#FFFFFF" fill-opacity="0.85" stroke="#2B2D42" stroke-width="4"/>
+  <rect x="17" y="60" width="54" height="16" rx="6" fill="#2EE59D" stroke="#2B2D42" stroke-width="4"/>
+  <rect x="28" y="96" width="32" height="22" rx="5" fill="#2EE59D"/>
+  <rect x="76" y="70" width="48" height="90" rx="12" fill="#FFFFFF" fill-opacity="0.85" stroke="#2B2D42" stroke-width="4"/>
+  <rect x="73" y="60" width="54" height="16" rx="6" fill="#FFD23F" stroke="#2B2D42" stroke-width="4"/>
+  <rect x="84" y="96" width="32" height="22" rx="5" fill="#FFD23F"/>
+  <rect x="132" y="70" width="48" height="90" rx="12" fill="#FFFFFF" fill-opacity="0.85" stroke="#2B2D42" stroke-width="4"/>
+  <rect x="129" y="60" width="54" height="16" rx="6" fill="#FF3D8B" stroke="#2B2D42" stroke-width="4"/>
+  <rect x="140" y="96" width="32" height="22" rx="5" fill="#FF3D8B"/>
+  <circle cx="44" cy="142" r="10" fill="#FFD23F" stroke="#C98A00" stroke-width="3"/>
+  <circle cx="44" cy="142" r="5.5" fill="none" stroke="#C98A00" stroke-width="2.5"/>
+  <circle cx="100" cy="142" r="10" fill="#FFD23F" stroke="#C98A00" stroke-width="3"/>
+  <circle cx="100" cy="142" r="5.5" fill="none" stroke="#C98A00" stroke-width="2.5"/>
+  <circle cx="156" cy="142" r="10" fill="#FFD23F" stroke="#C98A00" stroke-width="3"/>
+  <circle cx="156" cy="142" r="5.5" fill="none" stroke="#C98A00" stroke-width="2.5"/>
+  <path d="M156 112 C150 105 140 109 144 100 C147 95 154 96 156 102 C158 96 165 95 168 100 C172 109 162 105 156 112 Z" fill="#FFFFFF"/>
+  </g>
+</svg>
