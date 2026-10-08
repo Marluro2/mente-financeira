@@ -45,8 +45,6 @@ ORBS = (
 
 HOVER_SCALE = 1.03
 
-# Cartas exibidas em leque na abertura: (id do conceito, ângulo em graus).
-FAN = (("poupanca", -14), ("investimento", 0), ("cartao_credito", 14))
 
 
 class HomeScreen:
@@ -71,7 +69,6 @@ class HomeScreen:
         self.generation = 0
         self.floaters: list[ft.Container] = []
         self.orbs: list[ft.Container] = []
-        self.fan_cards: list[ft.Container] = []
         self.play_button: ft.Container | None = None
         self.name_1 = ft.TextField()
         self.name_2 = ft.TextField()
@@ -97,7 +94,7 @@ class HomeScreen:
             self.show()
 
     async def _float_loop(self, generation: int) -> None:
-        """Dá vida à abertura: ícones flutuam, luzes derivam, cartas balançam e o botão pulsa."""
+        """Dá vida à abertura: ícones flutuam, luzes derivam e o botão pulsa."""
 
         up = True
         while generation == self.generation:
@@ -108,11 +105,6 @@ class HomeScreen:
             for index, orb in enumerate(self.orbs):
                 direction = 1 if (index % 2 == 0) == up else -1
                 orb.offset = ft.Offset(0.08 * direction, 0.06 * direction)
-            for position, card in enumerate(self.fan_cards):
-                sway = 3 if up else -3
-                card.rotate = ft.Rotate(math.radians(card.data + sway))
-                if position == 1:  # a carta do meio sobe e desce
-                    card.offset = ft.Offset(0, -0.06 if up else 0)
             if self.play_button is not None:
                 self.play_button.scale = 1.04 if up else 1.0
             up = not up
@@ -154,7 +146,7 @@ class HomeScreen:
             )
             for color, x, y, diameter in ORBS
         ]
-        content = self._compact_content() if self.compact else self._wide_content()
+        content = self._panel_content()
         return ft.SafeArea(
             expand=True,
             content=ft.Container(
@@ -177,68 +169,50 @@ class HomeScreen:
                                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                             ),
                         ),
+                        *self._back_button(),
                     ],
                     expand=True,
                 ),
             ),
         )
 
-    def _compact_content(self) -> ft.Control:
+    def _panel_content(self) -> ft.Control:
+        """Painel central de vidro: título, escolha de modo, nome e botão de jogar."""
+
         items: list[ft.Control] = [
-            self._badge(),
-            self._fan(card=92),
             self._title(),
-            self._tagline(),
+            ft.Text(
+                "Como você quer jogar?",
+                size=20 if self.compact else 24,
+                weight=ft.FontWeight.W_900,
+                color=s.WHITE,
+                text_align=ft.TextAlign.CENTER,
+            ),
             self._mode_picker(),
             self._names(),
-            self._play_button(),
-            self._footer(),
+            self._play_button(height=58 if self.compact or self.short else 66),
         ]
         if self.on_admin:
             items.insert(0, self._admin_banner())
-            items.insert(-1, self._admin_card())
+            items.append(self._admin_card())
+        panel = ft.Container(
+            width=None if self.compact else 600,
+            padding=ft.Padding.symmetric(horizontal=12, vertical=24) if self.compact else (24 if self.short else 32),
+            border_radius=28 if self.compact else 32,
+            bgcolor=ft.Colors.with_opacity(0.10, s.WHITE),
+            border=ft.Border.all(1.5, ft.Colors.with_opacity(0.35, s.CYAN)),
+            shadow=ft.BoxShadow(blur_radius=60, color=ft.Colors.with_opacity(0.35, "#6C63FF")),
+            content=ft.Column(
+                items,
+                spacing=14 if self.compact or self.short else 18,
+                horizontal_alignment=ft.CrossAxisAlignment.STRETCH,
+            ),
+        )
+        # Espaço no topo para o botão "Trilhas", que fica no canto da tela.
+        top = 64 if self.on_tracks is not None else 16
         return ft.Container(
-            padding=ft.Padding.symmetric(horizontal=18, vertical=22),
-            content=ft.Column(items, spacing=18, horizontal_alignment=ft.CrossAxisAlignment.STRETCH),
-        )
-
-    def _wide_content(self) -> ft.Control:
-        left = ft.Column(
-            [
-                self._badge(),
-                self._title(),
-                self._tagline(),
-                self._mode_picker(),
-                self._names(),
-                self._play_button(height=54 if self.short else 62),
-            ],
-            spacing=12 if self.short else 20,
-            width=470,
-        )
-        right_items: list[ft.Control] = [self._fan(card=130 if self.short else 150), self._footer()]
-        if self.on_admin:
-            right_items.insert(1, self._admin_card())
-        right = ft.Column(
-            right_items,
-            spacing=26,
-            width=400,
-            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-        )
-        row = ft.Row(
-            [left, right],
-            spacing=56,
-            alignment=ft.MainAxisAlignment.CENTER,
-            vertical_alignment=ft.CrossAxisAlignment.CENTER,
-        )
-        content: ft.Control = row
-        if self.on_admin:
-            content = ft.Column(
-                [ft.Container(self._admin_banner(), width=470 + 56 + 400), row],
-                spacing=20,
-                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-            )
-        return ft.Container(
-            padding=ft.Padding.symmetric(horizontal=32, vertical=10 if self.short else 28), content=content
+            padding=ft.Padding.only(left=12, right=12, top=top, bottom=16) if self.compact else ft.Padding.symmetric(horizontal=32, vertical=top),
+            content=panel,
         )
 
     def _admin_banner(self) -> ft.Control:
@@ -278,27 +252,28 @@ class HomeScreen:
         )
 
     # ------------------------------------------------------------ peças
-    def _badge(self) -> ft.Control:
+    def _back_button(self) -> list[ft.Control]:
+        """Botão "Trilhas", grande, no canto superior esquerdo (só dentro de uma trilha)."""
+
         if self.on_tracks is None:
-            label = "PROJETO IFSP • EDUCAÇÃO FINANCEIRA"
-            controls: list[ft.Control] = []
-        else:
-            # Dentro de uma trilha: botão para voltar à escolha das trilhas.
-            label = "TRILHA • ENSINO FUNDAMENTAL"
-            controls = [
-                ft.TextButton(
+            return []
+        return [
+            ft.Container(
+                left=8,
+                top=8,
+                content=ft.TextButton(
                     "Trilhas",
                     icon=ft.Icons.ARROW_BACK_ROUNDED,
                     on_click=self._back_to_tracks,
-                    style=ft.ButtonStyle(color=s.CYAN),
-                )
-            ]
-        controls.append(s.chip(label, icon=ft.Icons.AUTO_AWESOME, color=s.YELLOW, size=11))
-        return ft.Row(
-            controls,
-            spacing=8,
-            alignment=ft.MainAxisAlignment.CENTER if self.compact else ft.MainAxisAlignment.START,
-        )
+                    style=ft.ButtonStyle(
+                        color=s.CYAN,
+                        icon_size=30 if self.compact else 36,
+                        text_style=ft.TextStyle(size=22 if self.compact else 28, weight=ft.FontWeight.W_900),
+                        padding=ft.Padding.symmetric(horizontal=14, vertical=10),
+                    ),
+                ),
+            )
+        ]
 
     def _back_to_tracks(self, _: Any = None) -> None:
         self.stop()
@@ -307,7 +282,7 @@ class HomeScreen:
 
     def _title(self) -> ft.Control:
         big, small = (50, 34) if self.compact else ((62, 40) if self.short else (78, 50))
-        align = ft.CrossAxisAlignment.CENTER if self.compact else ft.CrossAxisAlignment.START
+        align = ft.CrossAxisAlignment.CENTER
         return ft.Column(
             [
                 s.gradient_text("MENTE", big, [s.YELLOW, s.ORANGE, s.PINK]),
@@ -315,57 +290,6 @@ class HomeScreen:
             ],
             spacing=0,
             horizontal_alignment=align,
-        )
-
-    def _tagline(self) -> ft.Control:
-        return ft.Text(
-            "Vire as cartas, forme os pares e descubra os segredos do dinheiro.",
-            size=16 if self.compact else 19,
-            color=s.MUTED,
-            text_align=ft.TextAlign.CENTER if self.compact else ft.TextAlign.START,
-        )
-
-    def _fan(self, *, card: float) -> ft.Control:
-        concepts = {concept.id: concept for concept in self.deck.concepts}
-        width = card * 2.3
-        motion = ft.Animation(int(FLOAT_PERIOD_SECONDS * 1000), ft.AnimationCurve.EASE_IN_OUT)
-        # Halo de luz atrás do leque.
-        items: list[ft.Control] = [
-            ft.Container(
-                left=0,
-                top=0,
-                width=width,
-                height=card * 1.25,
-                gradient=ft.RadialGradient(
-                    colors=[ft.Colors.with_opacity(0.45, s.PINK), ft.Colors.with_opacity(0, s.PINK)],
-                ),
-            )
-        ]
-        self.fan_cards = []
-        for position, (concept_id, degrees) in enumerate(FAN):
-            concept = concepts.get(concept_id)
-            if concept is None:
-                continue
-            fan_card = ft.Container(
-                data=degrees,  # ângulo de repouso, usado pela animação de balanço
-                left=(width - card) / 2 + (position - 1) * card * 0.62,
-                top=card * 0.12 if position != 1 else 0,
-                width=card,
-                height=card,
-                rotate=ft.Rotate(math.radians(degrees)),
-                offset=ft.Offset(0, 0),
-                animate_rotation=motion,
-                animate_offset=motion,
-                border_radius=card * 0.18,
-                clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
-                shadow=ft.BoxShadow(blur_radius=28, color="#80000000", offset=ft.Offset(0, 12)),
-                content=ft.Image(src=concept.image, fit=ft.BoxFit.COVER, semantics_label=concept.name),
-            )
-            self.fan_cards.append(fan_card)
-            items.append(fan_card)
-        return ft.Row(
-            [ft.Stack(items, width=width, height=card * 1.25)],
-            alignment=ft.MainAxisAlignment.CENTER,
         )
 
     def _mode_tile(self, mode: Mode, icon: ft.IconData, title: str, subtitle: str) -> ft.Container:
@@ -454,20 +378,6 @@ class HomeScreen:
         if self.compact:
             return ft.Column([self.name_1, self.name_2], spacing=10)
         return ft.Row([self.name_1, self.name_2], spacing=12)
-
-    def _footer(self) -> ft.Control:
-        total = len(self.deck.concepts)
-        return ft.Row(
-            [
-                s.chip(f"{self.deck.pairs * 2} cartas", icon=ft.Icons.STYLE_ROUNDED, color=s.PINK, size=11),
-                s.chip(f"{total} conceitos", icon=ft.Icons.LIGHTBULB_ROUNDED, color=s.YELLOW, size=11),
-                s.chip("1 ou 2 jogadores", icon=ft.Icons.SPORTS_ESPORTS_ROUNDED, color=s.CYAN, size=11),
-            ],
-            spacing=8,
-            run_spacing=8,
-            wrap=True,
-            alignment=ft.MainAxisAlignment.CENTER,
-        )
 
     # ------------------------------------------------------------ animações
     def _floater(
