@@ -42,6 +42,7 @@ exclude = [
     "docs",
     "ferramentas",
     "registros",
+    "sugestoes",
     "mente_financeira_flet.egg-info",
     "iniciar_janela_app.py",
     "criar_atalhos.ps1",

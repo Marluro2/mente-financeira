@@ -14,6 +14,7 @@ from mente_financeira.core.coin_challenge import COIN_KIT
 from mente_financeira.core.memory_game import MemoryGame, Mode
 from mente_financeira.core.percent_challenge import PERCENT_KIT
 from mente_financeira.storage import SettingsStore
+from mente_financeira import sugestoes
 from mente_financeira.ui.admin_screen import AdminScreen
 from mente_financeira.ui.app import DEFAULT_TRACK, MemoryFinanceApp
 from mente_financeira.ui.home import HomeScreen
@@ -79,9 +80,20 @@ class GameShell:
     def show_tracks(self) -> None:
         """Página inicial: escolha da trilha (Fundamental 1 e 2, Médio, Engenharia)."""
 
-        tracks = TracksScreen(self.page, load_memory_deck(), on_select=self.open_track, rng=self.rng)
+        tracks = TracksScreen(
+            self.page,
+            load_memory_deck(),
+            on_select=self.open_track,
+            rng=self.rng,
+            on_suggest=self.open_suggestion_form if sugestoes.FORM_URL else None,
+        )
         self._activate(tracks)
         tracks.show()
+
+    def open_suggestion_form(self) -> None:
+        """Abre o Formulário Google de sugestões em outra aba."""
+
+        self.page.run_task(self.page.launch_url, sugestoes.FORM_URL)
 
     def open_track(self, key: str) -> None:
         # Por enquanto só os Ensinos Fundamentais 1 e 2 estão disponíveis; as

@@ -19,10 +19,12 @@ import flet as ft
 from mente_financeira.content.memory_deck import load_memory_deck
 from mente_financeira.sala.salas import NICKNAME_MAX, Lobby, Match, NicknameError, Room, RoomError, normalize_code
 from mente_financeira.storage import Settings, SettingsStore
+from mente_financeira.sugestoes import Suggestion
 from mente_financeira.ui import style as s
 from mente_financeira.ui.memory_screen import MemoryScreen
 from mente_financeira.ui.shell import MEMORY_TRACKS
 from mente_financeira.ui.sounds import SoundEffects
+from mente_financeira.ui.suggestion_form import SuggestionForm, suggestion_button
 from mente_financeira.ui.tracks import FUNDAMENTAL, TRACKS
 
 ROOM_TRACKS = tuple(t for t in TRACKS if t.key in MEMORY_TRACKS)
@@ -104,8 +106,18 @@ class Seat:
 
 
 class RoomApp:
-    def __init__(self, page: ft.Page, lobby: Lobby, messenger: Messenger, *, player_id: str, code: str | None = None) -> None:
+    def __init__(
+        self,
+        page: ft.Page,
+        lobby: Lobby,
+        messenger: Messenger,
+        *,
+        player_id: str,
+        code: str | None = None,
+        on_suggestion: Callable[[Suggestion], None] | None = None,
+    ) -> None:
         self.page = page
+        self.on_suggestion = on_suggestion  # guarda a sugestão no notebook
         self.lobby = lobby
         self.messenger = messenger
         self.player_id = player_id
@@ -368,8 +380,18 @@ class RoomApp:
                     color=s.MUTED,
                     text_align=ft.TextAlign.CENTER,
                 ),
+                *self._suggestion_row(),
             ]
         )
+
+    def _suggestion_row(self) -> list[ft.Control]:
+        if self.on_suggestion is None:
+            return []
+        return [ft.Row([suggestion_button(self._open_suggestion)], alignment=ft.MainAxisAlignment.CENTER)]
+
+    def _open_suggestion(self, _: Any = None) -> None:
+        if self.on_suggestion is not None:
+            SuggestionForm(self.page, self.on_suggestion).open()
 
     def _waiting_panel(self, room: Room) -> ft.Control:
         track = next(t for t in ROOM_TRACKS if t.key == room.track)
@@ -404,7 +426,7 @@ class RoomApp:
         )
 
 
-def make_main(lobby: Lobby) -> Callable[[ft.Page], None]:
+def make_main(lobby: Lobby, on_suggestion: Callable[[Suggestion], None] | None = None) -> Callable[[ft.Page], None]:
     """Ponto de entrada de cada celular no servidor, todos com as mesmas salas."""
 
     def main(page: ft.Page) -> None:
@@ -413,7 +435,7 @@ def make_main(lobby: Lobby) -> Callable[[ft.Page], None]:
             code = normalize_code(raw) if raw else None
         except RoomError:
             code = None
-        app = RoomApp(page, lobby, PubSubMessenger(page), player_id=page.session.id, code=code)
+        app = RoomApp(page, lobby, PubSubMessenger(page), player_id=page.session.id, code=code, on_suggestion=on_suggestion)
         page.on_close = app.close
 
     return main

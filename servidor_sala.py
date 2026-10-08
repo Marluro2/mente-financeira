@@ -27,10 +27,13 @@ import segno
 
 from mente_financeira.sala.app import make_main, new_lobby
 from mente_financeira.sala.salas import RoomError, normalize_code
+from mente_financeira.sugestoes import SuggestionBox
 
 ROOT = Path(__file__).resolve().parent
 ASSETS_DIR = ROOT / "assets"
 EMOJI_FONT = ASSETS_DIR / "fontes" / "emoji.woff2"
+# Sugestões deixadas na feira (anônimas). Abre no Excel.
+SUGGESTIONS_FILE = ROOT / "sugestoes" / "sugestoes.csv"
 PORT = int(os.getenv("PORT", "8000"))
 SESSION_TIMEOUT_SECONDS = 30  # quem fecha a página sai da sala depois disso
 LOCAL_HOSTS = ("localhost", "127.0.0.1", "::1")
@@ -55,8 +58,9 @@ def qr_png(text: str) -> Response:
     return Response(buffer.getvalue(), media_type="image/png", headers={"Cache-Control": "no-store"})
 
 
-def create_app(lan_url: str | None = None) -> FastAPI:
+def create_app(lan_url: str | None = None, suggestions: SuggestionBox | None = None) -> FastAPI:
     lobby = new_lobby()
+    suggestions = suggestions or SuggestionBox(SUGGESTIONS_FILE)
     lan_url = lan_url or f"http://{lan_address()}:{PORT}"
     server = FastAPI(title="Mente Financeira em sala", docs_url=None, redoc_url=None, openapi_url=None)
 
@@ -94,7 +98,7 @@ def create_app(lan_url: str | None = None) -> FastAPI:
     server.mount(
         "/",
         flet_fastapi.app(
-            make_main(lobby),
+            make_main(lobby, suggestions.save),
             assets_dir=str(ASSETS_DIR),
             app_name="Mente Financeira",
             no_cdn=True,  # sem internet: o Flet usa só os arquivos instalados
@@ -142,6 +146,7 @@ def main() -> None:
     print(" Mente Financeira • Duelo em sala")
     print(f" Celulares (mesmo Wi-Fi): {lan_url}")
     print(f" Cartaz com QR code:      http://localhost:{PORT}/mesa")
+    print(f" Sugestões ficam em:     {SUGGESTIONS_FILE}")
     print(" Para encerrar, feche esta janela.")
     print("=" * 60)
     if os.getenv("MENTE_FINANCEIRA_SEM_NAVEGADOR") != "1":
