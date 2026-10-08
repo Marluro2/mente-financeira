@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import asyncio
 from collections.abc import Callable
-from typing import Any
+from typing import Any, Protocol
 
 import flet as ft
 
@@ -27,6 +27,15 @@ CONCEPT_PANEL_MIN_WIDTH = 420
 COMPACT_TIP_HEIGHT = 150
 
 
+class OnlineSeat(Protocol):
+    """Lugar desta tela numa partida online (o jogo é compartilhado)."""
+
+    seat: int  # 0 ou 1: qual jogador da partida está nesta tela
+
+    def changed(self) -> None:
+        """Avisa a tela do adversário que o jogo mudou."""
+
+
 class MemoryScreen:
     def __init__(
         self,
@@ -37,10 +46,16 @@ class MemoryScreen:
         on_level2: Callable[[], None],
         sounds: SoundEffects | None = None,
         challenges: ChallengeKit = PERCENT_KIT,
+        online: OnlineSeat | None = None,
     ) -> None:
         self.page = page
         self.game = game
         self.challenges = challenges  # Desafio Relâmpago do Duelo, conforme a trilha
+        # Partida online: cada jogador tem a sua tela, com o mesmo jogo.
+        self.online = online
+        self.seen_learned = len(game.learned)
+        self.seen_turn = game.turn
+        self.result_shown = False
         self.on_home = on_home
         self.on_level2 = on_level2
         self.sounds = sounds or SoundEffects(page, SettingsStore())
@@ -86,7 +101,8 @@ class MemoryScreen:
         self.page.add(self.build())
         self.page.update()
         self.generation += 1
-        if not self.admin:
+        # Online, só a tela do primeiro jogador conta o tempo (o jogo é um só).
+        if not self.admin and (self.online is None or self.online.seat == 0):
             self.page.run_task(self._clock, self.generation)
 
     def stop(self) -> None:
@@ -182,6 +198,12 @@ class MemoryScreen:
 
     def _top_bar(self) -> ft.Control:
         mode_text = "Modo Solo" if self.game.mode is Mode.SOLO else "Modo Duelo"
+        if self.online is not None:
+            mode_text = "Duelo online"
+        # Online não há "nova partida": os dois precisariam concordar.
+        restart = [] if self.online is not None else [
+            ft.IconButton(ft.Icons.REPLAY_ROUNDED, icon_color=s.WHITE, tooltip="Nova partida", on_click=self._restart)
+        ]
         title = ft.Row(
             [
                 ft.IconButton(ft.Icons.HOME_ROUNDED, icon_color=s.WHITE, tooltip="Início", on_click=self._confirm_home),
@@ -194,7 +216,7 @@ class MemoryScreen:
                     expand=True,
                 ),
                 self.sounds.button(s.WHITE),
-                ft.IconButton(ft.Icons.REPLAY_ROUNDED, icon_color=s.WHITE, tooltip="Nova partida", on_click=self._restart),
+                *restart,
             ],
             spacing=6,
         )
@@ -562,12 +584,18 @@ class MemoryScreen:
     # ------------------------------------------------------------ jogada
     async def _on_card_click(self, event: Any) -> None:
         index = event.control.data
+        if self.online is not None and self.game.turn != self.online.seat:
+            if self.game.active:
+                self._snack(f"Espere: agora é a vez de {self.game.current_player}.")
+                self.page.update()
+            return
         result = self.game.flip(index)
         if result is Flip.IGNORED:
             return
         self.sounds.play("virar")
         self._refresh_card(index)
         self.page.update()
+        self._notify()
         if result is Flip.OPENED:
             return
 
@@ -593,7 +621,9 @@ class MemoryScreen:
                 self._open_challenge()
         elif self.game.mode is Mode.DUEL:
             self._snack(f"Errou! Agora é a vez de {self.game.current_player}.")
+        self.seen_learned, self.seen_turn = len(self.game.learned), self.game.turn
         self.page.update()
+        self._notify()
         if self.game.is_complete:
             await asyncio.sleep(RESULT_DELAY_SECONDS)
             if generation == self.generation:
@@ -906,6 +936,50 @@ class MemoryScreen:
         self._refresh_stats()
         if not correct:
             self._snack(f"Agora é a vez de {self.game.current_player}!")
+        self.seen_turn = self.game.turn
+        self.page.update()
+        self._notify()
+
+    # ------------------------------------------------------- partida online
+    def _notify(self) -> None:
+        if self.online is not None:
+            self.online.changed()
+
+    def sync(self) -> None:
+        """Partida online: o adversário jogou. Redesenha com o estado atual."""
+
+        game = self.game
+        for index in range(len(self.cards)):
+            self._refresh_card(index)
+        self._refresh_stats()
+        if len(game.learned) != self.seen_learned:
+            self.seen_learned = len(game.learned)
+            self.last_concept = game.learned[-1] if game.learned else None
+            self.tip_switcher.content = self._tip_content(self.last_concept)
+            self._refresh_learned()
+        if game.active and not game.is_complete:
+            mine = self.online is not None and game.turn == self.online.seat
+            if game.awaiting_challenge and not mine:
+                self._snack(f"{game.current_player} está no Desafio Relâmpago...")
+            elif mine and game.turn != self.seen_turn:
+                self._snack("Sua vez! 🎯")
+        self.seen_turn = game.turn
+        self.page.update()
+        if game.is_complete and not self.result_shown:
+            self._show_result()
+            self.page.update()
+
+    def opponent_left(self, nickname: str) -> None:
+        """Partida online: o adversário fechou o jogo ou voltou para a sala."""
+
+        if self.result_shown:
+            return
+        self.stop()
+        self._dialog(
+            "Partida encerrada",
+            ft.Text(f"{nickname} saiu da partida.", color=s.WHITE),
+            [("Voltar à sala", self.on_home, True)],
+        )
         self.page.update()
 
     # ------------------------------------------------------------ diálogos
@@ -955,6 +1029,7 @@ class MemoryScreen:
         )
 
     def _show_result(self) -> None:
+        self.result_shown = True
         self.sounds.play("vitoria")
         game = self.game
         lines: list[ft.Control] = []
@@ -978,13 +1053,16 @@ class MemoryScreen:
             )
             lines.append(ft.Text(f"⚡ Desafios certos — {desafios}", size=13, color=s.YELLOW))
         lines.append(ft.Text(f"Você descobriu {game.pairs} conceitos de educação financeira. 💡", size=13, color=s.MUTED))
+        actions: list[tuple[str, Callable[[], None] | None, bool]] = [
+            ("Início", self.on_home, False),
+            ("Jogar de novo", self._new_round, True),
+        ]
+        if self.online is not None:
+            actions = [("Voltar à sala", self.on_home, True)]
         self._dialog(
             "Mandou bem! 🎉",
             ft.Column(lines, spacing=8, tight=True, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
-            [
-                ("Início", self.on_home, False),
-                ("Jogar de novo", self._new_round, True),
-            ],
+            actions,
         )
 
     def _confirm_home(self, _: Any = None) -> None:

@@ -12,6 +12,29 @@ navegador baixa o jogo (alguns segundos a mais); depois fica em cache. O site
 (veja `.github/workflows/publicar-site.yml`). O modo administrador só existe
 na versão de computador.
 
+## Modo online (duelo entre dois computadores)
+
+O site acima continua igual (Solo e Duelo no mesmo computador). O modo online
+é um servidor à parte, `servidor_online.py`, com o mesmo jogo:
+
+- **Sala de espera:** a pessoa escolhe a trilha, digita só um **apelido** e
+  espera alguém da mesma trilha. Quando chega a segunda pessoa, o Duelo começa
+  nas duas telas; cada uma joga na sua vez.
+- **Quem está online:** a página das trilhas do site mostra "🟢 N online agora"
+  em cada trilha, e a abertura ganha o botão **Jogar online com outra pessoa**.
+- **Privacidade (LGPD):** nada é gravado. Apelido e partida ficam só na memória
+  do servidor e somem quando a pessoa sai (ou 30 s depois de fechar a página).
+
+Testar no computador: `python servidor_online.py` e abrir http://localhost:8000
+em duas abas.
+
+Publicar (grátis, no Render): criar conta em https://render.com com o GitHub,
+**New > Blueprint**, escolher este repositório (o `render.yaml` já tem tudo) e
+esperar o deploy. Depois, colocar o endereço do serviço em `SERVER_URL`
+(`mente_financeira/online/status.py`): só então o site passa a mostrar o modo
+online. No plano grátis o servidor dorme sem uso e leva cerca de 1 minuto para
+acordar.
+
 ## Como jogar (Windows) — 2 cliques
 
 | Arquivo | Para quê |

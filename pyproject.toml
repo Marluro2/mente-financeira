@@ -51,6 +51,8 @@ exclude = [
     "CHANGELOG.md",
     "README.md",
     "requirements.txt",
+    "servidor_online.py",
+    "render.yaml",
 ]
 
 [tool.flet.web]

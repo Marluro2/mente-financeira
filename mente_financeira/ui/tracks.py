@@ -9,7 +9,7 @@ um conceito do jogo.
 from __future__ import annotations
 
 import asyncio
-from collections.abc import Callable
+from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
 import random
 from typing import Any
@@ -17,10 +17,12 @@ from typing import Any
 import flet as ft
 
 from mente_financeira.content.memory_deck import MemoryDeck
+from mente_financeira.online import status as online_status
 from mente_financeira.ui import style as s
 from mente_financeira.ui.layout import Layout, layout_for
 
 FLIP_PERIOD_SECONDS = 1.6
+ONLINE_POLL_SECONDS = 15  # de quanto em quanto tempo pergunta quem está online
 BOARD_COLUMNS = 4
 
 FUNDAMENTAL_1, FUNDAMENTAL, MEDIO, ENGENHARIA = "fundamental1", "fundamental", "medio", "engenharia"
@@ -80,6 +82,7 @@ class TracksScreen:
         *,
         on_select: Callable[[str], None],
         rng: random.Random | None = None,
+        fetch_online: Callable[[], Awaitable[dict[str, int] | None]] | None = None,
     ) -> None:
         self.page = page
         self.deck = deck
@@ -91,6 +94,10 @@ class TracksScreen:
         self.switchers: list[ft.AnimatedSwitcher] = []
         self.card_size = 100.0
         self.open_card: int | None = None
+        # Modo online: "🟢 3 online agora" em cada trilha (só se houver servidor).
+        self.fetch_online = fetch_online or (online_status.fetch_counts if online_status.online_enabled() else None)
+        self.online_counts: dict[str, int] | None = None
+        self.online_labels: dict[str, ft.Text] = {}
 
     # ------------------------------------------------------------ ciclo
     def show(self) -> None:
@@ -101,6 +108,8 @@ class TracksScreen:
         self.page.update()
         self.generation += 1
         self.page.run_task(self._flip_loop, self.generation)
+        if self.fetch_online is not None:
+            self.page.run_task(self._online_loop, self.generation)
 
     def stop(self) -> None:
         self.generation += 1
@@ -132,6 +141,24 @@ class TracksScreen:
                 semantics_label=concept.name,
             )
             self.page.update()
+
+    async def _online_loop(self, generation: int) -> None:
+        """Pergunta ao servidor quem está online, enquanto a página está aberta."""
+
+        while generation == self.generation and self.fetch_online is not None:
+            counts = await self.fetch_online()
+            if generation != self.generation:
+                return
+            self.online_counts = counts
+            self._refresh_online()
+            self.page.update()
+            await asyncio.sleep(ONLINE_POLL_SECONDS)
+
+    def _refresh_online(self) -> None:
+        for key, label in self.online_labels.items():
+            count = (self.online_counts or {}).get(key)
+            label.visible = count is not None
+            label.value = f"🟢 {count} online agora" if count else "⚪ Ninguém online agora"
 
     # ------------------------------------------------------------ desenho
     @property
@@ -245,6 +272,7 @@ class TracksScreen:
                         [
                             ft.Text(track.title, size=18 if self.compact else 21, weight=ft.FontWeight.W_900, color=text_color),
                             ft.Text(track.subtitle, size=12 if self.compact else 13, color=sub_color),
+                            *([self._online_label(track.key)] if track.available and self.fetch_online else []),
                             # No celular a etiqueta "EM BREVE" vai para baixo do texto,
                             # para o título caber numa linha.
                             *([trailing] if below else []),
@@ -258,6 +286,12 @@ class TracksScreen:
             ),
             **decoration,
         )
+
+    def _online_label(self, key: str) -> ft.Text:
+        label = ft.Text("", size=12, weight=ft.FontWeight.BOLD, color=s.WHITE, visible=False)
+        self.online_labels[key] = label
+        self._refresh_online()
+        return label
 
     def _back(self, index: int) -> ft.Image:
         return ft.Image(
