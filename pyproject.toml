@@ -14,9 +14,11 @@ dependencies = [
 [project.optional-dependencies]
 desktop = [
     "flet[web]==0.86.5",
+    "segno==1.6.6",  # QR code do Duelo em sala (servidor_sala.py)
 ]
 dev = [
     "flet[web]==0.86.5",
+    "segno==1.6.6",
     "pytest>=9.0,<10",
 ]
 
@@ -51,8 +53,8 @@ exclude = [
     "CHANGELOG.md",
     "README.md",
     "requirements.txt",
-    "servidor_online.py",
-    "render.yaml",
+    "servidor_sala.py",
+    "JOGAR_FEIRA.bat",
 ]
 
 [tool.flet.web]

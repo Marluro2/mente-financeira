@@ -13,7 +13,6 @@ from mente_financeira.content.memory_deck import MemoryDeck, load_memory_deck
 from mente_financeira.core.coin_challenge import COIN_KIT
 from mente_financeira.core.memory_game import MemoryGame, Mode
 from mente_financeira.core.percent_challenge import PERCENT_KIT
-from mente_financeira.online import status as online_status
 from mente_financeira.storage import SettingsStore
 from mente_financeira.ui.admin_screen import AdminScreen
 from mente_financeira.ui.app import DEFAULT_TRACK, MemoryFinanceApp
@@ -102,7 +101,6 @@ class GameShell:
             # O painel do professor traz as questões do Ensino Fundamental 2.
             on_admin=self.open_admin if admin_ativo() and self.track == FUNDAMENTAL else None,
             on_tracks=self.show_tracks,
-            online_url=online_status.play_url(self.track) if online_status.online_enabled() else None,
         )
         self._activate(home)
         home.show()

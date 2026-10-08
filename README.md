@@ -12,28 +12,17 @@ navegador baixa o jogo (alguns segundos a mais); depois fica em cache. O site
 (veja `.github/workflows/publicar-site.yml`). O modo administrador só existe
 na versão de computador.
 
-## Modo online (duelo entre dois computadores)
+## Duelo em sala (feira, sem internet)
 
-O site acima continua igual (Solo e Duelo no mesmo computador). O modo online
-é um servidor à parte, `servidor_online.py`, com o mesmo jogo:
+O notebook vira o servidor do jogo (`JOGAR_FEIRA.bat` ou `python servidor_sala.py`).
+Os celulares no mesmo Wi-Fi abrem o endereço do notebook. Uma pessoa cria a
+sala e recebe um código (ex.: `GATO-42`) com QR code, e a outra entra com o
+código. Tudo vem do notebook, inclusive os emojis (`assets/fontes/emoji.woff2`),
+então funciona sem internet. O cartaz com o QR code da mesa fica em
+`http://localhost:8000/mesa`. Só pedimos um apelido, e nada é gravado.
 
-- **Sala de espera:** a pessoa escolhe a trilha, digita só um **apelido** e
-  espera alguém da mesma trilha. Quando chega a segunda pessoa, o Duelo começa
-  nas duas telas; cada uma joga na sua vez.
-- **Quem está online:** a página das trilhas do site mostra "🟢 N online agora"
-  em cada trilha, e a abertura ganha o botão **Jogar online com outra pessoa**.
-- **Privacidade (LGPD):** nada é gravado. Apelido e partida ficam só na memória
-  do servidor e somem quando a pessoa sai (ou 30 s depois de fechar a página).
-
-Testar no computador: `python servidor_online.py` e abrir http://localhost:8000
-em duas abas.
-
-Publicar (grátis, no Render): criar conta em https://render.com com o GitHub,
-**New > Blueprint**, escolher este repositório (o `render.yaml` já tem tudo) e
-esperar o deploy. Depois, colocar o endereço do serviço em `SERVER_URL`
-(`mente_financeira/online/status.py`): só então o site passa a mostrar o modo
-online. No plano grátis o servidor dorme sem uso e leva cerca de 1 minuto para
-acordar.
+Passo a passo para o estande, com roteador, Firewall e IP fixo, em
+[docs/GUIA_FEIRA.md](docs/GUIA_FEIRA.md).
 
 ## Como jogar (Windows) — 2 cliques
 

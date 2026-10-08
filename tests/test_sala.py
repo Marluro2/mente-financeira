@@ -1,4 +1,4 @@
-"""Modo online: sala de espera, duelo entre duas telas e contagem por trilha."""
+"""Duelo em sala: códigos de sala, duelo entre dois celulares e servidor sem internet."""
 
 from __future__ import annotations
 
@@ -11,18 +11,17 @@ from typing import Any
 
 import flet as ft
 import pytest
+from fastapi.testclient import TestClient
 
 from fakes import FakePage, walk
 from mente_financeira.content.memory_deck import load_memory_deck
-from mente_financeira.online import status
-from mente_financeira.online.app import OnlineApp, SessionStore, new_lobby, track_from_route
-from mente_financeira.online.lobby import Lobby, NicknameError, clean_nickname
-from mente_financeira.storage import Settings, SettingsStore
+from mente_financeira.sala.app import RoomApp, SessionStore, code_from_route, new_lobby, room_qr_path
+from mente_financeira.sala.salas import ANIMALS, Lobby, NicknameError, RoomError, clean_nickname, normalize_code
+from mente_financeira.storage import Settings
 from mente_financeira.ui import memory_screen as memory_module
-from mente_financeira.ui.home import HomeScreen
 from mente_financeira.ui.memory_screen import MemoryScreen
-from mente_financeira.ui.shell import GameShell
-from mente_financeira.ui.tracks import FUNDAMENTAL, FUNDAMENTAL_1, MEDIO, TracksScreen
+from mente_financeira.ui.tracks import FUNDAMENTAL, FUNDAMENTAL_1, MEDIO
+import servidor_sala
 
 Handler = Callable[[dict[str, Any]], Awaitable[None]]
 
@@ -75,24 +74,37 @@ def _texts(page: FakePage) -> list[str]:
     return [c.value for c in walk(page.controls[-1]) if isinstance(c, ft.Text) and isinstance(c.value, str)]
 
 
-def _join(hub: FakeHub, lobby: Lobby, player_id: str, track: str | None = FUNDAMENTAL) -> OnlineApp:
-    return OnlineApp(FakePage(1280, 720), lobby, hub.messenger(player_id), player_id=player_id, track=track)  # type: ignore[arg-type]
+def _texts_of_dialogs(page: FakePage) -> list[str]:
+    return [c.value for d in page.dialogs for c in walk(d) if isinstance(c, ft.Text) and isinstance(c.value, str)]
 
 
-def _search(app: OnlineApp, hub: FakeHub, nickname: str) -> None:
+def _join(hub: FakeHub, lobby: Lobby, player_id: str, code: str | None = None) -> RoomApp:
+    return RoomApp(FakePage(390, 844), lobby, hub.messenger(player_id), player_id=player_id, code=code)  # type: ignore[arg-type]
+
+
+def _create(app: RoomApp, hub: FakeHub, nickname: str) -> str:
     app.name_field.value = nickname
-    app._search()
+    app._create()
+    hub.flush()
+    room = app.lobby.room_of(app.player_id)
+    assert room is not None
+    return room.code
+
+
+def _enter(app: RoomApp, hub: FakeHub, nickname: str, code: str) -> None:
+    app.name_field.value, app.code_field.value = nickname, code
+    app._join()
     hub.flush()
 
 
-def _pair(hub: FakeHub, lobby: Lobby) -> tuple[OnlineApp, OnlineApp]:
+def _pair(hub: FakeHub, lobby: Lobby) -> tuple[RoomApp, RoomApp]:
     ana, bia = _join(hub, lobby, "a"), _join(hub, lobby, "b")
-    _search(ana, hub, "Ana")
-    _search(bia, hub, "Bia")
+    code = _create(ana, hub, "Ana")
+    _enter(bia, hub, "Bia", code)
     return ana, bia
 
 
-def _tap(app: OnlineApp, index: int) -> None:
+def _tap(app: RoomApp, index: int) -> None:
     assert app.game_screen is not None
     asyncio.run(app.game_screen._on_card_click(SimpleNamespace(control=SimpleNamespace(data=index))))
 
@@ -106,7 +118,7 @@ def _mismatch(game: Any) -> tuple[int, int]:
     return first, next(i for i, c in enumerate(game.cards) if c.id != game.cards[first].id)
 
 
-# ------------------------------------------------------------------ sala (regras)
+# ------------------------------------------------------------------ salas (regras)
 def test_nickname_is_trimmed_and_limited() -> None:
     assert clean_nickname("  Lia   Souza ") == "Lia Souza"
     for bad in ("", " a ", "x" * 17, None):
@@ -114,75 +126,96 @@ def test_nickname_is_trimmed_and_limited() -> None:
             clean_nickname(bad)
 
 
-def test_lobby_pairs_two_people_on_the_same_track_only() -> None:
+def test_codes_are_easy_to_type() -> None:
+    for raw in ("gato42", "Gato 42", "GATO-42", " gato - 42 "):
+        assert normalize_code(raw) == "GATO-42"
+    for bad in ("", "42", "GATO", "GATO-4", "GATO-421"):
+        with pytest.raises(RoomError):
+            normalize_code(bad)
+
+
+def test_create_and_join_a_room() -> None:
     lobby = _lobby()
-    assert lobby.wait("a", "Ana", FUNDAMENTAL) is None
-    assert lobby.wait("c", "Caio", FUNDAMENTAL_1) is None  # outra trilha: continua esperando
-    match = lobby.wait("b", "Bia", FUNDAMENTAL)
-    assert match is not None and [p.nickname for p in match.players] == ["Ana", "Bia"]
+    room = lobby.create_room("a", "Ana", FUNDAMENTAL_1)
+    word, number = room.code.split("-")
+    assert word in ANIMALS and 10 <= int(number) <= 99
+    match = lobby.join("b", "Bia", room.code.lower().replace("-", ""))
+    assert [p.nickname for p in match.players] == ["Ana", "Bia"] and match.track == FUNDAMENTAL_1
     assert match.game.players == ["Ana", "Bia"] and match.game.active
-    assert lobby.matches["a"] is lobby.matches["b"] is match
-    assert lobby.counts() == {FUNDAMENTAL_1: 1, FUNDAMENTAL: 2}
+    assert lobby.matches["a"] is lobby.matches["b"] is match and not lobby.rooms
+    ids = {c.id for c in load_memory_deck("memoria_fundamental1").concepts}
+    assert {c.id for c in match.game.cards} <= ids  # baralho da trilha de quem criou
+    with pytest.raises(RoomError):
+        lobby.join("c", "Caio", room.code)  # a sala já começou
     with pytest.raises(ValueError):
-        lobby.wait("d", "Duda", MEDIO)  # trilha ainda sem jogo
+        lobby.create_room("d", "Duda", MEDIO)  # trilha ainda sem jogo
+
+
+def test_wrong_code_and_own_room_are_refused() -> None:
+    lobby = _lobby()
+    room = lobby.create_room("a", "Ana", FUNDAMENTAL)
+    with pytest.raises(RoomError, match="Não achei a sala"):
+        lobby.join("b", "Bia", "ZEBRA-11" if room.code != "ZEBRA-11" else "PATO-12")
+    with pytest.raises(RoomError, match="sua"):
+        lobby.join("a", "Ana", room.code)
+
+
+def test_codes_do_not_repeat() -> None:
+    lobby = _lobby()
+    codes = {lobby.create_room(str(i), "Jogador", FUNDAMENTAL).code for i in range(200)}
+    assert len(codes) == 200
 
 
 def test_leaving_forgets_the_player() -> None:
     lobby = _lobby()
-    lobby.wait("a", "Ana", FUNDAMENTAL)
+    room = lobby.create_room("a", "Ana", FUNDAMENTAL)
     lobby.leave("a")
-    assert lobby.counts() == {FUNDAMENTAL_1: 0, FUNDAMENTAL: 0}
-    assert not lobby.waiting and not lobby.matches and not lobby.browsing
-    match = lobby.wait("b", "Bia", FUNDAMENTAL)
-    assert match is None  # a Ana já tinha saído
+    assert not lobby.rooms and not lobby.matches
+    with pytest.raises(RoomError):
+        lobby.join("b", "Bia", room.code)
 
 
-def test_tracks_use_their_own_decks() -> None:
-    lobby = _lobby()
-    lobby.wait("a", "Ana", FUNDAMENTAL_1)
-    match = lobby.wait("b", "Bia", FUNDAMENTAL_1)
-    assert match is not None
-    ids = {c.id for c in load_memory_deck("memoria_fundamental1").concepts}
-    assert {c.id for c in match.game.cards} <= ids
-
-
-# ------------------------------------------------------------------ sala (tela)
-def test_lobby_screen_asks_only_for_a_nickname_and_shows_counts() -> None:
-    hub, lobby = FakeHub(), _lobby()
-    ana = _join(hub, lobby, "a", track="qualquer")
-    assert ana.track == FUNDAMENTAL  # trilha desconhecida no endereço: usa a padrão
+# ------------------------------------------------------------------ salas (tela)
+def test_start_screen_asks_only_for_a_nickname() -> None:
+    ana = _join(FakeHub(), _lobby(), "a")
     texts = _texts(ana.page)
-    assert "Ensino Fundamental 1" in texts and "Ensino Fundamental 2" in texts
+    assert {"Criar uma sala", "Entrar numa sala", "Ensino Fundamental 1", "Ensino Fundamental 2"} <= set(texts)
     assert "Ensino Médio" not in texts
+    assert texts.index("Criar uma sala") < texts.index("Entrar numa sala")
     assert ana.name_field.label == "Seu apelido" and ana.name_field.max_length == 16
     assert any("Nada fica guardado" in t for t in texts)
-    assert ana.count_labels[FUNDAMENTAL].value == "1 pessoa online"
-
-    _join(hub, lobby, "b", track=FUNDAMENTAL)
-    hub.flush()
-    assert ana.count_labels[FUNDAMENTAL].value == "2 pessoas online"
 
 
-def test_track_from_the_site_link_is_preselected() -> None:
-    ana = _join(FakeHub(), _lobby(), "a", track=FUNDAMENTAL_1)
-    assert ana.track == FUNDAMENTAL_1 and ana.lobby.browsing == {"a": FUNDAMENTAL_1}
+def test_qr_code_link_fills_the_room_code() -> None:
+    assert code_from_route("/?sala=GATO-42") == "GATO-42" and code_from_route("/") is None
+    bia = _join(FakeHub(), _lobby(), "b", code="GATO-42")
+    texts = _texts(bia.page)
+    assert bia.code_field.value == "GATO-42"
+    assert texts.index("Entrar numa sala") < texts.index("Criar uma sala")  # entrar vem primeiro
 
 
-def test_short_nickname_shows_an_error() -> None:
+def test_waiting_screen_shows_code_and_qr() -> None:
     hub, lobby = FakeHub(), _lobby()
     ana = _join(hub, lobby, "a")
-    _search(ana, hub, "A")
-    assert ana.name_field.error and not lobby.waiting
-
-
-def test_waiting_screen_and_cancel() -> None:
-    hub, lobby = FakeHub(), _lobby()
-    ana = _join(hub, lobby, "a")
-    _search(ana, hub, "Ana")
-    assert lobby.is_waiting("a")
-    assert "Olá, Ana! Esperando alguém para jogar" in _texts(ana.page)
+    ana._choose_track(SimpleNamespace(control=SimpleNamespace(data=FUNDAMENTAL_1)))
+    code = _create(ana, hub, "Ana")
+    texts = _texts(ana.page)
+    assert code in texts and "Olá, Ana! Sua sala é:" in texts
+    images = [c.src for c in walk(ana.page.controls[-1]) if isinstance(c, ft.Image)]
+    assert room_qr_path(code) in images
+    assert lobby.room_of("a").track == FUNDAMENTAL_1
     ana._cancel()
-    assert not lobby.is_waiting("a") and ana.name_field.value == "Ana"
+    assert not lobby.rooms and ana.name_field.value == "Ana"
+
+
+def test_errors_show_on_the_fields() -> None:
+    hub, lobby = FakeHub(), _lobby()
+    ana = _join(hub, lobby, "a")
+    ana.name_field.value = "A"
+    ana._create()
+    assert ana.name_field.error and not lobby.rooms
+    _enter(ana, hub, "Ana", "LOBO-77")
+    assert "Não achei a sala LOBO-77" in ana.code_field.error and ana.game_screen is None
 
 
 # ------------------------------------------------------------------ duelo
@@ -192,7 +225,7 @@ def test_second_player_starts_the_match_on_both_screens() -> None:
     assert isinstance(ana.game_screen, MemoryScreen) and isinstance(bia.game_screen, MemoryScreen)
     assert ana.game_screen.game is bia.game_screen.game
     assert (ana.game_screen.online.seat, bia.game_screen.online.seat) == (0, 1)
-    assert "Nível 1 • Duelo online" in _texts(ana.page)
+    assert "Nível 1 • Duelo em sala" in _texts(ana.page)
     # Só a tela de quem começa conta o tempo; não há "nova partida" online.
     assert any(task[0] == ana.game_screen._clock for task in ana.page.tasks)
     assert not any(task[0] == bia.game_screen._clock for task in bia.page.tasks)
@@ -276,11 +309,9 @@ def test_opponent_leaving_ends_the_match_and_forgets_both() -> None:
     assert "Ana saiu da partida." in [c.value for c in walk(dialog) if isinstance(c, ft.Text)]
     next(b for b in dialog.actions if b.content == "Voltar à sala").on_click(None)
     hub.flush()
-    assert bia.game_screen is None and "Escolha a trilha" in _texts(bia.page)
-    assert not lobby.matches and lobby.counts()[FUNDAMENTAL] == 1  # só a Bia, na sala
+    assert bia.game_screen is None and "Criar uma sala" in _texts(bia.page)
+    assert not lobby.matches and not lobby.rooms
     assert all(owner != "a" for handlers in hub.handlers.values() for owner, _ in handlers)
-    bia.close()
-    assert lobby.counts() == {FUNDAMENTAL_1: 0, FUNDAMENTAL: 0}
 
 
 def test_sound_preference_stays_in_memory(tmp_path: Path) -> None:
@@ -290,56 +321,31 @@ def test_sound_preference_stays_in_memory(tmp_path: Path) -> None:
     assert store.load().sound is False and not store.path.exists()
 
 
-# ------------------------------------------------------------------ site
-def test_online_is_hidden_until_there_is_a_server(tmp_path: Path) -> None:
-    assert status.SERVER_URL == "" and not status.online_enabled()
-    shell = GameShell(FakePage(1280, 720), store=SettingsStore(tmp_path), rng=random.Random(2))  # type: ignore[arg-type]
-    assert shell.current.fetch_online is None and not shell.current.online_labels
-    shell.open_track(FUNDAMENTAL)
-    assert isinstance(shell.current, HomeScreen) and shell.current.online_url is None
+# ------------------------------------------------------------------ servidor sem internet
+@pytest.fixture
+def client() -> TestClient:
+    return TestClient(servidor_sala.create_app("http://192.168.0.10:8000"))
 
 
-def test_home_has_play_online_button_when_server_exists(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(status, "SERVER_URL", "https://exemplo.onrender.com/")
-    shell = GameShell(FakePage(1280, 720), store=SettingsStore(tmp_path), rng=random.Random(2))  # type: ignore[arg-type]
-    shell.open_track(FUNDAMENTAL_1)
-    home = shell.current
-    assert home.online_url == "https://exemplo.onrender.com/?trilha=fundamental1"
-    button = next(c for c in walk(shell.page.controls[-1]) if isinstance(c, ft.OutlinedButton))
-    button.on_click(None)
-    assert shell.page.tasks[-1] == (shell.page.launch_url, (home.online_url,))
+def test_server_serves_emojis_locally(client: TestClient) -> None:
+    response = client.get("/assets/fonts/notocoloremoji/v32/qualquer.7.woff2")
+    assert response.status_code == 200 and response.headers["content-type"] == "font/woff2"
+    assert len(response.content) > 10_000
 
 
-def test_tracks_page_shows_who_is_online(tmp_path: Path) -> None:
-    async def fetch() -> dict[str, int]:
-        return {FUNDAMENTAL_1: 0, FUNDAMENTAL: 3}
-
-    page = FakePage(1280, 720)
-    screen = TracksScreen(page, load_memory_deck(), on_select=lambda _: None, fetch_online=fetch)  # type: ignore[arg-type]
-    screen.show()
-    assert set(screen.online_labels) == {FUNDAMENTAL_1, FUNDAMENTAL}  # só trilhas abertas
-    assert not any(label.visible for label in screen.online_labels.values())  # ainda sem resposta
-    loop = next(task for task in page.tasks if task[0] == screen._online_loop)
-
-    async def one_round() -> None:
-        runner = asyncio.create_task(loop[0](*loop[1]))
-        await asyncio.sleep(0)
-        screen.stop()
-        runner.cancel()
-
-    asyncio.run(one_round())
-    assert screen.online_labels[FUNDAMENTAL].value == "🟢 3 online agora"
-    assert screen.online_labels[FUNDAMENTAL_1].value == "⚪ Ninguém online agora"
-    assert all(label.visible for label in screen.online_labels.values())
+def test_server_draws_qr_codes(client: TestClient) -> None:
+    room = client.get("/qr/sala/gato42.png")
+    assert room.status_code == 200 and room.headers["content-type"] == "image/png"
+    assert client.get("/qr/sala/xx.png").status_code == 404
+    assert client.get("/qr/mesa.png").status_code == 200
 
 
-def test_counts_parsing_and_offline_server() -> None:
-    assert status.parse_counts({"fundamental": 2, "x": -1, "y": "3"}) == {"fundamental": 2}
-    assert status.parse_counts([1, 2]) == {}
-    assert status.play_url(FUNDAMENTAL, "https://a.b/") == "https://a.b/?trilha=fundamental"
-    assert asyncio.run(status.fetch_counts("http://127.0.0.1:9")) is None  # servidor fora do ar
+def test_table_poster_uses_the_network_address(client: TestClient) -> None:
+    page = client.get("/mesa", headers={"host": "localhost:8000"})
+    assert "http://192.168.0.10:8000" in page.text and "Wi-Fi do estande" in page.text
+    phone = client.get("/mesa", headers={"host": "10.0.0.5:8000"})
+    assert "http://10.0.0.5:8000" in phone.text
 
 
-def test_track_comes_from_the_address() -> None:
-    assert track_from_route("/?trilha=fundamental1") == FUNDAMENTAL_1
-    assert track_from_route("/") is None and track_from_route(None) is None
+def test_game_page_is_served(client: TestClient) -> None:
+    assert client.get("/").status_code == 200

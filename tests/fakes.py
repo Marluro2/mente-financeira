@@ -35,9 +35,6 @@ class FakePage:
     def run_task(self, handler: Any, *args: Any) -> None:
         self.tasks.append((handler, args))
 
-    async def launch_url(self, url: str) -> None:
-        self.launched = url
-
     def resize(self, width: float, height: float) -> None:
         self.width, self.height = width, height
         self.on_resize(SimpleNamespace(width=width, height=height))

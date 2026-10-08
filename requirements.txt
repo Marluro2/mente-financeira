@@ -1,2 +1,3 @@
 flet[web]==0.86.5
 flet-audio==0.86.5
+segno==1.6.6

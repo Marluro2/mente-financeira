@@ -57,7 +57,6 @@ class HomeScreen:
         on_level2: Callable[[], None],
         on_admin: Callable[[], None] | None = None,
         on_tracks: Callable[[], None] | None = None,
-        online_url: str | None = None,
     ) -> None:
         self.page = page
         self.deck = deck
@@ -65,7 +64,6 @@ class HomeScreen:
         self.on_level2 = on_level2
         self.on_admin = on_admin  # só no modo administrador
         self.on_tracks = on_tracks  # volta à página das trilhas
-        self.online_url = online_url  # sala de espera do modo online, se houver servidor
         self.mode = Mode.SOLO
         self.layout = layout_for(page.width)
         self.generation = 0
@@ -194,8 +192,6 @@ class HomeScreen:
             self._names(),
             self._play_button(height=58 if self.compact or self.short else 66),
         ]
-        if self.online_url:
-            items.append(self._online_button())
         if self.on_admin:
             items.insert(0, self._admin_banner())
             items.append(self._admin_card())
@@ -415,26 +411,6 @@ class HomeScreen:
         self.play_button.scale = 1
         self.play_button.animate_scale = ft.Animation(int(FLOAT_PERIOD_SECONDS * 1000), ft.AnimationCurve.EASE_IN_OUT)
         return self.play_button
-
-    def _online_button(self) -> ft.Control:
-        """Abre a sala de espera do modo online, em outra aba."""
-
-        return ft.OutlinedButton(
-            "Jogar online com outra pessoa",
-            icon=ft.Icons.PUBLIC_ROUNDED,
-            on_click=self._play_online,
-            style=ft.ButtonStyle(
-                color=s.CYAN,
-                side=ft.BorderSide(2, s.CYAN),
-                shape=ft.RoundedRectangleBorder(radius=22),
-                padding=ft.Padding.symmetric(horizontal=18, vertical=16),
-                text_style=ft.TextStyle(size=16, weight=ft.FontWeight.W_900),
-            ),
-        )
-
-    def _play_online(self, _: Any = None) -> None:
-        if self.online_url:
-            self.page.run_task(self.page.launch_url, self.online_url)
 
     def _hover(self, event: Any) -> None:
         """Cartões crescem um pouco quando o mouse passa por cima."""

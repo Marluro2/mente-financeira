@@ -199,8 +199,8 @@ class MemoryScreen:
     def _top_bar(self) -> ft.Control:
         mode_text = "Modo Solo" if self.game.mode is Mode.SOLO else "Modo Duelo"
         if self.online is not None:
-            mode_text = "Duelo online"
-        # Online não há "nova partida": os dois precisariam concordar.
+            mode_text = "Duelo em sala"
+        # Em sala não há "nova partida": os dois precisariam concordar.
         restart = [] if self.online is not None else [
             ft.IconButton(ft.Icons.REPLAY_ROUNDED, icon_color=s.WHITE, tooltip="Nova partida", on_click=self._restart)
         ]
