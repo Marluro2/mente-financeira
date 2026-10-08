@@ -1,4 +1,4 @@
-"""Página inicial: escolha da trilha (Fundamental, Médio, Engenharia de Produção)."""
+"""Página inicial: escolha da trilha (Fundamental 1 e 2, Médio, Engenharia de Produção)."""
 
 import asyncio
 from pathlib import Path
@@ -13,7 +13,7 @@ from mente_financeira.storage import SettingsStore
 from mente_financeira.ui import tracks as tracks_module
 from mente_financeira.ui.home import HomeScreen
 from mente_financeira.ui.shell import GameShell
-from mente_financeira.ui.tracks import ENGENHARIA, FUNDAMENTAL, MEDIO, TRACKS, TracksScreen
+from mente_financeira.ui.tracks import ENGENHARIA, FUNDAMENTAL, FUNDAMENTAL_1, MEDIO, TRACKS, TracksScreen
 
 PHONE, NOTEBOOK, DESKTOP = (360, 740), (1536, 785), (1920, 1000)
 
@@ -34,10 +34,10 @@ def _click(screen: TracksScreen, key: str) -> None:
 def test_game_opens_on_the_tracks_page(shell: GameShell) -> None:
     assert isinstance(shell.current, TracksScreen)
     texts = _texts(shell.page.controls[-1])
-    for title in ("Ensino Fundamental", "Ensino Médio", "Engenharia de Produção", "Qual é a sua trilha?"):
+    for title in ("Ensino Fundamental 1", "Ensino Fundamental 2", "Ensino Médio", "Engenharia de Produção", "Qual é a sua trilha?"):
         assert title in texts
-    assert texts.count("EM BREVE") == 2
-    assert [t.key for t in TRACKS] == [FUNDAMENTAL, MEDIO, ENGENHARIA]  # ordem dos botões
+    assert texts.count("EM BREVE") == 3
+    assert [t.key for t in TRACKS] == [FUNDAMENTAL_1, FUNDAMENTAL, MEDIO, ENGENHARIA]  # ordem dos botões
 
 
 def test_fundamental_opens_the_current_game_and_can_come_back(shell: GameShell) -> None:
@@ -52,7 +52,7 @@ def test_fundamental_opens_the_current_game_and_can_come_back(shell: GameShell) 
     assert shell.page.on_resize == shell.current.on_resize
 
 
-@pytest.mark.parametrize("key", [MEDIO, ENGENHARIA])
+@pytest.mark.parametrize("key", [FUNDAMENTAL_1, MEDIO, ENGENHARIA])
 def test_other_tracks_only_announce_coming_soon(shell: GameShell, key: str) -> None:
     screen = shell.current
     _click(screen, key)

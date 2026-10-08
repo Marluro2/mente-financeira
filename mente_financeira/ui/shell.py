@@ -61,20 +61,20 @@ class GameShell:
         self.page.on_disconnect = self._stop_current
 
     def show_tracks(self) -> None:
-        """Página inicial: escolha da trilha (Fundamental, Médio, Engenharia)."""
+        """Página inicial: escolha da trilha (Fundamental 1 e 2, Médio, Engenharia)."""
 
         tracks = TracksScreen(self.page, self.deck, on_select=self.open_track, rng=self.rng)
         self._activate(tracks)
         tracks.show()
 
     def open_track(self, key: str) -> None:
-        # Por enquanto só o Ensino Fundamental está disponível; as demais
+        # Por enquanto só o Ensino Fundamental 2 está disponível; as demais
         # trilhas aparecem como "Em breve" na página inicial.
         if key == FUNDAMENTAL:
             self.show_home()
 
     def show_home(self) -> None:
-        """Abertura da trilha do Ensino Fundamental (Nível 1 e Nível 2)."""
+        """Abertura da trilha do Ensino Fundamental 2."""
 
         home = HomeScreen(
             self.page,

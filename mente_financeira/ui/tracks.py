@@ -1,6 +1,6 @@
 """Página inicial: escolha da trilha educacional.
 
-As três trilhas correspondem ao Quadro 2 do projeto: Ensino Fundamental, Ensino
+As trilhas seguem o Quadro 2 do projeto: Ensino Fundamental 1 e 2, Ensino
 Médio e Engenharia de Produção. À esquerda ficam os botões; à direita, um
 tabuleiro de cartas "vivo" (reto e alinhado), em que uma carta vira de tempos em tempos e mostra
 um conceito do jogo.
@@ -23,7 +23,7 @@ from mente_financeira.ui.layout import Layout, layout_for
 FLIP_PERIOD_SECONDS = 1.6
 BOARD_COLUMNS = 4
 
-FUNDAMENTAL, MEDIO, ENGENHARIA = "fundamental", "medio", "engenharia"
+FUNDAMENTAL_1, FUNDAMENTAL, MEDIO, ENGENHARIA = "fundamental1", "fundamental", "medio", "engenharia"
 
 
 @dataclass(frozen=True, slots=True)
@@ -38,8 +38,16 @@ class TrackOption:
 
 TRACKS: tuple[TrackOption, ...] = (
     TrackOption(
+        FUNDAMENTAL_1,
+        "Ensino Fundamental 1",
+        "Dinheiro, troco, compras e primeiras economias",
+        ft.Icons.TOYS_ROUNDED,
+        (s.YELLOW, s.ORANGE),
+        available=False,
+    ),
+    TrackOption(
         FUNDAMENTAL,
-        "Ensino Fundamental",
+        "Ensino Fundamental 2",
         "Porcentagem, consumo e primeiros conceitos",
         ft.Icons.BACKPACK_ROUNDED,
         (s.PINK, s.ORANGE),
@@ -157,7 +165,7 @@ class TracksScreen:
         )
         buttons = ft.Column([self._track_button(track) for track in TRACKS], spacing=12 if short else 16)
         footer = ft.Text(
-            "Um jogo, três trilhas: do primeiro contato com a porcentagem à análise de investimentos.",
+            "Um jogo, quatro trilhas: das primeiras contas com dinheiro à análise de investimentos.",
             size=12,
             color=s.MUTED,
             text_align=ft.TextAlign.CENTER if self.compact else ft.TextAlign.START,
@@ -216,6 +224,7 @@ class TracksScreen:
             }
             trailing = s.chip("EM BREVE", icon=ft.Icons.LOCK_CLOCK_ROUNDED, color=first, size=11)
             icon_bg, text_color, sub_color = ft.Colors.with_opacity(0.18, first), s.WHITE, s.MUTED
+        below = self.compact and not track.available
         return ft.Container(
             data=track.key,
             on_click=self._choose,
@@ -236,11 +245,14 @@ class TracksScreen:
                         [
                             ft.Text(track.title, size=18 if self.compact else 21, weight=ft.FontWeight.W_900, color=text_color),
                             ft.Text(track.subtitle, size=12 if self.compact else 13, color=sub_color),
+                            # No celular a etiqueta "EM BREVE" vai para baixo do texto,
+                            # para o título caber numa linha.
+                            *([trailing] if below else []),
                         ],
-                        spacing=1,
+                        spacing=1 if not below else 6,
                         expand=True,
                     ),
-                    trailing,
+                    *([] if below else [trailing]),
                 ],
                 spacing=14,
             ),
