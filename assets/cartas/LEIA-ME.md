@@ -31,3 +31,22 @@ verso antigo com ponto de interrogação, caso se queira trocar no futuro.
    `mente_financeira/content/memoria.toml` com nome, imagem, cor e dica.
 4. Rode `python -m pytest` — os testes conferem se a imagem existe e é um SVG
    válido.
+
+## Ensino Fundamental 1
+
+O baralho do Ensino Fundamental 1 fica em
+`mente_financeira/content/memoria_fundamental1.toml` (12 conceitos, 8 sorteados
+por partida). As ilustrações novas estão em `fundamental1/`; Cofrinho,
+Orçamento e Objetivo reaproveitam `poupanca.svg`, `orcamento.svg` e `meta.svg`.
+
+| Arquivo | Conceito |
+|---|---|
+| `fundamental1/dinheiro.svg` | Dinheiro (nota e moedas) |
+| `fundamental1/necessidade.svg` | Necessidade (casa e gota d'água) |
+| `fundamental1/desejo.svg` | Desejo (controle de videogame com coração) |
+| `fundamental1/troco.svg` | Troco (nota que volta em moedas) |
+| `fundamental1/esperar.svg` | Esperar vale a pena (ampulheta) |
+| `fundamental1/tres_potes.svg` | Guardar, gastar e doar (três potes) |
+| `fundamental1/preco.svg` | Preço (etiqueta e moeda) |
+| `fundamental1/trabalho.svg` | Trabalho (maleta) |
+| `fundamental1/cuidar.svg` | Cuidar das coisas (bola e coração) |

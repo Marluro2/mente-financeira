@@ -11,7 +11,7 @@ import flet as ft
 from mente_financeira.admin import admin_ativo
 from mente_financeira.content.memory_deck import Concept
 from mente_financeira.core.memory_game import Flip, MemoryGame, Mode
-from mente_financeira.core.percent_challenge import Challenge, encouragement, make_challenge
+from mente_financeira.core.percent_challenge import PERCENT_KIT, Challenge, ChallengeKit
 from mente_financeira.storage import SettingsStore
 from mente_financeira.ui import style as s
 from mente_financeira.ui.sounds import SoundEffects
@@ -36,9 +36,11 @@ class MemoryScreen:
         on_home: Callable[[], None],
         on_level2: Callable[[], None],
         sounds: SoundEffects | None = None,
+        challenges: ChallengeKit = PERCENT_KIT,
     ) -> None:
         self.page = page
         self.game = game
+        self.challenges = challenges  # Desafio Relâmpago do Duelo, conforme a trilha
         self.on_home = on_home
         self.on_level2 = on_level2
         self.sounds = sounds or SoundEffects(page, SettingsStore())
@@ -384,7 +386,7 @@ class MemoryScreen:
             )
             if self.game.mode is Mode.DUEL:
                 rules += (
-                    "\n\n⚡ No Duelo, cada par vale um Desafio Relâmpago de porcentagem: "
+                    f"\n\n⚡ No Duelo, cada par vale um Desafio Relâmpago {self.challenges.topic}: "
                     "acerte para continuar jogando; errou, passa a vez."
                 )
             return ft.Container(
@@ -599,7 +601,7 @@ class MemoryScreen:
 
     # ------------------------------------------------------ Desafio Relâmpago
     def _open_challenge(self) -> None:
-        self.challenge = make_challenge(self.game.rng)
+        self.challenge = self.challenges.make(self.game.rng)
         self.challenge_choice = None
         self.challenge_feedback = ""
         self.challenge_board_visible = False
@@ -879,7 +881,7 @@ class MemoryScreen:
             return
         self.challenge_choice = int(event.control.data)
         if challenge.is_correct(self.challenge_choice):
-            self.challenge_feedback = encouragement(self.game.rng)
+            self.challenge_feedback = self.challenges.encourage(self.game.rng)
             self.sounds.play("incentivo")
         else:
             self.challenge_feedback = f"Quase! A resposta certa é {challenge.answer}.\n{challenge.explanation}"

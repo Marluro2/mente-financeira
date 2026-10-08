@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Cuidar das coisas: brinquedo bem cuidado -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7FD8E6"/>
+      <stop offset="1" stop-color="#00798C"/>
+    </linearGradient>
+    <clipPath id="clip"><rect width="200" height="200" rx="36"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+  <rect width="200" height="200" rx="36" fill="url(#bg)"/>
+  <circle cx="170" cy="32" r="48" fill="#FFFFFF" opacity="0.14"/>
+  <circle cx="92" cy="112" r="54" fill="#FFFFFF" stroke="#2B2D42" stroke-width="5"/>
+  <path d="M42 96 C70 110 114 110 142 96" fill="none" stroke="#FF3D8B" stroke-width="10"/>
+  <path d="M46 132 C72 120 112 120 138 132" fill="none" stroke="#3AB0FF" stroke-width="10"/>
+  <circle cx="92" cy="112" r="54" fill="none" stroke="#2B2D42" stroke-width="5"/>
+  <path d="M150 74 C138 60 116 68 126 46 C132 34 148 38 150 50 C152 38 168 34 174 46 C184 68 162 60 150 74 Z" fill="#FF3D8B" stroke="#2B2D42" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M38 44 v14 M31 51 h14" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+  </g>
+</svg>

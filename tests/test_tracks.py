@@ -9,9 +9,12 @@ import flet as ft
 import pytest
 
 from fakes import FakePage, walk
+from mente_financeira.core.coin_challenge import COIN_KIT
+from mente_financeira.core.memory_game import Mode
 from mente_financeira.storage import SettingsStore
 from mente_financeira.ui import tracks as tracks_module
 from mente_financeira.ui.home import HomeScreen
+from mente_financeira.ui.memory_screen import MemoryScreen
 from mente_financeira.ui.shell import GameShell
 from mente_financeira.ui.tracks import ENGENHARIA, FUNDAMENTAL, FUNDAMENTAL_1, MEDIO, TRACKS, TracksScreen
 
@@ -36,7 +39,7 @@ def test_game_opens_on_the_tracks_page(shell: GameShell) -> None:
     texts = _texts(shell.page.controls[-1])
     for title in ("Ensino Fundamental 1", "Ensino Fundamental 2", "Ensino Médio", "Engenharia de Produção", "Qual é a sua trilha?"):
         assert title in texts
-    assert texts.count("EM BREVE") == 3
+    assert texts.count("EM BREVE") == 2
     assert [t.key for t in TRACKS] == [FUNDAMENTAL_1, FUNDAMENTAL, MEDIO, ENGENHARIA]  # ordem dos botões
 
 
@@ -52,7 +55,21 @@ def test_fundamental_opens_the_current_game_and_can_come_back(shell: GameShell) 
     assert shell.page.on_resize == shell.current.on_resize
 
 
-@pytest.mark.parametrize("key", [FUNDAMENTAL_1, MEDIO, ENGENHARIA])
+def test_fundamental1_opens_its_own_memory_game(shell: GameShell) -> None:
+    _click(shell.current, FUNDAMENTAL_1)
+    assert isinstance(shell.current, HomeScreen)
+    assert shell.deck.concepts[0].id == "dinheiro"  # baralho do Ensino Fundamental 1
+    shell.play_memory(Mode.DUEL, ("Ana", "Bruno"))
+    screen: MemoryScreen = shell.current  # type: ignore[assignment]
+    assert {c.id for c in screen.game.cards} <= {c.id for c in shell.deck.concepts}
+    assert screen.challenges is COIN_KIT  # desafio de contas, sem porcentagem
+    # Voltar às trilhas e entrar no Fundamental 2 troca o baralho.
+    shell.show_tracks()
+    _click(shell.current, FUNDAMENTAL)
+    assert shell.deck.concepts[0].id == "poupanca"
+
+
+@pytest.mark.parametrize("key", [MEDIO, ENGENHARIA])
 def test_other_tracks_only_announce_coming_soon(shell: GameShell, key: str) -> None:
     screen = shell.current
     _click(screen, key)

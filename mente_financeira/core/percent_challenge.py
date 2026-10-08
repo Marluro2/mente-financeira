@@ -208,3 +208,15 @@ def make_challenge(rng: random.Random | None = None) -> Challenge:
 
 def encouragement(rng: random.Random | None = None) -> str:
     return (rng or random.Random()).choice(ENCOURAGEMENTS)
+
+
+@dataclass(frozen=True, slots=True)
+class ChallengeKit:
+    """Desafio Relâmpago que o Duelo de uma trilha usa."""
+
+    topic: str  # completa "Desafio Relâmpago ..." nas regras ("de porcentagem")
+    make: Callable[[random.Random], Challenge]
+    encourage: Callable[[random.Random], str]
+
+
+PERCENT_KIT = ChallengeKit("de porcentagem", make_challenge, encouragement)

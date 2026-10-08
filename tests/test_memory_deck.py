@@ -8,15 +8,19 @@ from mente_financeira.content.memory_deck import load_memory_deck, parse_deck
 
 ASSETS = Path(__file__).resolve().parents[1] / "assets"
 DECK = load_memory_deck()
+# Baralhos do Ensino Fundamental 2 (memoria) e do Ensino Fundamental 1.
+DECK_NAMES = ("memoria", "memoria_fundamental1")
+DECKS = [load_memory_deck(name) for name in DECK_NAMES]
 
 
-def test_deck_has_enough_concepts_for_variety() -> None:
-    assert DECK.pairs == 8
-    assert len(DECK.concepts) >= DECK.pairs + 2  # partidas variam
-    assert len({c.id for c in DECK.concepts}) == len(DECK.concepts)
+@pytest.mark.parametrize("deck", DECKS, ids=DECK_NAMES)
+def test_deck_has_enough_concepts_for_variety(deck) -> None:
+    assert deck.pairs == 8
+    assert len(deck.concepts) >= deck.pairs + 2  # partidas variam
+    assert len({c.id for c in deck.concepts}) == len(deck.concepts)
 
 
-@pytest.mark.parametrize("image", [DECK.back_image, *(c.image for c in DECK.concepts)])
+@pytest.mark.parametrize("image", sorted({d.back_image for d in DECKS} | {c.image for d in DECKS for c in d.concepts}))
 def test_every_image_exists_and_is_valid_svg(image: str) -> None:
     path = ASSETS / image
     assert path.is_file(), f"imagem ausente: {image}"
@@ -25,25 +29,35 @@ def test_every_image_exists_and_is_valid_svg(image: str) -> None:
     assert root.get("viewBox") == "0 0 200 200"
 
 
-def test_images_live_in_the_cards_folder() -> None:
-    assert all(c.image.startswith("cartas/") for c in DECK.concepts)
+@pytest.mark.parametrize("deck", DECKS, ids=DECK_NAMES)
+def test_images_live_in_the_cards_folder(deck) -> None:
+    assert all(c.image.startswith("cartas/") for c in deck.concepts)
 
 
-def test_tips_are_short_enough_for_a_phone() -> None:
-    for concept in DECK.concepts:
+@pytest.mark.parametrize("deck", DECKS, ids=DECK_NAMES)
+def test_tips_are_short_enough_for_a_phone(deck) -> None:
+    for concept in deck.concepts:
         assert 30 <= len(concept.tip) <= 170, concept.id
         assert 40 <= len(concept.example) <= 200, concept.id
         assert len(concept.name) <= 22, concept.id
 
 
-def test_every_example_has_numbers() -> None:
+@pytest.mark.parametrize("deck", DECKS, ids=DECK_NAMES)
+def test_every_example_has_numbers(deck) -> None:
     # "Na prática" deve trazer uma situação concreta, com valores.
-    for concept in DECK.concepts:
+    for concept in deck.concepts:
         assert any(ch.isdigit() for ch in concept.example), concept.id
 
 
-def test_memory_deck_is_not_listed_as_a_track() -> None:
-    assert "memoria" not in available_tracks()
+def test_memory_decks_are_not_listed_as_tracks() -> None:
+    assert not set(DECK_NAMES) & set(available_tracks())
+
+
+def test_fundamental1_has_no_percent() -> None:
+    # Crianças de 7 a 10 anos: só soma e subtração, sem porcentagem.
+    deck = load_memory_deck("memoria_fundamental1")
+    assert len(deck.concepts) == 12
+    assert not any("%" in c.tip + c.example for c in deck.concepts)
 
 
 def _deck(**overrides) -> dict:
@@ -67,3 +81,8 @@ def _deck(**overrides) -> dict:
 def test_deck_errors_are_reported(overrides: dict, message: str) -> None:
     with pytest.raises(ContentError, match=message):
         parse_deck(_deck(**overrides))
+
+
+def test_deck_errors_name_the_file() -> None:
+    with pytest.raises(ContentError, match="memoria_fundamental1.toml"):
+        parse_deck(_deck(pairs=2), "memoria_fundamental1.toml")

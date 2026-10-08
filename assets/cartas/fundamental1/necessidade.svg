@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Necessidade: casa, comida e água -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFC48A"/>
+      <stop offset="1" stop-color="#FF7A1A"/>
+    </linearGradient>
+    <clipPath id="clip"><rect width="200" height="200" rx="36"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+  <rect width="200" height="200" rx="36" fill="url(#bg)"/>
+  <circle cx="170" cy="32" r="48" fill="#FFFFFF" opacity="0.14"/>
+  <path d="M30 98 L90 46 L150 98 Z" fill="#E63946" stroke="#2B2D42" stroke-width="5" stroke-linejoin="round"/>
+  <rect x="44" y="96" width="92" height="74" rx="6" fill="#FFFFFF" stroke="#2B2D42" stroke-width="5"/>
+  <rect x="78" y="124" width="26" height="46" rx="4" fill="#FFB347" stroke="#2B2D42" stroke-width="4"/>
+  <rect x="54" y="110" width="18" height="18" rx="3" fill="#8FD3FF" stroke="#2B2D42" stroke-width="3"/>
+  <rect x="110" y="110" width="18" height="18" rx="3" fill="#8FD3FF" stroke="#2B2D42" stroke-width="3"/>
+  <path d="M160 112 C160 112 140 136 140 150 a20 20 0 0 0 40 0 C180 136 160 112 160 112 Z" fill="#3AB0FF" stroke="#2B2D42" stroke-width="4"/>
+  <circle cx="153" cy="148" r="5" fill="#FFFFFF" opacity="0.8"/>
+  </g>
+</svg>
