@@ -17,7 +17,7 @@ ficam nítidas em qualquer tela, do celular ao projetor.
 | `consumo_consciente.svg` | Consumo consciente (sacola com folha) |
 | `renda.svg` | Renda (carteira com notas) |
 | `seguranca.svg` | Segurança digital (escudo e cadeado contra golpes) |
-| `verso.svg` | Verso de todas as cartas: meio cérebro, meio gráfico em alta, com o nome "Mente Financeira" (opção D, escolhida em 28/09/2026) |
+| `verso.svg` | Verso de todas as cartas: "?" amarelo sobre listras escuras, no estilo carta de baralho (escolhido em 07/10/2026). O verso anterior, meio cérebro e meio gráfico, está em `opcoes_verso/D_cerebro_grafico.svg` |
 
 A pasta `opcoes_verso/` guarda as outras propostas de verso (A, B, C, D) e o
 verso antigo com ponto de interrogação, caso se queira trocar no futuro.
