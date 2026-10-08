@@ -113,6 +113,7 @@ def test_solo_game_to_the_end(shell: GameShell) -> None:
     texts = [c.value for c in walk(result) if isinstance(c, ft.Text)]
     assert "⭐⭐⭐" in texts  # 9 jogadas
 
+    assert [b.content for b in result.actions] == ["Início", "Jogar de novo"]  # sem atalho para o Nível 2
     press(result, "Jogar de novo")
     assert shell.current is screen and screen.game.active and screen.game.moves == 0
 

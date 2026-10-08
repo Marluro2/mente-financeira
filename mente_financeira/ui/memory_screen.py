@@ -961,7 +961,6 @@ class MemoryScreen:
             ft.Column(lines, spacing=8, tight=True, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
             [
                 ("Início", self.on_home, False),
-                ("Nível 2", self.on_level2, False),
                 ("Jogar de novo", self._new_round, True),
             ],
         )
