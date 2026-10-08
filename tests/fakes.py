@@ -59,7 +59,7 @@ def press(dialog: ft.AlertDialog, label: str) -> None:
 
 
 def started_shell(*args: Any, **kwargs: Any):
-    """Abre o jogo e entra na trilha do Ensino Fundamental (abertura do jogo)."""
+    """Abre o jogo e entra na trilha do Ensino Fundamental 2 (abertura do jogo)."""
 
     from mente_financeira.ui.shell import GameShell
     from mente_financeira.ui.tracks import FUNDAMENTAL
