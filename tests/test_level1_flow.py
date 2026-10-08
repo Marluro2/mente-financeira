@@ -56,7 +56,7 @@ def test_opens_on_the_home_screen(shell: GameShell) -> None:
     home = _home(shell)
     texts = [c.value for c in walk(shell.page.controls[-1]) if isinstance(c, ft.Text)]
     assert "MENTE" in texts and "FINANCEIRA" in texts
-    assert "Desafio dos Cálculos" in texts
+    assert "Desafio dos Cálculos" not in texts  # o Nível 2 não aparece mais na abertura
     assert home.mode is Mode.SOLO
     assert shell.page.tasks[-1][0] == home._float_loop  # animação dos ícones flutuantes
 
