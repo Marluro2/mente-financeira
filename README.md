@@ -12,6 +12,18 @@ navegador baixa o jogo (alguns segundos a mais); depois fica em cache. O site
 (veja `.github/workflows/publicar-site.yml`). O modo administrador só existe
 na versão de computador.
 
+## Duelo em sala (feira, sem internet)
+
+O notebook vira o servidor do jogo (`JOGAR_FEIRA.bat` ou `python servidor_sala.py`).
+Os celulares no mesmo Wi-Fi abrem o endereço do notebook. Uma pessoa cria a
+sala e recebe um código (ex.: `GATO-42`) com QR code, e a outra entra com o
+código. Tudo vem do notebook, inclusive os emojis (`assets/fontes/emoji.woff2`),
+então funciona sem internet. O cartaz com o QR code da mesa fica em
+`http://localhost:8000/mesa`. Só pedimos um apelido, e nada é gravado.
+
+Passo a passo para o estande, com roteador, Firewall e IP fixo, em
+[docs/GUIA_FEIRA.md](docs/GUIA_FEIRA.md).
+
 ## Como jogar (Windows) — 2 cliques
 
 | Arquivo | Para quê |
