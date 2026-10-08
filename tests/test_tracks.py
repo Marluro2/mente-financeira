@@ -45,7 +45,7 @@ def test_fundamental_opens_the_current_game_and_can_come_back(shell: GameShell) 
     home = shell.current
     assert isinstance(home, HomeScreen)
     texts = _texts(shell.page.controls[-1])
-    assert "TRILHA • ENSINO FUNDAMENTAL" in texts and "Desafio dos Cálculos" in texts
+    assert "TRILHA • ENSINO FUNDAMENTAL" in texts and "Desafio dos Cálculos" not in texts
     back = next(c for c in walk(shell.page.controls[-1]) if isinstance(c, ft.TextButton) and c.content == "Trilhas")
     back.on_click(None)
     assert isinstance(shell.current, TracksScreen)

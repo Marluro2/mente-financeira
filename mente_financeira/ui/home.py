@@ -192,7 +192,6 @@ class HomeScreen:
             self._mode_picker(),
             self._names(),
             self._play_button(),
-            self._level2_card(),
             self._footer(),
         ]
         if self.on_admin:
@@ -216,9 +215,9 @@ class HomeScreen:
             spacing=12 if self.short else 20,
             width=470,
         )
-        right_items: list[ft.Control] = [self._fan(card=130 if self.short else 150), self._level2_card(), self._footer()]
+        right_items: list[ft.Control] = [self._fan(card=130 if self.short else 150), self._footer()]
         if self.on_admin:
-            right_items.insert(2, self._admin_card())
+            right_items.insert(1, self._admin_card())
         right = ft.Column(
             right_items,
             spacing=26,
@@ -455,59 +454,6 @@ class HomeScreen:
         if self.compact:
             return ft.Column([self.name_1, self.name_2], spacing=10)
         return ft.Row([self.name_1, self.name_2], spacing=12)
-
-    def _level2_card(self) -> ft.Control:
-        # Borda em degradê: um contêiner colorido com o cartão escuro por dentro.
-        inner = ft.Container(
-            padding=14,
-            border_radius=21,
-            bgcolor="#E6241056",
-            content=ft.Row(
-                [
-                    ft.Container(
-                        width=52,
-                        height=52,
-                        border_radius=16,
-                        gradient=ft.LinearGradient(colors=[s.CYAN, "#6C63FF"]),
-                        alignment=ft.Alignment.CENTER,
-                        content=ft.Icon(ft.Icons.CALCULATE_ROUNDED, color=s.WHITE, size=28),
-                    ),
-                    ft.Column(
-                        [
-                            ft.Text("NÍVEL 2", size=11, weight=ft.FontWeight.BOLD, color=s.CYAN),
-                            ft.Text("Desafio dos Cálculos", size=17, weight=ft.FontWeight.W_900, color=s.WHITE),
-                            ft.Text("Porcentagem, juros e financiamentos.", size=12, color=s.MUTED),
-                        ],
-                        spacing=1,
-                        expand=True,
-                    ),
-                    ft.IconButton(
-                        ft.Icons.ARROW_FORWARD_ROUNDED,
-                        icon_color=s.WHITE,
-                        tooltip="Entrar no Nível 2",
-                        on_click=lambda _: self.on_level2(),
-                        style=ft.ButtonStyle(bgcolor=ft.Colors.with_opacity(0.18, s.CYAN)),
-                    ),
-                ],
-                spacing=14,
-            ),
-        )
-        return ft.Container(
-            padding=2,
-            border_radius=23,
-            gradient=ft.LinearGradient(
-                begin=ft.Alignment.CENTER_LEFT,
-                end=ft.Alignment.CENTER_RIGHT,
-                colors=[s.CYAN, "#6C63FF", s.PINK],
-            ),
-            shadow=ft.BoxShadow(blur_radius=30, color=ft.Colors.with_opacity(0.35, "#6C63FF"), offset=ft.Offset(0, 8)),
-            ink=True,
-            on_click=lambda _: self.on_level2(),
-            on_hover=self._hover,
-            scale=1,
-            animate_scale=ft.Animation(180, ft.AnimationCurve.EASE_OUT),
-            content=inner,
-        )
 
     def _footer(self) -> ft.Control:
         total = len(self.deck.concepts)
