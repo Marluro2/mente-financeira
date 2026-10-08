@@ -16,23 +16,34 @@ from mente_financeira.ui.layout import Layout, layout_for
 
 FLOAT_PERIOD_SECONDS = 2.4
 
-# Ícones que flutuam ao fundo: (emoji, x relativo, y relativo, tamanho).
+# Ícones que flutuam ao fundo: (ícone, cor, x relativo, y relativo, tamanho).
+# São ícones do próprio Flet, e não emojis: aparecem iguais e coloridos em
+# qualquer computador, mesmo sem fonte de emoji instalada.
 FLOATERS = (
-    ("💰", 0.06, 0.10, 44),
-    ("📈", 0.86, 0.08, 40),
-    ("🐷", 0.90, 0.62, 46),
-    ("💳", 0.04, 0.70, 38),
-    ("🎯", 0.48, 0.03, 30),
-    ("🪙", 0.72, 0.88, 34),
-    ("💡", 0.20, 0.92, 30),
+    (ft.Icons.SAVINGS_ROUNDED, s.PINK, 0.05, 0.10, 34),
+    (ft.Icons.TRENDING_UP_ROUNDED, s.GREEN, 0.88, 0.09, 32),
+    (ft.Icons.CREDIT_CARD_ROUNDED, s.CYAN, 0.04, 0.68, 30),
+    (ft.Icons.PERCENT_ROUNDED, s.YELLOW, 0.47, 0.03, 24),
+    (ft.Icons.ACCOUNT_BALANCE_ROUNDED, s.ORANGE, 0.74, 0.88, 28),
+    (ft.Icons.LIGHTBULB_ROUNDED, s.YELLOW, 0.19, 0.90, 24),
+    (ft.Icons.PAID_ROUNDED, s.GREEN, 0.92, 0.60, 34),
 )
 # No celular o conteúdo ocupa quase toda a tela: só alguns ícones, no topo.
 FLOATERS_COMPACT = (
-    ("💰", 0.04, 0.09, 34),
-    ("📈", 0.86, 0.09, 32),
-    ("🎯", 0.84, 0.30, 26),
-    ("🪙", 0.05, 0.31, 26),
+    (ft.Icons.SAVINGS_ROUNDED, s.PINK, 0.04, 0.08, 24),
+    (ft.Icons.TRENDING_UP_ROUNDED, s.GREEN, 0.84, 0.08, 22),
+    (ft.Icons.PERCENT_ROUNDED, s.YELLOW, 0.84, 0.30, 18),
+    (ft.Icons.PAID_ROUNDED, s.CYAN, 0.05, 0.31, 18),
 )
+
+# Manchas de luz que derivam devagar ao fundo: (cor, x relativo, y relativo, diâmetro relativo).
+ORBS = (
+    (s.PINK, -0.10, -0.15, 0.55),
+    (s.CYAN, 0.62, 0.45, 0.50),
+    ("#8F5BFF", 0.25, 0.70, 0.45),
+)
+
+HOVER_SCALE = 1.03
 
 # Cartas exibidas em leque na abertura: (id do conceito, ângulo em graus).
 FAN = (("poupanca", -14), ("investimento", 0), ("cartao_credito", 14))
@@ -59,6 +70,9 @@ class HomeScreen:
         self.layout = layout_for(page.width)
         self.generation = 0
         self.floaters: list[ft.Container] = []
+        self.orbs: list[ft.Container] = []
+        self.fan_cards: list[ft.Container] = []
+        self.play_button: ft.Container | None = None
         self.name_1 = ft.TextField()
         self.name_2 = ft.TextField()
         self.rendered_short = False
@@ -83,13 +97,24 @@ class HomeScreen:
             self.show()
 
     async def _float_loop(self, generation: int) -> None:
-        """Faz os ícones do fundo subirem e descerem suavemente."""
+        """Dá vida à abertura: ícones flutuam, luzes derivam, cartas balançam e o botão pulsa."""
 
         up = True
         while generation == self.generation:
             for index, floater in enumerate(self.floaters):
                 direction = -1 if (index % 2 == 0) == up else 1
                 floater.offset = ft.Offset(0, 0.25 * direction)
+                floater.rotate = ft.Rotate(math.radians(10 * direction))
+            for index, orb in enumerate(self.orbs):
+                direction = 1 if (index % 2 == 0) == up else -1
+                orb.offset = ft.Offset(0.08 * direction, 0.06 * direction)
+            for position, card in enumerate(self.fan_cards):
+                sway = 3 if up else -3
+                card.rotate = ft.Rotate(math.radians(card.data + sway))
+                if position == 1:  # a carta do meio sobe e desce
+                    card.offset = ft.Offset(0, -0.06 if up else 0)
+            if self.play_button is not None:
+                self.play_button.scale = 1.04 if up else 1.0
             up = not up
             self.page.update()
             await asyncio.sleep(FLOAT_PERIOD_SECONDS)
@@ -109,16 +134,25 @@ class HomeScreen:
         self.rendered_short = self.short  # para saber se a altura mudou de faixa
         width = self.page.width or 1280
         height = self.page.height or 720
+        motion = ft.Animation(int(FLOAT_PERIOD_SECONDS * 1000), ft.AnimationCurve.EASE_IN_OUT)
         self.floaters = [
+            self._floater(icon, color, size, left=x * width, top=y * height, motion=motion)
+            for icon, color, x, y, size in (FLOATERS_COMPACT if self.compact else FLOATERS)
+        ]
+        self.orbs = [
             ft.Container(
-                content=ft.Text(emoji, size=size),
                 left=x * width,
                 top=y * height,
-                opacity=0.25 if self.compact else 0.35,
+                width=diameter * max(width, height),
+                height=diameter * max(width, height),
+                shape=ft.BoxShape.CIRCLE,
+                gradient=ft.RadialGradient(
+                    colors=[ft.Colors.with_opacity(0.32, color), ft.Colors.with_opacity(0, color)],
+                ),
                 offset=ft.Offset(0, 0),
-                animate_offset=ft.Animation(int(FLOAT_PERIOD_SECONDS * 1000), ft.AnimationCurve.EASE_IN_OUT),
+                animate_offset=ft.Animation(int(FLOAT_PERIOD_SECONDS * 2000), ft.AnimationCurve.EASE_IN_OUT),
             )
-            for emoji, x, y, size in (FLOATERS_COMPACT if self.compact else FLOATERS)
+            for color, x, y, diameter in ORBS
         ]
         content = self._compact_content() if self.compact else self._wide_content()
         return ft.SafeArea(
@@ -128,6 +162,7 @@ class HomeScreen:
                 gradient=s.background(),
                 content=ft.Stack(
                     [
+                        *self.orbs,
                         *self.floaters,
                         # Posicionado nas quatro bordas: ocupa toda a pilha.
                         ft.Container(
@@ -156,7 +191,7 @@ class HomeScreen:
             self._tagline(),
             self._mode_picker(),
             self._names(),
-            s.pill_button("JOGAR AGORA", ft.Icons.PLAY_ARROW_ROUNDED, self._play),
+            self._play_button(),
             self._level2_card(),
             self._footer(),
         ]
@@ -176,7 +211,7 @@ class HomeScreen:
                 self._tagline(),
                 self._mode_picker(),
                 self._names(),
-                s.pill_button("JOGAR AGORA", ft.Icons.PLAY_ARROW_ROUNDED, self._play, height=54 if self.short else 62),
+                self._play_button(height=54 if self.short else 62),
             ],
             spacing=12 if self.short else 20,
             width=470,
@@ -285,7 +320,7 @@ class HomeScreen:
 
     def _tagline(self) -> ft.Control:
         return ft.Text(
-            "Vire as cartas, forme os pares e descubra os segredos do dinheiro. 💸",
+            "Vire as cartas, forme os pares e descubra os segredos do dinheiro.",
             size=16 if self.compact else 19,
             color=s.MUTED,
             text_align=ft.TextAlign.CENTER if self.compact else ft.TextAlign.START,
@@ -294,24 +329,41 @@ class HomeScreen:
     def _fan(self, *, card: float) -> ft.Control:
         concepts = {concept.id: concept for concept in self.deck.concepts}
         width = card * 2.3
-        items: list[ft.Control] = []
+        motion = ft.Animation(int(FLOAT_PERIOD_SECONDS * 1000), ft.AnimationCurve.EASE_IN_OUT)
+        # Halo de luz atrás do leque.
+        items: list[ft.Control] = [
+            ft.Container(
+                left=0,
+                top=0,
+                width=width,
+                height=card * 1.25,
+                gradient=ft.RadialGradient(
+                    colors=[ft.Colors.with_opacity(0.45, s.PINK), ft.Colors.with_opacity(0, s.PINK)],
+                ),
+            )
+        ]
+        self.fan_cards = []
         for position, (concept_id, degrees) in enumerate(FAN):
             concept = concepts.get(concept_id)
             if concept is None:
                 continue
-            items.append(
-                ft.Container(
-                    left=(width - card) / 2 + (position - 1) * card * 0.62,
-                    top=card * 0.12 if position != 1 else 0,
-                    width=card,
-                    height=card,
-                    rotate=ft.Rotate(math.radians(degrees)),
-                    border_radius=card * 0.18,
-                    clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
-                    shadow=ft.BoxShadow(blur_radius=24, color="#66000000", offset=ft.Offset(0, 10)),
-                    content=ft.Image(src=concept.image, fit=ft.BoxFit.COVER, semantics_label=concept.name),
-                )
+            fan_card = ft.Container(
+                data=degrees,  # ângulo de repouso, usado pela animação de balanço
+                left=(width - card) / 2 + (position - 1) * card * 0.62,
+                top=card * 0.12 if position != 1 else 0,
+                width=card,
+                height=card,
+                rotate=ft.Rotate(math.radians(degrees)),
+                offset=ft.Offset(0, 0),
+                animate_rotation=motion,
+                animate_offset=motion,
+                border_radius=card * 0.18,
+                clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
+                shadow=ft.BoxShadow(blur_radius=28, color="#80000000", offset=ft.Offset(0, 12)),
+                content=ft.Image(src=concept.image, fit=ft.BoxFit.COVER, semantics_label=concept.name),
             )
+            self.fan_cards.append(fan_card)
+            items.append(fan_card)
         return ft.Row(
             [ft.Stack(items, width=width, height=card * 1.25)],
             alignment=ft.MainAxisAlignment.CENTER,
@@ -319,24 +371,50 @@ class HomeScreen:
 
     def _mode_tile(self, mode: Mode, icon: ft.IconData, title: str, subtitle: str) -> ft.Container:
         selected = self.mode is mode
+        if selected:
+            look: dict[str, Any] = {
+                "gradient": ft.LinearGradient(
+                    begin=ft.Alignment.TOP_LEFT,
+                    end=ft.Alignment.BOTTOM_RIGHT,
+                    colors=[ft.Colors.with_opacity(0.40, s.CYAN), ft.Colors.with_opacity(0.30, "#6C63FF")],
+                ),
+                "border": ft.Border.all(2, s.CYAN),
+                "shadow": ft.BoxShadow(blur_radius=26, color=ft.Colors.with_opacity(0.45, s.CYAN), offset=ft.Offset(0, 6)),
+            }
+        else:
+            look = {
+                "bgcolor": ft.Colors.with_opacity(0.08, s.WHITE),
+                "border": ft.Border.all(1, s.GLASS_BORDER),
+            }
+        tile = ft.Column(
+            [
+                ft.Container(
+                    width=46,
+                    height=46,
+                    border_radius=23,
+                    alignment=ft.Alignment.CENTER,
+                    bgcolor=ft.Colors.with_opacity(0.25 if selected else 0.10, s.CYAN if selected else s.WHITE),
+                    content=ft.Icon(icon, color=s.WHITE if selected else s.MUTED, size=26),
+                ),
+                ft.Text(title, size=17, weight=ft.FontWeight.W_900, color=s.WHITE),
+                ft.Text(subtitle, size=12, color=s.WHITE if selected else s.MUTED),
+            ],
+            spacing=4,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+        )
+        badge = ft.Icon(ft.Icons.CHECK_CIRCLE_ROUNDED, color=s.CYAN, size=22, visible=selected)
         return ft.Container(
             expand=True,
             padding=10 if self.short else 14,
-            border_radius=18,
-            bgcolor=ft.Colors.with_opacity(0.22 if selected else 0.08, s.CYAN if selected else s.WHITE),
-            border=ft.Border.all(2 if selected else 1, s.CYAN if selected else s.GLASS_BORDER),
+            border_radius=20,
             ink=True,
             data=mode,
             on_click=self._select_mode,
-            content=ft.Column(
-                [
-                    ft.Icon(icon, color=s.CYAN if selected else s.MUTED, size=28),
-                    ft.Text(title, size=17, weight=ft.FontWeight.W_900, color=s.WHITE),
-                    ft.Text(subtitle, size=12, color=s.MUTED),
-                ],
-                spacing=2,
-                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-            ),
+            on_hover=self._hover,
+            scale=1,
+            animate_scale=ft.Animation(180, ft.AnimationCurve.EASE_OUT),
+            content=ft.Stack([ft.Row([tile], alignment=ft.MainAxisAlignment.CENTER), ft.Container(badge, right=0, top=0)]),
+            **look,
         )
 
     def _mode_picker(self) -> ft.Control:
@@ -379,8 +457,12 @@ class HomeScreen:
         return ft.Row([self.name_1, self.name_2], spacing=12)
 
     def _level2_card(self) -> ft.Control:
-        return s.glass(
-            ft.Row(
+        # Borda em degradê: um contêiner colorido com o cartão escuro por dentro.
+        inner = ft.Container(
+            padding=14,
+            border_radius=21,
+            bgcolor="#E6241056",
+            content=ft.Row(
                 [
                     ft.Container(
                         width=52,
@@ -409,19 +491,77 @@ class HomeScreen:
                 ],
                 spacing=14,
             ),
-            padding=14,
+        )
+        return ft.Container(
+            padding=2,
+            border_radius=23,
+            gradient=ft.LinearGradient(
+                begin=ft.Alignment.CENTER_LEFT,
+                end=ft.Alignment.CENTER_RIGHT,
+                colors=[s.CYAN, "#6C63FF", s.PINK],
+            ),
+            shadow=ft.BoxShadow(blur_radius=30, color=ft.Colors.with_opacity(0.35, "#6C63FF"), offset=ft.Offset(0, 8)),
             ink=True,
             on_click=lambda _: self.on_level2(),
+            on_hover=self._hover,
+            scale=1,
+            animate_scale=ft.Animation(180, ft.AnimationCurve.EASE_OUT),
+            content=inner,
         )
 
     def _footer(self) -> ft.Control:
         total = len(self.deck.concepts)
-        return ft.Text(
-            f"🃏 {self.deck.pairs * 2} cartas  •  💡 {total} conceitos  •  🎮 1 ou 2 jogadores",
-            size=12,
-            color=s.MUTED,
-            text_align=ft.TextAlign.CENTER,
+        return ft.Row(
+            [
+                s.chip(f"{self.deck.pairs * 2} cartas", icon=ft.Icons.STYLE_ROUNDED, color=s.PINK, size=11),
+                s.chip(f"{total} conceitos", icon=ft.Icons.LIGHTBULB_ROUNDED, color=s.YELLOW, size=11),
+                s.chip("1 ou 2 jogadores", icon=ft.Icons.SPORTS_ESPORTS_ROUNDED, color=s.CYAN, size=11),
+            ],
+            spacing=8,
+            run_spacing=8,
+            wrap=True,
+            alignment=ft.MainAxisAlignment.CENTER,
         )
+
+    # ------------------------------------------------------------ animações
+    def _floater(
+        self, icon: ft.IconData, color: str, size: float, *, left: float, top: float, motion: ft.Animation
+    ) -> ft.Container:
+        """Ícone em uma bolha de vidro com brilho colorido, que flutua ao fundo."""
+
+        bubble = size * 1.9
+        return ft.Container(
+            left=left,
+            top=top,
+            width=bubble,
+            height=bubble,
+            border_radius=bubble / 2,
+            alignment=ft.Alignment.CENTER,
+            bgcolor=ft.Colors.with_opacity(0.14, color),
+            border=ft.Border.all(1, ft.Colors.with_opacity(0.45, color)),
+            shadow=ft.BoxShadow(blur_radius=24, color=ft.Colors.with_opacity(0.45, color)),
+            opacity=0.55 if self.compact else 0.8,
+            content=ft.Icon(icon, color=color, size=size),
+            offset=ft.Offset(0, 0),
+            rotate=ft.Rotate(0),
+            animate_offset=motion,
+            animate_rotation=motion,
+        )
+
+    def _play_button(self, *, height: float = 58) -> ft.Container:
+        """Botão principal, que pulsa devagar para chamar a atenção."""
+
+        self.play_button = s.pill_button("JOGAR AGORA", ft.Icons.PLAY_ARROW_ROUNDED, self._play, height=height)
+        self.play_button.scale = 1
+        self.play_button.animate_scale = ft.Animation(int(FLOAT_PERIOD_SECONDS * 1000), ft.AnimationCurve.EASE_IN_OUT)
+        return self.play_button
+
+    def _hover(self, event: Any) -> None:
+        """Cartões crescem um pouco quando o mouse passa por cima."""
+
+        hovered = event.data in (True, "true")
+        event.control.scale = HOVER_SCALE if hovered else 1
+        event.control.update()
 
     # ------------------------------------------------------------ ações
     def _select_mode(self, event: Any) -> None:
