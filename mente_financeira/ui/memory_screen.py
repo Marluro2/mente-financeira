@@ -258,31 +258,51 @@ class MemoryScreen:
                 semantics_label="Carta virada",
             )
         concept = self.game.cards[index]
-        label_size = max(9, size * 0.095)
-        return ft.Stack(
+        # Frente no estilo carta de baralho: fundo claro com moldura na cor do
+        # conceito, o nome numa faixa colorida em cima e o desenho embaixo.
+        # Assim ninguém confunde carta aberta com o verso escuro.
+        band = size * 0.27
+        picture = min(size - band - size * 0.12, size * 0.62)
+        return ft.Container(
             key=f"frente-{index}",
             width=size,
             height=size,
-            controls=[
-                ft.Image(src=concept.image, width=size, height=size, fit=ft.BoxFit.COVER, semantics_label=concept.name),
-                ft.Container(
-                    left=0,
-                    right=0,
-                    bottom=0,
-                    padding=ft.Padding.symmetric(horizontal=4, vertical=3),
-                    bgcolor="#99000000",
-                    content=ft.Text(
-                        concept.name,
-                        size=label_size,
-                        weight=ft.FontWeight.BOLD,
-                        color=s.WHITE,
-                        text_align=ft.TextAlign.CENTER,
-                        # Duas linhas: nomes como "Reserva de emergência" cabem inteiros.
-                        max_lines=2,
-                        overflow=ft.TextOverflow.ELLIPSIS,
+            bgcolor="#FFF8EC",
+            border=ft.Border.all(max(2, size * 0.025), concept.color),
+            border_radius=size * 0.18,
+            content=ft.Column(
+                [
+                    ft.Container(
+                        height=band,
+                        bgcolor=concept.color,
+                        padding=ft.Padding.symmetric(horizontal=4),
+                        alignment=ft.Alignment.CENTER,
+                        content=ft.Text(
+                            concept.name,
+                            size=max(9, size * 0.095),
+                            weight=ft.FontWeight.BOLD,
+                            color=s.WHITE,
+                            text_align=ft.TextAlign.CENTER,
+                            # Duas linhas: nomes como "Reserva de emergência" cabem inteiros.
+                            max_lines=2,
+                            overflow=ft.TextOverflow.ELLIPSIS,
+                        ),
                     ),
-                ),
-            ],
+                    ft.Container(
+                        expand=True,
+                        alignment=ft.Alignment.CENTER,
+                        content=ft.Image(
+                            src=concept.image,
+                            width=picture,
+                            height=picture,
+                            fit=ft.BoxFit.CONTAIN,
+                            border_radius=picture * 0.2,
+                            semantics_label=concept.name,
+                        ),
+                    ),
+                ],
+                spacing=0,
+            ),
         )
 
     def _style_card(self, card: ft.Container, index: int) -> None:
