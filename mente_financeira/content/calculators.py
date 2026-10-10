@@ -18,11 +18,13 @@ from mente_financeira.finance import (
     decimal,
     money,
     monthly_to_annual,
+    net_present_value,
     number,
     percent,
     price_payment,
     round_money,
     simple_interest_amount,
+    simple_payback,
 )
 
 Scenario = Mapping[str, Any]
@@ -134,6 +136,59 @@ def price_total(scenario: Scenario) -> dict[str, str]:
     }
 
 
+def _rate(i: Decimal) -> str:
+    """Taxa curta para o enunciado: 10% ou 12,5%."""
+
+    return percent(i, 0) if (i * 100) == (i * 100).to_integral_value() else percent(i, 1)
+
+
+def payback(scenario: Scenario) -> dict[str, str]:
+    investment, gain = decimal(scenario["investment"]), decimal(scenario["gain"])
+    months = simple_payback(investment, gain)
+    if months != months.to_integral_value():
+        raise ValueError("Escolha valores com payback em meses inteiros.")
+    n = int(months)
+    in_years = f" ({n // 12} {'ano' if n == 12 else 'anos'})" if n % 12 == 0 else ""
+    return {
+        "investment": money(investment),
+        "gain": money(gain),
+        "periods": f"{n} {_months(n)}",
+        "in_years": in_years,
+    }
+
+
+def _flows_text(flows: list[Decimal]) -> str:
+    """ "R$ 8.000,00 por ano durante 3 anos" ou "R$ 20.000,00, R$ 25.000,00 e R$ 30.000,00 nos anos 1, 2 e 3"."""
+
+    n = len(flows)
+    if len(set(flows)) == 1:
+        return f"{money(flows[0])} por ano" + ("" if n == 1 else f" durante {n} anos")
+    values = [money(flow) for flow in flows]
+    years = [str(t) for t in range(1, n + 1)]
+    return f"{', '.join(values[:-1])} e {values[-1]} nos anos {', '.join(years[:-1])} e {years[-1]}"
+
+
+def npv(scenario: Scenario) -> dict[str, str]:
+    investment, i = decimal(scenario["investment"]), decimal(scenario["rate"])
+    flows = [decimal(flow) for flow in scenario["flows"]]
+    if not 1 <= len(flows) <= 5:
+        raise ValueError("Use de 1 a 5 fluxos de caixa (anos).")
+    value = round_money(net_present_value(investment, flows, i))
+    factor = number(Decimal(1) + i, 2 if (i * 100) == (i * 100).to_integral_value() else 3)
+    terms = " + ".join(
+        f"{money(flow)} ÷ {factor}" + ("" if t == 1 else f"{'²³⁴⁵'[t - 2]}") for t, flow in enumerate(flows, start=1)
+    )
+    sign = "−" if value < 0 else ""
+    return {
+        "investment": money(investment),
+        "rate": _rate(i),
+        "flows": _flows_text(flows),
+        "terms": terms,
+        "npv": f"{sign}{money(abs(value))}",
+        "verdict": "vale a pena" if value > 0 else "não vale a pena",
+    }
+
+
 CALCULATORS: dict[str, Calculator] = {
     "percentage": percentage,
     "simple_interest": simple_interest,
@@ -143,4 +198,6 @@ CALCULATORS: dict[str, Calculator] = {
     "inflation": inflation,
     "price_installment": price_installment,
     "price_total": price_total,
+    "payback": payback,
+    "npv": npv,
 }

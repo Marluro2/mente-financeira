@@ -80,3 +80,22 @@ def price_payment(principal: Numeric, rate: Numeric, periods: int) -> Decimal:
         return p / periods
     factor = (Decimal(1) + i) ** periods
     return p * (i * factor) / (factor - Decimal(1))
+
+
+def simple_payback(investment: Numeric, gain_per_period: Numeric) -> Decimal:
+    """Períodos para o ganho constante pagar o investimento (sem descontar o tempo)."""
+
+    gain = decimal(gain_per_period)
+    if gain <= 0:
+        raise ValueError("O ganho por período deve ser positivo.")
+    return decimal(investment) / gain
+
+
+def net_present_value(investment: Numeric, flows: list[Numeric], rate: Numeric) -> Decimal:
+    """VPL = −investimento + soma de FCₜ ÷ (1 + i)ᵗ, com t = 1, 2, …"""
+
+    i = decimal(rate)
+    if i <= Decimal("-1"):
+        raise ValueError("A taxa deve ser maior que -100%.")
+    present = sum((decimal(flow) / (Decimal(1) + i) ** t for t, flow in enumerate(flows, start=1)), Decimal(0))
+    return present - decimal(investment)

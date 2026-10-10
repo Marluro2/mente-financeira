@@ -11,8 +11,10 @@ from mente_financeira.admin import admin_ativo
 from mente_financeira.content import load_track
 from mente_financeira.content.memory_deck import MemoryDeck, load_memory_deck
 from mente_financeira.core.coin_challenge import COIN_KIT
+from mente_financeira.core.engineering_challenge import ENGINEERING_KIT
 from mente_financeira.core.memory_game import MemoryGame, Mode
 from mente_financeira.core.percent_challenge import PERCENT_KIT
+from mente_financeira.core.session import GameSession
 from mente_financeira.storage import SettingsStore
 from mente_financeira import sugestoes
 from mente_financeira.ui.admin_screen import AdminScreen
@@ -20,7 +22,7 @@ from mente_financeira.ui.app import DEFAULT_TRACK, MemoryFinanceApp
 from mente_financeira.ui.home import HomeScreen
 from mente_financeira.ui.memory_screen import MemoryScreen
 from mente_financeira.ui.sounds import SoundEffects
-from mente_financeira.ui.tracks import FUNDAMENTAL, FUNDAMENTAL_1, TracksScreen
+from mente_financeira.ui.tracks import ENGENHARIA, FUNDAMENTAL, FUNDAMENTAL_1, TracksScreen
 
 
 # Trilhas com jogo da memória: baralho (arquivo em content/) e Desafio Relâmpago
@@ -28,7 +30,11 @@ from mente_financeira.ui.tracks import FUNDAMENTAL, FUNDAMENTAL_1, TracksScreen
 MEMORY_TRACKS = {
     FUNDAMENTAL_1: ("memoria_fundamental1", COIN_KIT),
     FUNDAMENTAL: ("memoria", PERCENT_KIT),
+    ENGENHARIA: ("memoria_engenharia", ENGINEERING_KIT),
 }
+
+# Banco de questões do Nível 2 de cada trilha (as demais usam o do Ensino Médio).
+LEVEL2_TRACKS = {ENGENHARIA: "engenharia"}
 
 
 class Screen(Protocol):
@@ -91,14 +97,14 @@ class GameShell:
         tracks.show()
 
     def open_track(self, key: str) -> None:
-        # Por enquanto só os Ensinos Fundamentais 1 e 2 estão disponíveis; as
-        # demais trilhas aparecem como "Em breve" na página inicial.
+        # Só as trilhas com jogo da memória abrem; o Ensino Médio aparece como
+        # "Em breve" na página inicial.
         if key in MEMORY_TRACKS:
             self.track = key
             self.show_home()
 
     def show_home(self) -> None:
-        """Abertura da trilha aberta (Ensino Fundamental 1 ou 2)."""
+        """Abertura da trilha aberta (Ensino Fundamental 1 ou 2, Engenharia)."""
 
         home = HomeScreen(
             self.page,
@@ -133,5 +139,8 @@ class GameShell:
 
     def open_level2(self) -> None:
         self._stop_current()
-        level2 = MemoryFinanceApp(self.page, store=self.store, on_home=self.show_home, sounds=self.sounds)
+        session = GameSession(load_track(LEVEL2_TRACKS.get(self.track, DEFAULT_TRACK)))
+        level2 = MemoryFinanceApp(
+            self.page, session=session, store=self.store, on_home=self.show_home, sounds=self.sounds
+        )
         self._activate(level2)

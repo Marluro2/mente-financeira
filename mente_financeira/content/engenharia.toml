@@ -1,0 +1,55 @@
+# Banco de questões — Trilha de Engenharia de Produção (Nível 2)
+#
+# Mesmo formato de medio.toml (veja as instruções lá). O tema é engenharia
+# econômica: decisões de investimento de uma fábrica.
+# - payback: `investment` (investimento) e `gain` (ganho por mês). Escolha
+#   valores em que o payback dá um número inteiro de meses.
+# - npv: `investment`, `flows` (fluxos de caixa no fim de cada ano, até 5) e
+#   `rate` (TMA ao ano, entre aspas).
+# Depois de editar, rode `python -m pytest`.
+
+id = "engenharia"
+name = "Engenharia de Produção"
+description = "Payback e VPL: decisões de investimento de uma fábrica."
+pairs_per_phase = 4
+
+# --------------------------------------------------------------------------
+[[phases]]
+id = "f1"
+title = "Fase 1 — Payback"
+short_title = "Payback"
+objective = "Descubra em quanto tempo cada investimento se paga."
+calculator = "payback"
+scenarios = [
+    { id = "robot", context = "Um robô de solda", investment = 150000, gain = 6250 },
+    { id = "solar", context = "Um sistema de energia solar para o galpão", investment = 84000, gain = 2000 },
+    { id = "conveyor", context = "Uma esteira automatizada", investment = 45000, gain = 2500 },
+    { id = "software", context = "Um software de gestão da produção", investment = 18000, gain = 1500 },
+    { id = "compressor", context = "Um compressor mais econômico", investment = 9600, gain = 320 },
+    { id = "forklift", context = "Uma empilhadeira elétrica", investment = 72000, gain = 1600 },
+]
+
+[phases.templates.default]
+question = "{context} custa {investment} e aumenta o lucro em {gain} por mês. Qual é o payback?"
+resolution = "Payback: {periods}"
+explanation = "Payback = investimento ÷ ganho por mês\nPayback = {investment} ÷ {gain} = {periods}{in_years}."
+
+# --------------------------------------------------------------------------
+[[phases]]
+id = "f2"
+title = "Fase 2 — Valor Presente Líquido (VPL)"
+short_title = "VPL"
+objective = "Traga os fluxos de caixa para hoje e decida se o projeto vale a pena."
+calculator = "npv"
+scenarios = [
+    { id = "line", context = "Uma nova linha de montagem", investment = 100000, flows = [40000, 40000, 40000], rate = "0.10" },
+    { id = "oven", context = "Um forno industrial mais eficiente", investment = 50000, flows = [20000, 25000, 30000], rate = "0.12" },
+    { id = "cnc", context = "Uma máquina CNC", investment = 80000, flows = [30000, 30000, 30000, 30000], rate = "0.15" },
+    { id = "water", context = "Um sistema de reúso de água", investment = 20000, flows = [8000, 8000, 8000], rate = "0.08" },
+    { id = "printer", context = "Uma impressora 3D industrial", investment = 60000, flows = [25000, 25000, 25000], rate = "0.20" },
+]
+
+[phases.templates.default]
+question = "{context} custa {investment} e gera {flows}. Com TMA de {rate} ao ano, qual é o VPL?"
+resolution = "VPL: {npv} ({verdict})"
+explanation = "VPL = −investimento + soma de FC ÷ (1 + TMA)ᵗ\nVPL = −{investment} + {terms} = {npv}: {verdict}."
