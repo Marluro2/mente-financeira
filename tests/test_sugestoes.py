@@ -17,7 +17,7 @@ from mente_financeira.sala.app import RoomApp, new_lobby
 from mente_financeira.storage import SettingsStore
 from mente_financeira.sugestoes import Suggestion, SuggestionBox, SuggestionError, make_suggestion
 from mente_financeira.ui.shell import GameShell
-from mente_financeira.ui.suggestion_form import SuggestionForm
+from mente_financeira.ui.suggestion_form import SUGGESTION_QR, SuggestionForm
 import servidor_sala
 
 
@@ -108,3 +108,28 @@ def test_form_age_error_goes_to_age_field() -> None:
     form.text.value, form.age.value = "Boa ideia", "200"
     form._send()
     assert form.age.error and not form.text.error
+
+
+def test_site_uses_the_project_form_and_shows_its_qr(tmp_path: Path) -> None:
+    assert sugestoes.FORM_URL == "https://forms.gle/wh7rXXBcUBLCn7857"
+    assert (Path(__file__).resolve().parent.parent / "assets" / SUGGESTION_QR).stat().st_size > 200
+    shell = GameShell(FakePage(1280, 720), store=SettingsStore(tmp_path), rng=random.Random(2))  # type: ignore[arg-type]
+    assert _button(shell.page) is not None
+    images = [c.src for c in walk(shell.page.controls[-1]) if isinstance(c, ft.Image)]
+    assert SUGGESTION_QR in images
+
+
+def test_room_start_screen_shows_the_qr_too(tmp_path: Path) -> None:
+    page = FakePage(390, 844)
+    RoomApp(page, new_lobby(), NoMessenger(), player_id="a", on_suggestion=SuggestionBox(tmp_path / "s.csv").save)  # type: ignore[arg-type]
+    assert SUGGESTION_QR in [c.src for c in walk(page.controls[-1]) if isinstance(c, ft.Image)]
+
+
+def test_qr_image_matches_the_form_address() -> None:
+    import segno
+
+    expected = segno.make(sugestoes.FORM_URL, error="m")
+    rows = len(expected.matrix) + 4  # borda de 2 módulos de cada lado
+    png = (Path(__file__).resolve().parent.parent / "assets" / SUGGESTION_QR).read_bytes()
+    width = int.from_bytes(png[16:20], "big")
+    assert width == rows * 10  # mesmo tamanho do QR desse endereço (escala 10)

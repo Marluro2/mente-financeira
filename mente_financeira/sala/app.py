@@ -24,7 +24,7 @@ from mente_financeira.ui import style as s
 from mente_financeira.ui.memory_screen import MemoryScreen
 from mente_financeira.ui.shell import MEMORY_TRACKS
 from mente_financeira.ui.sounds import SoundEffects
-from mente_financeira.ui.suggestion_form import SuggestionForm, suggestion_button
+from mente_financeira.ui.suggestion_form import SuggestionForm, suggestion_button, suggestion_qr
 from mente_financeira.ui.tracks import FUNDAMENTAL, TRACKS
 
 ROOM_TRACKS = tuple(t for t in TRACKS if t.key in MEMORY_TRACKS)
@@ -387,7 +387,11 @@ class RoomApp:
     def _suggestion_row(self) -> list[ft.Control]:
         if self.on_suggestion is None:
             return []
-        return [ft.Row([suggestion_button(self._open_suggestion)], alignment=ft.MainAxisAlignment.CENTER)]
+        return [
+            ft.Row([suggestion_button(self._open_suggestion)], alignment=ft.MainAxisAlignment.CENTER),
+            # Sem internet na feira: o QR fica para a pessoa responder depois, em casa.
+            suggestion_qr("Prefere responder depois? Escaneie o QR code e responda em casa, com internet."),
+        ]
 
     def _open_suggestion(self, _: Any = None) -> None:
         if self.on_suggestion is not None:

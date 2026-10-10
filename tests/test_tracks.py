@@ -16,6 +16,7 @@ from mente_financeira.ui import tracks as tracks_module
 from mente_financeira.ui.home import HomeScreen
 from mente_financeira.ui.memory_screen import MemoryScreen
 from mente_financeira.ui.shell import GameShell
+from mente_financeira.ui.suggestion_form import SUGGESTION_QR
 from mente_financeira.ui.tracks import ENGENHARIA, FUNDAMENTAL, FUNDAMENTAL_1, MEDIO, TRACKS, TracksScreen
 
 PHONE, NOTEBOOK, DESKTOP = (360, 740), (1536, 785), (1920, 1000)
@@ -80,7 +81,8 @@ def test_other_tracks_only_announce_coming_soon(shell: GameShell, key: str) -> N
 def test_board_uses_the_card_back_and_fits_the_window(shell: GameShell) -> None:
     screen: TracksScreen = shell.current  # type: ignore[assignment]
     page = shell.page
-    images = [c.src for c in walk(page.controls[-1]) if isinstance(c, ft.Image)]
+    # Fora do tabuleiro só há o QR code do formulário de sugestões.
+    images = [c.src for c in walk(page.controls[-1]) if isinstance(c, ft.Image) and c.src != SUGGESTION_QR]
     assert images and set(images) == {screen.deck.back_image}
     board_width = 4 * screen.card_size + 3 * (8 if screen.compact else 12)
     assert board_width <= page.width

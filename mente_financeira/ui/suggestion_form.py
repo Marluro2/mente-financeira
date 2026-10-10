@@ -26,6 +26,33 @@ def suggestion_button(on_click: Callable[[Any], None]) -> ft.Control:
     )
 
 
+SUGGESTION_QR = "qr/sugestoes.png"  # gerado por ferramentas/gerar_qr_sugestoes.py
+
+
+def suggestion_qr(caption: str, *, size: float = 92, button: ft.Control | None = None) -> ft.Control:
+    """QR code do Formulário Google, para responder pelo próprio celular.
+
+    Com ``button``, o botão fica ao lado do QR, acima da legenda (ocupa menos altura).
+    """
+
+    side: ft.Control = ft.Text(caption, size=12, color=s.MUTED, expand=True)
+    if button is not None:
+        side = ft.Column([ft.Row([button]), ft.Text(caption, size=12, color=s.MUTED)], spacing=8, tight=True, expand=True)
+    return ft.Row(
+        [
+            ft.Container(
+                padding=6,
+                border_radius=12,
+                bgcolor=s.WHITE,
+                content=ft.Image(src=SUGGESTION_QR, width=size, height=size, semantics_label="QR code do formulário de sugestões"),
+            ),
+            side,
+        ],
+        spacing=12,
+        vertical_alignment=ft.CrossAxisAlignment.CENTER,
+    )
+
+
 class SuggestionForm:
     """Janela com a sugestão (obrigatória), o nível e a idade (opcionais)."""
 
