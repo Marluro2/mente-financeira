@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Depreciação: o equipamento perde valor com o tempo -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#9AA3B8"/>
+      <stop offset="1" stop-color="#3F4460"/>
+    </linearGradient>
+    <clipPath id="clip"><rect width="200" height="200" rx="36"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+  <rect width="200" height="200" rx="36" fill="url(#bg)"/>
+  <circle cx="170" cy="30" r="46" fill="#FFFFFF" opacity="0.1"/>
+  <circle cx="30" cy="176" r="40" fill="#FFFFFF" opacity="0.08"/>
+  <!-- escada de valor descendo -->
+  <path d="M20 50 H60 V82 H100 V114 H140 V146 H168 V156" fill="none" stroke="#2B2D42" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M20 50 H60 V82 H100 V114 H140 V146 H168 V156" fill="none" stroke="#FF6B6B" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M152 154 L168 180 L184 154 Z" fill="#FF6B6B" stroke="#2B2D42" stroke-width="4" stroke-linejoin="round"/>
+  <!-- moedas cada vez menores -->
+  <g fill="#FFD23F" stroke="#D99400">
+    <circle cx="40" cy="28" r="15" stroke-width="4"/>
+    <circle cx="80" cy="64" r="11" stroke-width="3.5"/>
+    <circle cx="120" cy="99" r="8" stroke-width="3"/>
+    <circle cx="154" cy="134" r="5" stroke-width="2.5"/>
+  </g>
+  <circle cx="40" cy="28" r="7" fill="none" stroke="#D99400" stroke-width="2.5"/>
+  <!-- notebook -->
+  <rect x="26" y="108" width="80" height="54" rx="7" fill="#2B2D42"/>
+  <rect x="33" y="115" width="66" height="40" rx="3" fill="#5CC8FF"/>
+  <path d="M40 150 L64 118 H76 L52 150 Z" fill="#FFFFFF" opacity="0.3"/>
+  <path d="M16 162 H116 L109 176 H23 Z" fill="#C9CED6" stroke="#2B2D42" stroke-width="4" stroke-linejoin="round"/>
+  <rect x="56" y="164" width="20" height="4" rx="2" fill="#9AA1AC"/>
+  <!-- brilhos -->
+  <path d="M168 50 v14 M161 57 h14" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+  <path d="M130 172 v10 M125 177 h10" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round"/>
+  </g>
+</svg>

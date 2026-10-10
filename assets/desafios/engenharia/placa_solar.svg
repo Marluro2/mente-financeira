@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Placas solares no telhado -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8EDBFF"/>
+      <stop offset="1" stop-color="#1E7BD9"/>
+    </linearGradient>
+    <clipPath id="clip"><rect width="200" height="200" rx="36"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+  <rect width="200" height="200" rx="36" fill="url(#bg)"/>
+  <circle cx="168" cy="32" r="50" fill="#FFFFFF" opacity="0.13"/>
+  <circle cx="26" cy="178" r="40" fill="#FFFFFF" opacity="0.09"/>
+
+  <!-- sol -->
+  <g stroke="#FFD23F" stroke-width="6" stroke-linecap="round">
+    <path d="M48 12 v8 M48 76 v8 M12 48 h8 M76 48 h8 M23 23 l6 6 M67 67 l6 6 M73 23 l-6 6 M23 73 l6 -6"/>
+  </g>
+  <circle cx="48" cy="48" r="20" fill="#FFD23F" stroke="#F2A900" stroke-width="4"/>
+  <!-- paredes -->
+  <path d="M34 208 V132 L68 98 L102 132 V208 Z" fill="#F4F1EA" stroke="#2B2D42" stroke-width="5" stroke-linejoin="round"/>
+  <rect x="102" y="132" width="80" height="76" fill="#E3DCCB" stroke="#2B2D42" stroke-width="5" stroke-linejoin="round"/>
+  <rect x="56" y="146" width="24" height="24" rx="3" fill="#BFE9FF" stroke="#2B2D42" stroke-width="4"/>
+  <path d="M68 146 v24 M56 158 h24" stroke="#2B2D42" stroke-width="3"/>
+  <rect x="128" y="152" width="26" height="48" rx="3" fill="#C2410C" stroke="#2B2D42" stroke-width="4"/>
+  <!-- telhado -->
+  <path d="M68 92 H156 L194 136 H106 Z" fill="#D62839" stroke="#2B2D42" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M24 140 L68 92 L110 140" fill="none" stroke="#2B2D42" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M24 140 L68 92 L110 140" fill="none" stroke="#D62839" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- placas solares -->
+  <path d="M82 98 H152 L180 130 H110 Z" fill="#1B3A8C" stroke="#2B2D42" stroke-width="4" stroke-linejoin="round"/>
+  <g stroke="#7FC4FF" stroke-width="2.5">
+    <path d="M105.3 98 L133.3 130 M128.7 98 L156.7 130 M96 114 H166"/>
+  </g>
+  <path d="M90 104 L98 104 L106 112 L98 112 Z" fill="#FFFFFF" opacity="0.5"/>
+  <!-- raios chegando -->
+  <path d="M88 60 l10 12 M110 52 l6 14" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+  <!-- brilhos -->
+  <path d="M176 57 v14 M169 64 h14" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+  <path d="M124 25 v10 M119 30 h10" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round"/>
+  </g>
+</svg>

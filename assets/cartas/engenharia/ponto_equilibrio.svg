@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Ponto de equilíbrio: receitas e custos na mesma altura -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#6FE3F0"/>
+      <stop offset="1" stop-color="#00798C"/>
+    </linearGradient>
+    <clipPath id="clip"><rect width="200" height="200" rx="36"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+  <rect width="200" height="200" rx="36" fill="url(#bg)"/>
+  <circle cx="170" cy="30" r="46" fill="#FFFFFF" opacity="0.12"/>
+  <circle cx="28" cy="178" r="38" fill="#FFFFFF" opacity="0.09"/>
+  <!-- haste e base -->
+  <rect x="95" y="58" width="10" height="114" rx="4" fill="#2B2D42"/>
+  <path d="M64 184 C64 172 72 166 84 166 H116 C128 166 136 172 136 184 Z" fill="#2B2D42"/>
+  <!-- cordas -->
+  <g stroke="#2B2D42" stroke-width="3" fill="none">
+    <path d="M44 64 L20 124 M44 64 L68 124"/>
+    <path d="M156 64 L132 124 M156 64 L180 124"/>
+  </g>
+  <!-- travessão nivelado -->
+  <rect x="28" y="56" width="144" height="12" rx="6" fill="#F4F1EA" stroke="#2B2D42" stroke-width="4"/>
+  <circle cx="100" cy="62" r="11" fill="#FFD23F" stroke="#2B2D42" stroke-width="4"/>
+  <path d="M100 51 V36" stroke="#2B2D42" stroke-width="4" stroke-linecap="round"/>
+  <path d="M92 36 L100 26 L108 36 Z" fill="#2B2D42" stroke="#2B2D42" stroke-width="2" stroke-linejoin="round"/>
+  <!-- prato esquerdo: moedas (receita) -->
+  <g stroke="#D99400" stroke-width="3" stroke-linejoin="round">
+    <path d="M28 104 v14 a16 5.5 0 0 0 32 0 v-14" fill="#FFD23F"/>
+    <path d="M28 111 a16 5.5 0 0 0 32 0" fill="none"/>
+    <ellipse cx="44" cy="104" rx="16" ry="5.5" fill="#FFE27A"/>
+    <path d="M30 90 v8 a14 5 0 0 0 28 0 v-8" fill="#FFD23F"/>
+    <ellipse cx="44" cy="90" rx="14" ry="5" fill="#FFE27A"/>
+  </g>
+  <!-- prato direito: caixa e engrenagem (custos) -->
+  <rect x="128" y="98" width="26" height="24" rx="3" fill="#E0A86A" stroke="#2B2D42" stroke-width="3.5"/>
+  <path d="M141 98 v9" stroke="#F4D6A0" stroke-width="5"/>
+  <g transform="translate(170 105)">
+    <g fill="#2B2D42">
+      <rect x="-5.5" y="-17" width="11" height="34" rx="2"/>
+      <rect x="-5.5" y="-17" width="11" height="34" rx="2" transform="rotate(45)"/>
+      <rect x="-5.5" y="-17" width="11" height="34" rx="2" transform="rotate(90)"/>
+      <rect x="-5.5" y="-17" width="11" height="34" rx="2" transform="rotate(135)"/>
+      <circle r="13.5"/>
+    </g>
+    <g fill="#B8BEC8">
+      <rect x="-3" y="-14.5" width="6" height="29" rx="1"/>
+      <rect x="-3" y="-14.5" width="6" height="29" rx="1" transform="rotate(45)"/>
+      <rect x="-3" y="-14.5" width="6" height="29" rx="1" transform="rotate(90)"/>
+      <rect x="-3" y="-14.5" width="6" height="29" rx="1" transform="rotate(135)"/>
+      <circle r="11"/>
+    </g>
+    <circle r="4" fill="#F4F1EA" stroke="#2B2D42" stroke-width="3"/>
+  </g>
+  <!-- pratos -->
+  <g fill="#F4F1EA" stroke="#2B2D42" stroke-width="4" stroke-linejoin="round">
+    <path d="M14 122 H74 A30 14 0 0 1 14 122 Z"/>
+    <path d="M126 122 H186 A30 14 0 0 1 126 122 Z"/>
+  </g>
+  <!-- brilhos -->
+  <path d="M34 30 v14 M27 37 h14" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+  <path d="M164 160 v10 M159 165 h10" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round"/>
+  </g>
+</svg>

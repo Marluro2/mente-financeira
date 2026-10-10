@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Valor do dinheiro no tempo: a moeda de hoje vale mais que a de amanhã -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#9BF0B0"/>
+      <stop offset="1" stop-color="#1FA45C"/>
+    </linearGradient>
+    <clipPath id="clip"><rect width="200" height="200" rx="36"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+  <rect width="200" height="200" rx="36" fill="url(#bg)"/>
+  <circle cx="30" cy="30" r="44" fill="#FFFFFF" opacity="0.12"/>
+  <circle cx="176" cy="180" r="36" fill="#FFFFFF" opacity="0.09"/>
+  <!-- relógio -->
+  <circle cx="140" cy="64" r="38" fill="#FFFFFF" stroke="#2B2D42" stroke-width="5"/>
+  <path d="M140 32 v8 M140 88 v8 M108 64 h8 M164 64 h8" stroke="#2B2D42" stroke-width="4" stroke-linecap="round"/>
+  <path d="M140 64 V44 M140 64 L156 72" stroke="#2B2D42" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="140" cy="64" r="4.5" fill="#FF5C5C"/>
+  <!-- moeda grande (hoje) -->
+  <circle cx="76" cy="120" r="50" fill="#FFD23F" stroke="#D99400" stroke-width="5"/>
+  <circle cx="76" cy="120" r="34" fill="none" stroke="#D99400" stroke-width="3.5"/>
+  <path d="M54 98 A30 30 0 0 1 72 88" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" opacity="0.7"/>
+  <!-- seta e moeda pequena (amanhã) -->
+  <path d="M132 120 L150 136" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/>
+  <path d="M140 140 L158 144 L154 126 Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="3" stroke-linejoin="round"/>
+  <circle cx="164" cy="158" r="15" fill="#FFD23F" stroke="#D99400" stroke-width="3.5"/>
+  <circle cx="164" cy="158" r="6" fill="none" stroke="#D99400" stroke-width="2.5"/>
+  <!-- brilhos -->
+  <path d="M36 30 v14 M29 37 h14" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+  <path d="M182 108 v10 M177 113 h10" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round"/>
+  </g>
+</svg>

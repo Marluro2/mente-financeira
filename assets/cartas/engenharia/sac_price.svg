@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- SAC x Price: parcelas que caem (SAC) e parcelas iguais (Price) -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8F88FF"/>
+      <stop offset="1" stop-color="#4331D6"/>
+    </linearGradient>
+    <clipPath id="clip"><rect width="200" height="200" rx="36"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+  <rect width="200" height="200" rx="36" fill="url(#bg)"/>
+  <circle cx="30" cy="28" r="40" fill="#FFFFFF" opacity="0.1"/>
+  <circle cx="172" cy="176" r="44" fill="#FFFFFF" opacity="0.1"/>
+  <!-- divisória -->
+  <path d="M100 30 V172" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" opacity="0.7"/>
+  <!-- SAC: amortização igual (amarelo) + juros que caem (rosa) -->
+  <g fill="#FFD23F">
+    <rect x="20" y="124" width="14" height="34"/>
+    <rect x="39" y="124" width="14" height="34"/>
+    <rect x="58" y="124" width="14" height="34"/>
+    <rect x="77" y="124" width="14" height="34"/>
+  </g>
+  <g fill="#FF6FA8">
+    <rect x="20" y="70" width="14" height="54"/>
+    <rect x="39" y="86" width="14" height="38"/>
+    <rect x="58" y="102" width="14" height="22"/>
+    <rect x="77" y="116" width="14" height="8"/>
+  </g>
+  <g fill="none" stroke="#2B2D42" stroke-width="3.5" stroke-linejoin="round">
+    <rect x="20" y="70" width="14" height="88" rx="2"/>
+    <rect x="39" y="86" width="14" height="72" rx="2"/>
+    <rect x="58" y="102" width="14" height="56" rx="2"/>
+    <rect x="77" y="116" width="14" height="42" rx="2"/>
+  </g>
+  <!-- Price: parcelas iguais -->
+  <g fill="#FFD23F">
+    <rect x="109" y="128" width="14" height="30"/>
+    <rect x="128" y="116" width="14" height="42"/>
+    <rect x="147" y="104" width="14" height="54"/>
+    <rect x="166" y="92" width="14" height="66"/>
+  </g>
+  <g fill="#FF6FA8">
+    <rect x="109" y="86" width="14" height="42"/>
+    <rect x="128" y="86" width="14" height="30"/>
+    <rect x="147" y="86" width="14" height="18"/>
+    <rect x="166" y="86" width="14" height="6"/>
+  </g>
+  <g fill="none" stroke="#2B2D42" stroke-width="3.5" stroke-linejoin="round">
+    <rect x="109" y="86" width="14" height="72" rx="2"/>
+    <rect x="128" y="86" width="14" height="72" rx="2"/>
+    <rect x="147" y="86" width="14" height="72" rx="2"/>
+    <rect x="166" y="86" width="14" height="72" rx="2"/>
+  </g>
+  <!-- bases -->
+  <path d="M14 160 H96 M104 160 H186" stroke="#1E1470" stroke-width="5" stroke-linecap="round"/>
+  <!-- ícones: seta que desce / sinal de igual -->
+  <path d="M30 40 L74 58" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"/>
+  <path d="M66 46 L84 62 L60 66 Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M126 50 H164 M126 66 H164" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round"/>
+  <!-- brilhos -->
+  <path d="M60 176 v10 M55 181 h10" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round"/>
+  </g>
+</svg>
