@@ -81,12 +81,12 @@ class TracksScreen:
         *,
         on_select: Callable[[str], None],
         rng: random.Random | None = None,
-        on_suggest: Callable[[], None] | None = None,
+        suggest_url: str | None = None,
     ) -> None:
         self.page = page
         self.deck = deck
         self.on_select = on_select
-        self.on_suggest = on_suggest  # "Deixe sua sugestão" (só com formulário configurado)
+        self.suggest_url = suggest_url  # Formulário Google de sugestões (sem ele, nada aparece)
         self.rng = rng or random.Random()
         self.layout = layout_for(page.width)
         self.generation = 0
@@ -173,9 +173,9 @@ class TracksScreen:
             color=s.MUTED,
             text_align=ft.TextAlign.CENTER if self.compact else ft.TextAlign.START,
         )
-        if self.on_suggest is not None:
+        if self.suggest_url:
             # QR do formulário ao lado do título; o botão continua no rodapé.
-            qr = suggestion_qr_tile(lambda _: self.on_suggest(), size=72 if self.compact else (96 if short else 112))
+            qr = suggestion_qr_tile(self.suggest_url, size=72 if self.compact else (96 if short else 112))
             title = ft.Row(
                 [title, qr],
                 spacing=16 if self.compact else 28,
@@ -183,7 +183,7 @@ class TracksScreen:
                 vertical_alignment=ft.CrossAxisAlignment.CENTER,
             )
             suggest = ft.Row(
-                [suggestion_button(lambda _: self.on_suggest())],
+                [suggestion_button(url=self.suggest_url)],
                 alignment=ft.MainAxisAlignment.CENTER if self.compact else ft.MainAxisAlignment.START,
             )
             footer = ft.Column([footer, suggest], spacing=10, horizontal_alignment=ft.CrossAxisAlignment.STRETCH)
