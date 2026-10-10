@@ -429,17 +429,3 @@ class RoomApp:
             ]
         )
 
-
-def make_main(lobby: Lobby, on_suggestion: Callable[[Suggestion], None] | None = None) -> Callable[[ft.Page], None]:
-    """Ponto de entrada de cada celular no servidor, todos com as mesmas salas."""
-
-    def main(page: ft.Page) -> None:
-        raw = code_from_route(page.route)
-        try:
-            code = normalize_code(raw) if raw else None
-        except RoomError:
-            code = None
-        app = RoomApp(page, lobby, PubSubMessenger(page), player_id=page.session.id, code=code, on_suggestion=on_suggestion)
-        page.on_close = app.close
-
-    return main

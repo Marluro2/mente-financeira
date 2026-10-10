@@ -1,4 +1,4 @@
-# Guia da feira: Duelo em sala
+# Guia da feira: Duelo em sala e Quiz ao vivo
 
 O notebook vira o servidor do jogo. Os celulares entram no Wi-Fi do estande e
 jogam pelo navegador, **sem internet**. Uma pessoa cria a sala e recebe um
@@ -47,6 +47,28 @@ quando a pessoa sai.
    o código ou o QR code da sala. A outra escaneia esse QR code ou digita o
    código e toca em **Entrar**.
 
+## Quiz ao vivo (para o grupo todo)
+
+Bom para turmas e grupos parados no estande: as perguntas aparecem na tela do
+notebook (ou no projetor/TV ligado nele) e cada pessoa responde pelo celular.
+Quem acerta mais rápido ganha mais pontos, e o placar aparece a cada pergunta.
+
+1. No notebook, abra `http://localhost:8000/?quiz=apresentar` (a janela preta
+   mostra esse endereço, e o cartaz da mesa tem o botão **Abrir o Quiz ao
+   vivo**). Essa tela só abre no próprio notebook.
+2. Escolha a trilha das perguntas (Fundamental 1, Fundamental 2 ou Engenharia
+   de Produção).
+3. O público conecta no Wi-Fi do estande, escaneia o QR code da tela e digita
+   um apelido. Os apelidos aparecem na tela do notebook.
+4. Clique em **Começar o quiz**. São 8 perguntas de 30 segundos. A resposta
+   aparece quando o tempo acaba ou quando todos responderam (ou clique em
+   **Mostrar a resposta agora**).
+5. Depois de cada resposta, clique em **Próxima pergunta**. No fim aparece o
+   **pódio**. **Novo quiz** começa outra rodada com as mesmas pessoas.
+
+Quem chega atrasado pode entrar no meio do quiz. Como no Duelo, só pedimos um
+apelido e nada é guardado.
+
 ## Sugestões dos visitantes
 
 Na tela inicial do celular há o botão **Deixe sua sugestão**. A sugestão é
@@ -62,6 +84,7 @@ preta mostra esse caminho ao iniciar.
 | A página não abre no celular | Conferir se o celular está no Wi-Fi do estande, o isolamento de clientes e o Firewall (passo 3) |
 | O endereço mudou | Reservar o IP no roteador; reabrir o JOGAR_FEIRA.bat e o cartaz |
 | "Não achei a sala" | Conferir o código; quem criou a sala não pode ter saído dela |
+| O endereço do quiz abre a tela de jogador no notebook | Abrir pelo próprio notebook com `localhost` (ou pelo IP do notebook), não por outro computador |
 | Nada funciona | Plano B: **Duelo no mesmo aparelho**, que já existe no jogo normal (JOGAR.bat ou o site) |
 
 Cada celular também pode abrir o jogo normal pelo site, se houver internet.

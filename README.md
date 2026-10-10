@@ -21,6 +21,11 @@ código. Tudo vem do notebook, inclusive os emojis (`assets/fontes/emoji.woff2`)
 então funciona sem internet. O cartaz com o QR code da mesa fica em
 `http://localhost:8000/mesa`. Só pedimos um apelido, e nada é gravado.
 
+**Quiz ao vivo:** o notebook abre `http://localhost:8000/?quiz=apresentar` e
+vira o telão (QR code, perguntas, relógio, placar e pódio). O público entra
+pelo QR code e responde pelo celular; quem acerta mais rápido ganha mais
+pontos. As perguntas vêm do Desafio Relâmpago da trilha escolhida.
+
 O botão **Deixe sua sugestão** salva sugestões anônimas em
 `sugestoes/sugestoes.csv` no notebook. No site, o mesmo botão abre o Formulário
 Google cujo endereço estiver em `FORM_URL` (`mente_financeira/sugestoes.py`).

@@ -1,9 +1,13 @@
 """Página simulada para testar as telas sem abrir janela."""
 
+import asyncio
+from collections.abc import Awaitable, Callable
 from types import SimpleNamespace
 from typing import Any
 
 import flet as ft
+
+Handler = Callable[[dict[str, Any]], Awaitable[None]]
 
 
 class FakePage:
@@ -70,3 +74,35 @@ def started_shell(*args: Any, **kwargs: Any):
     shell = GameShell(*args, **kwargs)
     shell.open_track(FUNDAMENTAL)
     return shell
+
+
+class FakeHub:
+    """Faz o papel do pubsub do Flet: guarda os recados e entrega com ``flush``."""
+
+    def __init__(self) -> None:
+        self.handlers: dict[str, list[tuple[str, Handler]]] = {}
+        self.queue: list[tuple[str, dict[str, Any]]] = []
+
+    def messenger(self, owner: str) -> FakeMessenger:
+        return FakeMessenger(self, owner)
+
+    def flush(self) -> None:
+        while self.queue:
+            topic, message = self.queue.pop(0)
+            for _, handler in list(self.handlers.get(topic, [])):
+                asyncio.run(handler(message))
+
+
+class FakeMessenger:
+    def __init__(self, hub: FakeHub, owner: str) -> None:
+        self.hub, self.owner = hub, owner
+
+    def subscribe(self, topic: str, handler: Handler) -> None:
+        self.hub.handlers.setdefault(topic, []).append((self.owner, handler))
+
+    def send(self, topic: str, message: dict[str, Any]) -> None:
+        self.hub.queue.append((topic, message))
+
+    def close(self) -> None:
+        for topic, handlers in self.hub.handlers.items():
+            self.hub.handlers[topic] = [(o, h) for o, h in handlers if o != self.owner]
