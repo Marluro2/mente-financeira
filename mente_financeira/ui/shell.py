@@ -12,6 +12,7 @@ from mente_financeira.content import load_track
 from mente_financeira.content.memory_deck import MemoryDeck, load_memory_deck
 from mente_financeira.core.coin_challenge import COIN_KIT
 from mente_financeira.core.engineering_challenge import ENGINEERING_KIT
+from mente_financeira.core.medals import GameSummary, Medal, MedalBook
 from mente_financeira.core.memory_game import MemoryGame, Mode
 from mente_financeira.core.percent_challenge import PERCENT_KIT
 from mente_financeira.core.session import GameSession
@@ -60,6 +61,7 @@ class GameShell:
         # abertura para o primeiro toque não atrasar).
         self.sounds = SoundEffects(page, self.store)
         self.sounds.preload()
+        self.medals = MedalBook(self.store)  # conquistas, guardadas com as preferências
         self.page.title = "Mente Financeira"
         self.page.padding = 0
         self.page.spacing = 0
@@ -114,6 +116,7 @@ class GameShell:
             # O painel do professor traz as questões do Ensino Fundamental 2.
             on_admin=self.open_admin if admin_ativo() and self.track == FUNDAMENTAL else None,
             on_tracks=self.show_tracks,
+            medals=self.medals,
         )
         self._activate(home)
         home.show()
@@ -133,9 +136,13 @@ class GameShell:
             on_level2=self.open_level2,
             sounds=self.sounds,
             challenges=MEMORY_TRACKS[self.track][1],
+            medals=self._record_medals,
         )
         self._activate(screen)
         screen.show()
+
+    def _record_medals(self, game: MemoryGame, right_labels: set[str]) -> list[Medal]:
+        return self.medals.record(GameSummary.of(game, self.track, right_labels))
 
     def open_level2(self) -> None:
         self._stop_current()
