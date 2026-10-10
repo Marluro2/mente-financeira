@@ -343,7 +343,7 @@ class HomeScreen:
     def _mode_picker(self) -> ft.Control:
         return ft.Row(
             [
-                self._mode_tile(Mode.SOLO, ft.Icons.PERSON_ROUNDED, "Solo", "Contra o relógio"),
+                self._mode_tile(Mode.SOLO, ft.Icons.PERSON_ROUNDED, "Solo", "Relógio + desafios"),
                 self._mode_tile(Mode.DUEL, ft.Icons.PEOPLE_ALT_ROUNDED, "Duelo", "2 jogadores + desafios"),
             ],
             spacing=12,

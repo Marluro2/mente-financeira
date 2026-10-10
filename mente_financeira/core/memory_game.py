@@ -1,9 +1,13 @@
 """Motor do jogo da memória tradicional (Nível 1).
 
-Cartas iguais formam pares. No modo Solo o objetivo é terminar com poucas
-jogadas. No Duelo, quem forma um par marca ponto e enfrenta um Desafio
-Relâmpago de porcentagem: acertando, continua jogando; errando, passa a vez.
-Quem erra o par também passa a vez.
+Cartas iguais formam pares. Cada par vale pontos e traz um Desafio
+Relâmpago (menos o último, que encerra a partida). Pares seguidos sem errar
+formam um combo: a partir do segundo, os pontos dobram, inclusive os do
+desafio; errar um par ou um desafio zera o combo.
+
+No modo Solo o objetivo é terminar com poucas jogadas, e cada desafio certo
+tira alguns segundos do relógio. No Duelo, acertando o desafio, o jogador
+continua; errando, passa a vez. Quem erra o par também passa a vez.
 """
 
 from __future__ import annotations
@@ -14,6 +18,12 @@ import random
 
 from mente_financeira.content.memory_deck import Concept, MemoryDeck
 from mente_financeira.core.session import DEFAULT_PLAYERS, clean_name
+
+
+PAIR_POINTS = 10
+CHALLENGE_POINTS = 5
+COMBO_FROM = 2  # a partir do 2º par seguido os pontos dobram
+TIME_BONUS_SECONDS = 5  # Solo: cada desafio certo tira 5 s do relógio
 
 
 class Mode(StrEnum):
@@ -31,7 +41,8 @@ class Flip(Enum):
 class Outcome:
     matched: bool
     concept: Concept
-    challenge: bool = False  # Duelo: o jogador precisa responder o desafio
+    challenge: bool = False  # o jogador precisa responder o Desafio Relâmpago
+    gain: int = 0  # pontos ganhos com o par
 
 
 class MemoryGame:
@@ -46,7 +57,10 @@ class MemoryGame:
         self.learned: list[Concept] = []
         self.moves = 0
         self.mistakes = 0
-        self.scores = [0, 0]
+        self.scores = [0, 0]  # pares encontrados por jogador
+        self.points = [0, 0]  # pontos (pares, desafios e combos) por jogador
+        self.streak = 0  # pares seguidos da vez atual, sem erro
+        self.best_streak = 0
         self.turn = 0
         self.elapsed = 0
         self.active = False
@@ -70,6 +84,9 @@ class MemoryGame:
         self.moves = 0
         self.mistakes = 0
         self.scores = [0, 0]
+        self.points = [0, 0]
+        self.streak = 0
+        self.best_streak = 0
         self.turn = 0
         self.elapsed = 0
         self.active = True
@@ -102,6 +119,18 @@ class MemoryGame:
     def current_player(self) -> str:
         return self.players[self.turn]
 
+    @property
+    def multiplier(self) -> int:
+        """2 durante um combo (a partir do 2º par seguido), senão 1."""
+
+        return 2 if self.streak >= COMBO_FROM else 1
+
+    @property
+    def challenge_gain(self) -> int:
+        """Pontos que um acerto no desafio aberto vale agora."""
+
+        return CHALLENGE_POINTS * self.multiplier
+
     def is_revealed(self, index: int) -> bool:
         return index in self.matched or index in self.face_up
 
@@ -129,20 +158,26 @@ class MemoryGame:
             self.matched.update((first, second))
             self.learned.append(concept)
             self.scores[self.turn] += 1
+            self.streak += 1
+            self.best_streak = max(self.best_streak, self.streak)
+            gain = PAIR_POINTS * self.multiplier
+            self.points[self.turn] += gain
             if self.is_complete:
                 self.active = False  # último par: o jogo acaba, sem desafio
-            elif self.mode is Mode.DUEL:
+            else:
                 self.awaiting_challenge = True
-            return Outcome(True, concept, challenge=self.awaiting_challenge)
+            return Outcome(True, concept, challenge=self.awaiting_challenge, gain=gain)
         self.mistakes += 1
+        self.streak = 0
         if self.mode is Mode.DUEL:
             self.turn = 1 - self.turn
         return Outcome(False, concept)
 
     def answer_challenge(self, correct: bool) -> None:
-        """Acerto: o jogador continua. Erro: a vez passa ao adversário.
+        """Acerto: ganha pontos e continua (no Solo, também tira segundos do relógio).
 
-        O ponto do par já encontrado é mantido em ambos os casos.
+        Erro: zera o combo e, no Duelo, a vez passa ao adversário. Os pontos do
+        par já encontrado são mantidos em ambos os casos.
         """
 
         if not self.awaiting_challenge:
@@ -151,8 +186,13 @@ class MemoryGame:
         stats[1] += 1
         if correct:
             stats[0] += 1
+            self.points[self.turn] += self.challenge_gain
+            if self.mode is Mode.SOLO:
+                self.elapsed = max(0, self.elapsed - TIME_BONUS_SECONDS)
         else:
-            self.turn = 1 - self.turn
+            self.streak = 0
+            if self.mode is Mode.DUEL:
+                self.turn = 1 - self.turn
         self.awaiting_challenge = False
 
     def tick(self) -> None:
@@ -179,7 +219,7 @@ class MemoryGame:
     def winner_text(self) -> str:
         if self.mode is Mode.SOLO:
             return f"{self.players[0]} encontrou os {self.pairs} pares!"
-        first, second = self.scores
+        first, second = self.points
         if first > second:
             return f"{self.players[0]} venceu o duelo!"
         if second > first:

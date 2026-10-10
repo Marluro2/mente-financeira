@@ -59,7 +59,7 @@ abre duas vezes ao mesmo tempo; o modo administrador pode ficar aberto junto.
 | Tela | O que é |
 |---|---|
 | **Abertura** | Título, escolha Solo/Duelo, nomes e acesso aos níveis |
-| **Nível 1 — Memória Financeira** | Jogo da memória tradicional: 16 cartas (8 pares iguais) sorteadas entre 12 conceitos; cada par revela um "Você sabia?". No Duelo, cada par traz um **Desafio Relâmpago** de porcentagem (com lousa): acertou, continua; errou, passa a vez |
+| **Nível 1 — Memória Financeira** | Jogo da memória tradicional: 16 cartas (8 pares iguais) sorteadas entre 12 conceitos; cada par revela um "Você sabia?" e traz um **Desafio Relâmpago** (com lousa). No Solo, acertar tira 5 segundos do relógio; no Duelo, acertou, continua; errou, passa a vez. Pares seguidos sem errar formam um **combo** que dobra os pontos |
 | **Nível 2 — Desafio dos Cálculos** | Pares questão ↔ resolução com porcentagem, juros, inflação e financiamentos (8 fases) |
 
 Efeitos sonoros (virar carta, acerto, erro, incentivo e vitória) ficam em

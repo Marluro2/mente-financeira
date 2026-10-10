@@ -10,7 +10,7 @@ import flet as ft
 
 from mente_financeira.admin import admin_ativo
 from mente_financeira.content.memory_deck import Concept
-from mente_financeira.core.memory_game import Flip, MemoryGame, Mode
+from mente_financeira.core.memory_game import TIME_BONUS_SECONDS, Flip, MemoryGame, Mode
 from mente_financeira.core.percent_challenge import PERCENT_KIT, Challenge, ChallengeKit
 from mente_financeira.storage import SettingsStore
 from mente_financeira.ui import style as s
@@ -410,8 +410,14 @@ class MemoryScreen:
             if self.game.mode is Mode.DUEL:
                 rules += (
                     f"\n\n⚡ No Duelo, cada par vale um Desafio Relâmpago {self.challenges.topic}: "
-                    "acerte para continuar jogando; errou, passa a vez."
+                    "acerte para ganhar pontos e continuar jogando; errou, passa a vez."
                 )
+            else:
+                rules += (
+                    f"\n\n⚡ Cada par traz um Desafio Relâmpago {self.challenges.topic}: "
+                    f"acertou, ganha pontos e {TIME_BONUS_SECONDS} segundos a menos no relógio."
+                )
+            rules += "\n\n🔥 Combo: pares seguidos sem errar valem pontos em dobro!"
             return ft.Container(
                 key="intro",
                 padding=16,
@@ -558,10 +564,13 @@ class MemoryScreen:
             chips = [
                 s.chip(f"{minutes}:{seconds:02d}", icon=ft.Icons.TIMER_ROUNDED, color=s.CYAN),
                 s.chip(f"{game.moves} jogadas", icon=ft.Icons.TOUCH_APP_ROUNDED, color=s.YELLOW),
+                s.chip(f"{game.points[0]} pts", icon=ft.Icons.STAR_ROUNDED, color=s.PINK),
                 found,
             ]
         else:
             chips = [self._player_chip(i) for i in range(2)] + [found]
+        if game.multiplier > 1 and game.active:
+            chips.insert(0, s.chip(f"COMBO x{game.multiplier}", icon=ft.Icons.LOCAL_FIRE_DEPARTMENT_ROUNDED, color=s.ORANGE))
         self.stats.controls = chips
 
     def _player_chip(self, index: int) -> ft.Container:
@@ -575,7 +584,7 @@ class MemoryScreen:
             content=ft.Row(
                 [
                     ft.Icon(ft.Icons.PLAY_ARROW_ROUNDED if active else ft.Icons.PERSON_ROUNDED, color=s.WHITE, size=16),
-                    ft.Text(f"{self.game.players[index]}: {self.game.scores[index]}", size=12, weight=ft.FontWeight.BOLD, color=s.WHITE),
+                    ft.Text(f"{self.game.players[index]}: {self.game.points[index]} pts", size=12, weight=ft.FontWeight.BOLD, color=s.WHITE),
                 ],
                 spacing=4,
                 tight=True,
@@ -618,6 +627,8 @@ class MemoryScreen:
             self.last_concept = outcome.concept
             self.tip_switcher.content = self._tip_content(outcome.concept)
             self._refresh_learned()
+            if self.game.multiplier > 1:
+                self._snack(f"🔥 COMBO x{self.game.multiplier}! +{outcome.gain} pontos")
             if outcome.challenge:
                 self._open_challenge()
         elif self.game.mode is Mode.DUEL:
@@ -769,7 +780,7 @@ class MemoryScreen:
             [
                 s.chip("DESAFIO RELÂMPAGO", icon=ft.Icons.BOLT_ROUNDED, color=s.YELLOW, size=13 if compact else 15),
                 ft.Text(
-                    f"Vez de {self.game.current_player} — acerte para continuar jogando!",
+                    self._challenge_call(),
                     size=14 if compact else 18,
                     weight=ft.FontWeight.W_900,
                     color=player_color,
@@ -782,7 +793,7 @@ class MemoryScreen:
             spacing=16,
         )
         player_line = ft.Text(
-            f"Vez de {self.game.current_player} — acerte para continuar jogando!",
+            self._challenge_call(),
             size=14,
             weight=ft.FontWeight.W_900,
             color=player_color,
@@ -837,11 +848,24 @@ class MemoryScreen:
         self.overlay.visible = True
         self._apply_challenge_state()
 
+    def _opponent(self) -> str:
+        """Quem recebe a vez se o desafio for errado (só no Duelo)."""
+
+        return self.game.players[1 - self.game.turn] if self.game.mode is Mode.DUEL else ""
+
+    def _challenge_call(self) -> str:
+        gain = self.game.challenge_gain
+        if self.game.mode is Mode.SOLO:
+            return f"Vale +{gain} pontos e −{TIME_BONUS_SECONDS} s no relógio!"
+        return f"Vez de {self.game.current_player} — acerte para ganhar +{gain} pontos e continuar jogando!"
+
     def _celebration(self, correct: bool) -> ft.Control:
         """Bloco de destaque: comemoração no acerto, correção no erro."""
 
         compact = self.compact
-        other = self.game.players[1 - self.game.turn]
+        solo = self.game.mode is Mode.SOLO
+        other = self._opponent()
+        gain = f"+{self.game.challenge_gain} pontos"
         if correct:
             colors, emoji = [s.GREEN, s.CYAN], "🎉"
             lines: list[ft.Control] = [
@@ -853,7 +877,9 @@ class MemoryScreen:
                     text_align=ft.TextAlign.CENTER,
                 ),
                 ft.Text(
-                    f"{self.game.current_player}, a vez continua sua!",
+                    f"{gain} e −{TIME_BONUS_SECONDS} s no relógio!"
+                    if solo
+                    else f"{gain}! {self.game.current_player}, a vez continua sua!",
                     size=15 if compact else 18,
                     weight=ft.FontWeight.BOLD,
                     color="#0B1E3F",
@@ -866,7 +892,14 @@ class MemoryScreen:
             lines = [
                 ft.Text(first, size=20 if compact else 25, weight=ft.FontWeight.W_900, color=s.WHITE, text_align=ft.TextAlign.CENTER),
                 ft.Text(rest, size=14 if compact else 17, weight=ft.FontWeight.W_600, color=s.WHITE, text_align=ft.TextAlign.CENTER),
-                ft.Text(f"A vez passa para {other}.", size=14 if compact else 16, color=s.WHITE, text_align=ft.TextAlign.CENTER),
+                ft.Text(
+                    ("Seu combo zerou. Siga jogando!" if self.game.multiplier > 1 else "Siga jogando!")
+                    if solo
+                    else f"A vez passa para {other}.",
+                    size=14 if compact else 16,
+                    color=s.WHITE,
+                    text_align=ft.TextAlign.CENTER,
+                ),
             ]
         return ft.Container(
             key=f"feedback-{correct}",
@@ -904,8 +937,8 @@ class MemoryScreen:
         if answered:
             self.feedback_switcher.content = self._celebration(correct)
         self.continue_button.visible = answered
-        other = self.game.players[1 - self.game.turn]
-        label = "Continuar jogando" if correct else f"Passar a vez para {other}"
+        other = self._opponent()
+        label = "Continuar jogando" if correct or self.game.mode is Mode.SOLO else f"Passar a vez para {other}"
         row = self.continue_button.content
         row.controls[1].value = label.upper()
 
@@ -955,7 +988,7 @@ class MemoryScreen:
         self.challenge_board = None
         self.overlay.visible = False
         self._refresh_stats()
-        if not correct:
+        if not correct and self.game.mode is Mode.DUEL:
             self._snack(f"Agora é a vez de {self.game.current_player}!")
         self.seen_turn = self.game.turn
         self.page.update()
@@ -1060,6 +1093,7 @@ class MemoryScreen:
                 ft.Text("⭐" * game.stars + "☆" * (3 - game.stars), size=34),
                 ft.Text(game.winner_text(), size=16, color=s.WHITE, weight=ft.FontWeight.BOLD),
                 ft.Text(f"{game.moves} jogadas • {minutes}:{seconds:02d}", size=14, color=s.MUTED),
+                ft.Text(f"{game.points[0]} pontos • maior combo: {game.best_streak} pares seguidos", size=14, color=s.PINK),
             ]
             if game.stars < 3:
                 lines.append(ft.Text(f"Dica: com até {game.pairs + 4} jogadas você ganha 3 estrelas!", size=13, color=s.YELLOW))
@@ -1067,12 +1101,21 @@ class MemoryScreen:
             lines += [
                 ft.Text("🏆", size=40),
                 ft.Text(game.winner_text(), size=18, color=s.WHITE, weight=ft.FontWeight.BOLD),
-                ft.Text(f"{game.players[0]} {game.scores[0]} × {game.scores[1]} {game.players[1]}", size=14, color=s.MUTED),
+                ft.Text(
+                    f"{game.players[0]} {game.points[0]} × {game.points[1]} {game.players[1]} (pontos)",
+                    size=14,
+                    color=s.MUTED,
+                ),
+                ft.Text(
+                    f"Pares: {game.scores[0]} × {game.scores[1]} • maior combo: {game.best_streak} pares seguidos",
+                    size=13,
+                    color=s.MUTED,
+                ),
             ]
-            desafios = " • ".join(
-                f"{name}: {right}/{total}" for name, (right, total) in zip(game.players, game.challenge_stats)
-            )
-            lines.append(ft.Text(f"⚡ Desafios certos — {desafios}", size=13, color=s.YELLOW))
+        desafios = " • ".join(
+            f"{name}: {right}/{total}" for name, (right, total) in zip(game.players, game.challenge_stats)
+        )
+        lines.append(ft.Text(f"⚡ Desafios certos — {desafios}", size=13, color=s.YELLOW))
         lines.append(ft.Text(f"Você descobriu {game.pairs} conceitos de educação financeira. 💡", size=13, color=s.MUTED))
         actions: list[tuple[str, Callable[[], None] | None, bool]] = [
             ("Início", self.on_home, False),
