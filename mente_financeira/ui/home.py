@@ -10,9 +10,11 @@ from typing import Any
 import flet as ft
 
 from mente_financeira.content.memory_deck import MemoryDeck
+from mente_financeira.core.medals import MEDALS, MedalBook
 from mente_financeira.core.memory_game import Mode
 from mente_financeira.ui import style as s
 from mente_financeira.ui.layout import Layout, layout_for
+from mente_financeira.ui.medals_view import medals_dialog
 
 FLOAT_PERIOD_SECONDS = 2.4
 
@@ -57,8 +59,10 @@ class HomeScreen:
         on_level2: Callable[[], None],
         on_admin: Callable[[], None] | None = None,
         on_tracks: Callable[[], None] | None = None,
+        medals: MedalBook | None = None,
     ) -> None:
         self.page = page
+        self.medals = medals  # botão "Medalhas" no canto (veja medals_view)
         self.deck = deck
         self.on_play = on_play
         self.on_level2 = on_level2
@@ -170,6 +174,7 @@ class HomeScreen:
                             ),
                         ),
                         *self._back_button(),
+                        *self._medals_button(),
                     ],
                     expand=True,
                 ),
@@ -274,6 +279,35 @@ class HomeScreen:
                 ),
             )
         ]
+
+    def _medals_button(self) -> list[ft.Control]:
+        """Botão "Medalhas", no canto superior direito, com quantas já foram conquistadas."""
+
+        if self.medals is None:
+            return []
+        count = f"{len(self.medals.owned())}/{len(MEDALS)}"
+        return [
+            ft.Container(
+                right=8,
+                top=8,
+                content=ft.TextButton(
+                    count if self.compact else f"Medalhas {count}",
+                    icon=ft.Icons.MILITARY_TECH_ROUNDED,
+                    on_click=self._open_medals,
+                    tooltip="Suas medalhas",
+                    style=ft.ButtonStyle(
+                        color=s.YELLOW,
+                        icon_size=30 if self.compact else 34,
+                        text_style=ft.TextStyle(size=20 if self.compact else 24, weight=ft.FontWeight.W_900),
+                        padding=ft.Padding.symmetric(horizontal=14, vertical=10),
+                    ),
+                ),
+            )
+        ]
+
+    def _open_medals(self, _: Any = None) -> None:
+        if self.medals is not None:
+            self.page.show_dialog(medals_dialog(self.page, self.medals))
 
     def _back_to_tracks(self, _: Any = None) -> None:
         self.stop()

@@ -10,12 +10,14 @@ import flet as ft
 
 from mente_financeira.admin import admin_ativo
 from mente_financeira.content.memory_deck import Concept
+from mente_financeira.core.medals import Medal
 from mente_financeira.core.memory_game import TIME_BONUS_SECONDS, Flip, MemoryGame, Mode
 from mente_financeira.core.percent_challenge import PERCENT_KIT, Challenge, ChallengeKit
 from mente_financeira.storage import SettingsStore
 from mente_financeira.ui import style as s
 from mente_financeira.ui.sounds import SoundEffects
 from mente_financeira.ui.layout import Layout, layout_for
+from mente_financeira.ui.medals_view import new_medals_block
 from mente_financeira.ui.theme import PALETTES
 from mente_financeira.ui.whiteboard import Whiteboard
 
@@ -48,9 +50,13 @@ class MemoryScreen:
         sounds: SoundEffects | None = None,
         challenges: ChallengeKit = PERCENT_KIT,
         online: OnlineSeat | None = None,
+        medals: Callable[[MemoryGame, set[str]], list[Medal]] | None = None,
     ) -> None:
         self.page = page
         self.game = game
+        # Ao fim da partida, confere as metas e devolve as medalhas novas.
+        self.medals = medals
+        self.right_labels: set[str] = set()  # tipos de desafio acertados na partida
         self.challenges = challenges  # Desafio Relâmpago do Duelo, conforme a trilha
         # Partida online: cada jogador tem a sua tela, com o mesmo jogo.
         self.online = online
@@ -983,6 +989,8 @@ class MemoryScreen:
         if challenge is None or choice is None:
             return
         correct = challenge.is_correct(choice)
+        if correct:
+            self.right_labels.add(challenge.label)
         self.game.answer_challenge(correct)
         self.challenge = None
         self.challenge_board = None
@@ -1117,6 +1125,9 @@ class MemoryScreen:
         )
         lines.append(ft.Text(f"⚡ Desafios certos — {desafios}", size=13, color=s.YELLOW))
         lines.append(ft.Text(f"Você descobriu {game.pairs} conceitos de educação financeira. 💡", size=13, color=s.MUTED))
+        won = self.medals(game, self.right_labels) if self.medals is not None and self.online is None else []
+        if won:
+            lines.append(new_medals_block(won))
         actions: list[tuple[str, Callable[[], None] | None, bool]] = [
             ("Início", self.on_home, False),
             ("Jogar de novo", self._new_round, True),
@@ -1152,5 +1163,6 @@ class MemoryScreen:
     def _new_round(self) -> None:
         self.stop()
         self.game.restart()
+        self.right_labels = set()
         self.last_concept = None
         self.show()

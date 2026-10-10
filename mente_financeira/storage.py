@@ -6,12 +6,12 @@ diretório pela variável ``FLET_APP_STORAGE_DATA``; ao rodar a partir do códig
 fonte, usa-se ``~/.mente_financeira``.
 
 Nenhum dado pessoal é gravado (seção 5.9 do projeto): apenas preferências de
-aparência.
+aparência e as medalhas conquistadas no aparelho.
 """
 
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass, fields
+from dataclasses import asdict, dataclass, field, fields
 import json
 import os
 from collections.abc import Callable
@@ -35,6 +35,7 @@ class Settings:
     palette: str = "kids"
     dark_mode: bool = False
     sound: bool = True  # efeitos sonoros ligados
+    medals: list[str] = field(default_factory=list)  # chaves das medalhas (core/medals.py)
 
 
 class SettingsStore:
@@ -55,10 +56,14 @@ class SettingsStore:
             return Settings()
         defaults = Settings()
         values = {}
-        for field in fields(Settings):
-            value = raw.get(field.name)
-            default = getattr(defaults, field.name)
-            values[field.name] = value if type(value) is type(default) else default
+        for item in fields(Settings):
+            value = raw.get(item.name)
+            default = getattr(defaults, item.name)
+            if type(value) is not type(default):
+                value = default
+            elif isinstance(value, list):
+                value = list(dict.fromkeys(v for v in value if isinstance(v, str)))
+            values[item.name] = value
         return Settings(**values)
 
     def save(self, settings: Settings) -> bool:
