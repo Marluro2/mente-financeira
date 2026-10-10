@@ -18,7 +18,7 @@ import threading
 
 # Endereço do Formulário Google "Mente Financeira – Sugestões". Enquanto
 # estiver vazio, o site não mostra o botão.
-FORM_URL = ""
+FORM_URL = "https://forms.gle/wh7rXXBcUBLCn7857"
 
 LEVELS = ("Ensino Fundamental 1", "Ensino Fundamental 2", "Ensino Médio")
 TEXT_MAX = 500
