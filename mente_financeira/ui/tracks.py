@@ -18,6 +18,7 @@ import flet as ft
 
 from mente_financeira.content.memory_deck import MemoryDeck
 from mente_financeira.ui import style as s
+from mente_financeira.ui.suggestion_form import suggestion_button
 from mente_financeira.ui.layout import Layout, layout_for
 
 FLIP_PERIOD_SECONDS = 1.6
@@ -80,10 +81,12 @@ class TracksScreen:
         *,
         on_select: Callable[[str], None],
         rng: random.Random | None = None,
+        on_suggest: Callable[[], None] | None = None,
     ) -> None:
         self.page = page
         self.deck = deck
         self.on_select = on_select
+        self.on_suggest = on_suggest  # "Deixe sua sugestão" (só com formulário configurado)
         self.rng = rng or random.Random()
         self.layout = layout_for(page.width)
         self.generation = 0
@@ -170,6 +173,12 @@ class TracksScreen:
             color=s.MUTED,
             text_align=ft.TextAlign.CENTER if self.compact else ft.TextAlign.START,
         )
+        if self.on_suggest is not None:
+            suggest = ft.Row(
+                [suggestion_button(lambda _: self.on_suggest())],
+                alignment=ft.MainAxisAlignment.CENTER if self.compact else ft.MainAxisAlignment.START,
+            )
+            footer = ft.Column([footer, suggest], spacing=10, horizontal_alignment=ft.CrossAxisAlignment.STRETCH)
 
         if self.compact:
             board = self._board(side=min(width - 40, 340), rows=2)

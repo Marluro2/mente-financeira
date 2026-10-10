@@ -21,6 +21,10 @@ código. Tudo vem do notebook, inclusive os emojis (`assets/fontes/emoji.woff2`)
 então funciona sem internet. O cartaz com o QR code da mesa fica em
 `http://localhost:8000/mesa`. Só pedimos um apelido, e nada é gravado.
 
+O botão **Deixe sua sugestão** salva sugestões anônimas em
+`sugestoes/sugestoes.csv` no notebook. No site, o mesmo botão abre o Formulário
+Google cujo endereço estiver em `FORM_URL` (`mente_financeira/sugestoes.py`).
+
 Passo a passo para o estande, com roteador, Firewall e IP fixo, em
 [docs/GUIA_FEIRA.md](docs/GUIA_FEIRA.md).
 

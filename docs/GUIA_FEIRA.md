@@ -46,6 +46,13 @@ quando a pessoa sai.
    trilha (Fundamental 1 ou 2), e mostra o código ou o QR code da sala. A
    outra escaneia esse QR code ou digita o código e toca em **Entrar**.
 
+## Sugestões dos visitantes
+
+Na tela inicial do celular há o botão **Deixe sua sugestão**. A sugestão é
+anônima (só o texto e, se a pessoa quiser, o nível de ensino e a idade) e fica
+salva no notebook em `sugestoes\sugestoes.csv`, que abre no Excel. A janela
+preta mostra esse caminho ao iniciar.
+
 ## Se algo der errado
 
 | O que acontece | O que fazer |
