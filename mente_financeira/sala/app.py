@@ -17,6 +17,7 @@ from urllib.parse import parse_qs, urlparse
 import flet as ft
 
 from mente_financeira.content.memory_deck import load_memory_deck
+from mente_financeira.sala.ranking import DUEL, FairRanking
 from mente_financeira.sala.salas import NICKNAME_MAX, Lobby, Match, NicknameError, Room, RoomError, normalize_code
 from mente_financeira.storage import Settings, SettingsStore
 from mente_financeira.sugestoes import Suggestion
@@ -102,6 +103,7 @@ class Seat:
     match: Match = field(repr=False)
 
     def changed(self) -> None:
+        self.app.match_changed(self.match)
         self.app.tell_opponent(self.match, {"kind": "sync"})
 
 
@@ -115,9 +117,11 @@ class RoomApp:
         player_id: str,
         code: str | None = None,
         on_suggestion: Callable[[Suggestion], None] | None = None,
+        ranking: FairRanking | None = None,
     ) -> None:
         self.page = page
         self.on_suggestion = on_suggestion  # guarda a sugestão no notebook
+        self.ranking = ranking  # placar do dia no cartaz do estande
         self.lobby = lobby
         self.messenger = messenger
         self.player_id = player_id
@@ -151,6 +155,13 @@ class RoomApp:
             self.game_screen.sync()
         elif kind == "left" and self.game_screen is not None:
             self.game_screen.opponent_left(str(message.get("nickname", "O adversário")))
+
+    def match_changed(self, match: Match) -> None:
+        """Partida terminada: os pontos dos dois entram no ranking da feira."""
+
+        if self.ranking is not None and match.game.is_complete:
+            title = next(t.title for t in ROOM_TRACKS if t.key == match.track)
+            self.ranking.record(DUEL, match.id, zip((p.nickname for p in match.players), match.game.points), title)
 
     # ------------------------------------------------------------ saídas
     def leave(self) -> None:
@@ -375,7 +386,8 @@ class RoomApp:
                 self.name_field,
                 *sections,
                 ft.Text(
-                    "Só pedimos um apelido (não use seu nome completo). Nada fica guardado depois que você sai.",
+                    "Só pedimos um apelido (não use seu nome completo). Ele pode aparecer no ranking do estande "
+                    "até o fim do dia; nada fica gravado.",
                     size=12,
                     color=s.MUTED,
                     text_align=ft.TextAlign.CENTER,

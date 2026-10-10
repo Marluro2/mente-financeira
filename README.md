@@ -26,6 +26,10 @@ vira o telão (QR code, perguntas, relógio, placar e pódio). O público entra
 pelo QR code e responde pelo celular; quem acerta mais rápido ganha mais
 pontos. As perguntas vêm do Desafio Relâmpago da trilha escolhida.
 
+**Ranking do dia:** o cartaz da mesa mostra os 5 melhores apelidos do Duelo
+e do Quiz. Fica só na memória do notebook (`mente_financeira/sala/ranking.py`)
+e some quando o servidor fecha; só o próprio notebook pode tirar um apelido.
+
 O botão **Deixe sua sugestão** salva sugestões anônimas em
 `sugestoes/sugestoes.csv` no notebook. No site, o mesmo botão abre o Formulário
 Google cujo endereço estiver em `FORM_URL` (`mente_financeira/sugestoes.py`).

@@ -26,6 +26,7 @@ from mente_financeira.sala.quiz import (
     draw_questions,
 )
 from mente_financeira.sala.quiz_app import PLAY, PRESENT, QUIZ_QR_PATH, QuizHost, QuizPhone, is_local, new_quiz, quiz_role
+from mente_financeira.sala.ranking import QUIZ, FairRanking
 from mente_financeira.sala.salas import NicknameError
 from mente_financeira.ui.tracks import ENGENHARIA, FUNDAMENTAL, FUNDAMENTAL_1
 import servidor_sala
@@ -304,6 +305,29 @@ def test_full_round_between_notebook_and_phones(quiz: Quiz, clock: Clock) -> Non
     assert quiz.phase is Phase.LOBBY
     assert "Você está no quiz, Ana! 🎉" in _texts(ana.page)
     assert "Jogadores: 2" in _texts(host.page)
+
+
+def test_each_finished_round_goes_to_the_fair_ranking(quiz: Quiz) -> None:
+    hub, ranking = FakeHub(), FairRanking()
+    host = QuizHost(FakePage(1280, 720), quiz, hub.messenger("host"), session_id="host", ranking=ranking)  # type: ignore[arg-type]
+    ana, bia = _phone(hub, quiz, "a", "Ana"), _phone(hub, quiz, "b", "Bia")
+    best = 0
+    for _ in range(2):
+        host._start()
+        hub.flush()
+        for _ in range(quiz.total):
+            _tap(ana, _right(quiz), hub)
+            _tap(bia, _wrong(quiz), hub)
+            host._next()
+            hub.flush()
+        assert quiz.phase is Phase.FINISHED
+        host._next()  # clicar de novo no pódio não soma outra vez
+        best = max(best, quiz.players["a"].score)
+        # Bia não pontuou: fica fora do ranking.
+        assert [(e.nickname, e.points, e.detail) for e in ranking.top(QUIZ)] == [("Ana", best, "Ensino Fundamental 2")]
+        host._restart()
+        hub.flush()
+    assert len(ranking.recorded) == 2
 
 
 def test_clock_reveals_the_answer_when_time_is_up(quiz: Quiz, clock: Clock, monkeypatch: pytest.MonkeyPatch) -> None:

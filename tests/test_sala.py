@@ -15,6 +15,7 @@ from fastapi.testclient import TestClient
 from fakes import FakeHub, FakePage, walk
 from mente_financeira.content.memory_deck import load_memory_deck
 from mente_financeira.sala.app import RoomApp, SessionStore, code_from_route, new_lobby, room_qr_path
+from mente_financeira.sala.ranking import DUEL, FairRanking
 from mente_financeira.sala.salas import ANIMALS, Lobby, NicknameError, RoomError, clean_nickname, normalize_code
 from mente_financeira.storage import Settings
 from mente_financeira.ui import memory_screen as memory_module
@@ -43,8 +44,8 @@ def _texts_of_dialogs(page: FakePage) -> list[str]:
     return [c.value for d in page.dialogs for c in walk(d) if isinstance(c, ft.Text) and isinstance(c.value, str)]
 
 
-def _join(hub: FakeHub, lobby: Lobby, player_id: str, code: str | None = None) -> RoomApp:
-    return RoomApp(FakePage(390, 844), lobby, hub.messenger(player_id), player_id=player_id, code=code)  # type: ignore[arg-type]
+def _join(hub: FakeHub, lobby: Lobby, player_id: str, code: str | None = None, ranking: FairRanking | None = None) -> RoomApp:
+    return RoomApp(FakePage(390, 844), lobby, hub.messenger(player_id), player_id=player_id, code=code, ranking=ranking)  # type: ignore[arg-type]
 
 
 def _create(app: RoomApp, hub: FakeHub, nickname: str) -> str:
@@ -62,8 +63,8 @@ def _enter(app: RoomApp, hub: FakeHub, nickname: str, code: str) -> None:
     hub.flush()
 
 
-def _pair(hub: FakeHub, lobby: Lobby) -> tuple[RoomApp, RoomApp]:
-    ana, bia = _join(hub, lobby, "a"), _join(hub, lobby, "b")
+def _pair(hub: FakeHub, lobby: Lobby, ranking: FairRanking | None = None) -> tuple[RoomApp, RoomApp]:
+    ana, bia = _join(hub, lobby, "a", ranking=ranking), _join(hub, lobby, "b", ranking=ranking)
     code = _create(ana, hub, "Ana")
     _enter(bia, hub, "Bia", code)
     return ana, bia
@@ -148,7 +149,7 @@ def test_start_screen_asks_only_for_a_nickname() -> None:
     assert "Ensino Médio" not in texts
     assert texts.index("Criar uma sala") < texts.index("Entrar numa sala")
     assert ana.name_field.label == "Seu apelido" and ana.name_field.max_length == 16
-    assert any("Nada fica guardado" in t for t in texts)
+    assert any("ranking do estande" in t and "nada fica gravado" in t for t in texts)
 
 
 def test_qr_code_link_fills_the_room_code() -> None:
@@ -245,23 +246,58 @@ def test_pair_and_challenge_keep_both_screens_in_sync() -> None:
     assert game.turn == 1 and "Sua vez! 🎯" in _texts_of_dialogs(bia.page)
 
 
-def test_finishing_shows_the_result_on_both_screens() -> None:
-    hub, lobby = FakeHub(), _lobby()
-    ana, bia = _pair(hub, lobby)
+def _play_to_the_end(ana: RoomApp, bia: RoomApp, hub: FakeHub) -> Any:
     game = ana.game_screen.game
     while not game.is_complete:
         app = ana if game.turn == 0 else bia
         first = next(i for i in range(len(game.cards)) if i not in game.matched)
+        if app is ana and game.moves == 0:  # Ana erra a primeira: a vez passa e as duas pontuam
+            _tap(app, first)
+            _tap(app, next(i for i in range(len(game.cards)) if game.cards[i].id != game.cards[first].id))
+            hub.flush()
+            continue
         _tap(app, first)
         _tap(app, _pair_of(game, first))
         if app.game_screen.challenge is not None:
             screen = app.game_screen
-            screen._answer_challenge(SimpleNamespace(control=SimpleNamespace(data=screen.challenge.answer_index)))
+            # Bia erra o primeiro desafio: a vez volta para Ana.
+            miss = app is bia and game.challenge_stats[1][1] == 0
+            choice = (screen.challenge.answer_index + miss) % 4
+            screen._answer_challenge(SimpleNamespace(control=SimpleNamespace(data=choice)))
             screen._close_challenge()
         hub.flush()
+    return game
+
+
+def test_finishing_shows_the_result_on_both_screens() -> None:
+    hub, lobby = FakeHub(), _lobby()
+    ana, bia = _pair(hub, lobby)
+    _play_to_the_end(ana, bia, hub)
     assert ana.game_screen.result_shown and bia.game_screen.result_shown
     result = next(d for d in bia.page.dialogs if isinstance(d, ft.AlertDialog) and d.title.value == "Mandou bem! 🎉")
     assert [b.content for b in result.actions] == ["Voltar à sala"]
+
+
+def test_finished_duel_goes_to_the_fair_ranking() -> None:
+    hub, lobby, ranking = FakeHub(), _lobby(), FairRanking()
+    ana, bia = _pair(hub, lobby, ranking)
+    game = _play_to_the_end(ana, bia, hub)
+    top = ranking.top(DUEL)
+    assert min(game.points) > 0
+    assert {(e.nickname, e.points) for e in top} == {("Ana", game.points[0]), ("Bia", game.points[1])}
+    assert all(e.detail == "Ensino Fundamental 2" for e in top)
+    assert len(ranking.recorded) == 1  # as duas telas avisam, a partida conta uma vez
+
+
+def test_unfinished_duel_does_not_enter_the_ranking() -> None:
+    hub, lobby, ranking = FakeHub(), _lobby(), FairRanking()
+    ana, bia = _pair(hub, lobby, ranking)
+    first = 0
+    _tap(ana, first)
+    _tap(ana, _pair_of(ana.game_screen.game, first))
+    ana.close()
+    hub.flush()
+    assert ranking.top(DUEL) == []
 
 
 def test_opponent_leaving_ends_the_match_and_forgets_both() -> None:
@@ -326,6 +362,30 @@ def test_table_poster_uses_the_network_address(client: TestClient) -> None:
     assert "http://192.168.0.10:8000" in page.text and "Wi-Fi do estande" in page.text
     phone = client.get("/mesa", headers={"host": "10.0.0.5:8000"})
     assert "http://10.0.0.5:8000" in phone.text
+
+
+def test_poster_shows_the_ranking_and_only_the_notebook_can_edit_it() -> None:
+    app = servidor_sala.create_app("http://192.168.0.10:8000")
+    ranking: FairRanking = app.state.ranking
+    ranking.record(DUEL, 1, [("<b>Lia</b>", 120), ("Theo", 90)], "Ensino Fundamental 1")
+    phone = TestClient(app, client=("192.168.0.20", 50000))
+    notebook = TestClient(app, client=("127.0.0.1", 50000))
+
+    page = phone.get("/mesa").text
+    assert "Ranking do dia" in page and "textContent" in page and "innerHTML" not in page
+    data = phone.get("/ranking").json()
+    assert data["admin"] is False and data["quiz"] == []
+    assert [(e["nickname"], e["points"], e["detail"]) for e in data["duelo"]] == [("<b>Lia</b>", 120, "Ensino Fundamental 1"), ("Theo", 90, "Ensino Fundamental 1")]
+
+    assert phone.post("/ranking/remover", params={"board": DUEL, "nickname": "Theo"}).status_code == 403
+    assert phone.post("/ranking/limpar").status_code == 403
+    assert notebook.get("/ranking").json()["admin"] is True
+    assert notebook.post("/ranking/remover", params={"board": DUEL, "nickname": "theo"}).status_code == 204
+    assert [e.nickname for e in ranking.top(DUEL)] == ["<b>Lia</b>"]
+    assert notebook.post("/ranking/limpar").status_code == 204
+    assert ranking.top(DUEL) == []
+    # O notebook pelo IP da rede também é o notebook.
+    assert TestClient(app, client=("192.168.0.10", 50000)).get("/ranking").json()["admin"] is True
 
 
 def test_game_page_is_served(client: TestClient) -> None:

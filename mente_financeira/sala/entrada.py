@@ -16,6 +16,7 @@ import flet as ft
 from mente_financeira.sala.app import PubSubMessenger, RoomApp, code_from_route
 from mente_financeira.sala.quiz import Quiz
 from mente_financeira.sala.quiz_app import PRESENT, QuizHost, QuizPhone, is_local, quiz_role
+from mente_financeira.sala.ranking import FairRanking
 from mente_financeira.sala.salas import Lobby, RoomError, normalize_code
 from mente_financeira.sugestoes import Suggestion
 
@@ -27,17 +28,19 @@ def make_main(
     *,
     join_url: str = "",
     own_ips: Collection[str] = (),
+    ranking: FairRanking | None = None,
 ) -> Callable[[ft.Page], None]:
     """Ponto de entrada de cada aparelho, todos com as mesmas salas e o mesmo quiz.
 
-    ``join_url`` é o endereço do quiz escrito no telão; ``own_ips``, os IPs do notebook.
+    ``join_url`` é o endereço do quiz escrito no telão; ``own_ips``, os IPs do notebook;
+    ``ranking``, o placar do dia (Duelo e Quiz) mostrado no cartaz.
     """
 
     def main(page: ft.Page) -> None:
         messenger = PubSubMessenger(page)
         role = quiz_role(page.route)
         if role == PRESENT and is_local(page.client_ip, own_ips):
-            host = QuizHost(page, quiz, messenger, session_id=page.session.id, join_url=join_url)
+            host = QuizHost(page, quiz, messenger, session_id=page.session.id, join_url=join_url, ranking=ranking)
             page.on_close = host.close
             return
         if role is not None:
@@ -49,7 +52,9 @@ def make_main(
             code = normalize_code(raw) if raw else None
         except RoomError:
             code = None
-        app = RoomApp(page, lobby, messenger, player_id=page.session.id, code=code, on_suggestion=on_suggestion)
+        app = RoomApp(
+            page, lobby, messenger, player_id=page.session.id, code=code, on_suggestion=on_suggestion, ranking=ranking
+        )
         page.on_close = app.close
 
     return main
