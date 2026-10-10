@@ -53,6 +53,30 @@ def suggestion_qr(caption: str, *, size: float = 92, button: ft.Control | None =
     )
 
 
+def suggestion_qr_tile(on_click: Callable[[Any], None], *, size: float = 96) -> ft.Control:
+    """QR code compacto, ao lado do título: escaneia ou toca para abrir o formulário."""
+
+    return ft.Container(
+        on_click=on_click,
+        tooltip="Deixe sua sugestão",
+        content=ft.Column(
+            [
+                ft.Container(
+                    padding=6,
+                    border_radius=12,
+                    bgcolor=s.WHITE,
+                    border=ft.Border.all(2, s.YELLOW),
+                    content=ft.Image(src=SUGGESTION_QR, width=size, height=size, semantics_label="QR code do formulário de sugestões"),
+                ),
+                ft.Text("Deixe sua\nsugestão", size=11, color=s.YELLOW, weight=ft.FontWeight.W_800, text_align=ft.TextAlign.CENTER),
+            ],
+            spacing=4,
+            tight=True,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+        ),
+    )
+
+
 class SuggestionForm:
     """Janela com a sugestão (obrigatória), o nível e a idade (opcionais)."""
 

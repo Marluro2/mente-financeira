@@ -18,7 +18,7 @@ import flet as ft
 
 from mente_financeira.content.memory_deck import MemoryDeck
 from mente_financeira.ui import style as s
-from mente_financeira.ui.suggestion_form import suggestion_button, suggestion_qr
+from mente_financeira.ui.suggestion_form import suggestion_button, suggestion_qr_tile
 from mente_financeira.ui.layout import Layout, layout_for
 
 FLIP_PERIOD_SECONDS = 1.6
@@ -174,10 +174,17 @@ class TracksScreen:
             text_align=ft.TextAlign.CENTER if self.compact else ft.TextAlign.START,
         )
         if self.on_suggest is not None:
-            suggest = suggestion_qr(
-                "Ou aponte a câmera do celular para o QR code.",
-                size=84,
-                button=suggestion_button(lambda _: self.on_suggest()),
+            # QR do formulário ao lado do título; o botão continua no rodapé.
+            qr = suggestion_qr_tile(lambda _: self.on_suggest(), size=72 if self.compact else (96 if short else 112))
+            title = ft.Row(
+                [title, qr],
+                spacing=16 if self.compact else 28,
+                alignment=ft.MainAxisAlignment.CENTER if self.compact else ft.MainAxisAlignment.START,
+                vertical_alignment=ft.CrossAxisAlignment.CENTER,
+            )
+            suggest = ft.Row(
+                [suggestion_button(lambda _: self.on_suggest())],
+                alignment=ft.MainAxisAlignment.CENTER if self.compact else ft.MainAxisAlignment.START,
             )
             footer = ft.Column([footer, suggest], spacing=10, horizontal_alignment=ft.CrossAxisAlignment.STRETCH)
 
