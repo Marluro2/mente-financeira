@@ -103,12 +103,60 @@ def test_wrong_challenge_passes_turn_but_keeps_the_point() -> None:
         game.answer_challenge(True)
 
 
-def test_solo_has_no_challenge() -> None:
+def test_solo_challenge_takes_seconds_off_the_clock() -> None:
     game = _game(Mode.SOLO)
+    game.elapsed = 12
     game.flip(0)
     game.flip(_pair_of(game, 0))
-    assert not game.resolve().challenge
-    assert not game.awaiting_challenge
+    outcome = game.resolve()
+    assert outcome.challenge and game.awaiting_challenge and outcome.gain == 10
+    game.answer_challenge(True)
+    assert game.elapsed == 7 and game.points == [15, 0]
+    assert game.challenge_stats == [[1, 1], [0, 0]]
+
+
+def test_solo_wrong_challenge_only_breaks_the_combo() -> None:
+    game = _game(Mode.SOLO)
+    game.elapsed = 3
+    game.flip(0)
+    game.flip(_pair_of(game, 0))
+    game.resolve()
+    game.answer_challenge(False)
+    assert game.turn == 0 and game.streak == 0 and game.elapsed == 3
+    with pytest.raises(RuntimeError):
+        game.answer_challenge(True)
+
+
+def test_bonus_never_makes_the_clock_negative() -> None:
+    game = _game(Mode.SOLO)
+    game.elapsed = 2
+    game.flip(0)
+    game.flip(_pair_of(game, 0))
+    game.resolve()
+    game.answer_challenge(True)
+    assert game.elapsed == 0
+
+
+def test_combo_doubles_pairs_and_challenges_until_a_mistake() -> None:
+    game = _game(Mode.DUEL)
+    first = 0
+    game.flip(first)
+    game.flip(_pair_of(game, first))
+    assert game.resolve().gain == 10 and game.multiplier == 1
+    game.answer_challenge(True)  # +5
+    second = next(i for i in range(16) if not game.is_revealed(i))
+    game.flip(second)
+    game.flip(_pair_of(game, second))
+    assert game.resolve().gain == 20 and game.multiplier == 2  # combo
+    assert game.challenge_gain == 10
+    game.answer_challenge(True)  # +10
+    assert game.points == [45, 0] and game.best_streak == 2
+    # Errar o par zera o combo e passa a vez.
+    third = next(i for i in range(16) if not game.is_revealed(i))
+    game.flip(third)
+    game.flip(_wrong_of(game, third))
+    game.resolve()
+    assert game.streak == 0 and game.multiplier == 1 and game.current_player == "Bruno"
 
 
 def test_last_pair_ends_the_duel_without_challenge() -> None:
@@ -125,17 +173,19 @@ def test_last_pair_ends_the_duel_without_challenge() -> None:
     assert game.challenge_stats[0] == [7, 7]
 
 
-def _solve(game: MemoryGame) -> None:
+def _solve(game: MemoryGame, answer: bool = True) -> None:
     for index in range(len(game.cards)):
         if not game.is_revealed(index):
             game.flip(index)
             game.flip(_pair_of(game, index))
             game.resolve()
+            if game.awaiting_challenge:
+                game.answer_challenge(answer)
 
 
 def test_perfect_game_gives_three_stars() -> None:
     game = _game()
-    _solve(game)
+    _solve(game, answer=True)
     assert game.is_complete and not game.active
     assert game.moves == 8 and game.stars == 3
     assert len(game.learned) == 8
@@ -161,9 +211,11 @@ def test_clock_only_runs_while_playing() -> None:
 
 def test_winner_texts() -> None:
     game = _game(Mode.DUEL)
-    game.scores = [5, 3]
+    game.points = [50, 30]
     assert game.winner_text() == "Ana venceu o duelo!"
-    game.scores = [4, 4]
+    game.scores = [3, 5]  # quem decide são os pontos, não o número de pares
+    assert game.winner_text() == "Ana venceu o duelo!"
+    game.points = [40, 40]
     assert "Empate" in game.winner_text()
     solo = MemoryGame(DECK, random.Random(0))
     solo.new_game(Mode.SOLO, (None, None))

@@ -41,6 +41,18 @@ def _pair_of(screen: MemoryScreen, index: int) -> int:
     return next(i for i, c in enumerate(cards) if i != index and c.id == cards[index].id)
 
 
+def _match(screen: MemoryScreen, index: int, *, answer: bool = True) -> None:
+    """Forma o par da carta e, se abrir o Desafio Relâmpago, responde e segue."""
+
+    _tap(screen, index)
+    _tap(screen, _pair_of(screen, index))
+    if screen.challenge is not None:
+        challenge = screen.challenge
+        choice = challenge.answer_index if answer else (challenge.answer_index + 1) % 4
+        screen._answer_challenge(SimpleNamespace(control=SimpleNamespace(data=choice)))
+        screen._close_challenge()
+
+
 def _home(shell: GameShell) -> HomeScreen:
     assert isinstance(shell.current, HomeScreen)
     return shell.current
@@ -101,17 +113,18 @@ def test_solo_game_to_the_end(shell: GameShell) -> None:
     _tap(screen, wrong)
     assert not screen.game.is_revealed(0) and screen.game.moves == 1
 
-    # acertos
+    # acertos (cada par traz um desafio, respondido certo)
     for index in range(16):
         if not screen.game.is_revealed(index):
-            _tap(screen, index)
-            _tap(screen, _pair_of(screen, index))
+            _match(screen, index)
             assert screen.last_concept is screen.game.cards[index]
     assert screen.game.is_complete
     result = page.dialogs[-1]
     assert result.title.value == "Mandou bem! 🎉"
     texts = [c.value for c in walk(result) if isinstance(c, ft.Text)]
     assert "⭐⭐⭐" in texts  # 9 jogadas
+    # 8 pares seguidos: 10 + 7 × 20 = 150; 7 desafios: 5 + 6 × 10 = 65
+    assert "215 pontos • maior combo: 8 pares seguidos" in texts
 
     assert [b.content for b in result.actions] == ["Início", "Jogar de novo"]  # sem atalho para o Nível 2
     press(result, "Jogar de novo")
@@ -139,9 +152,7 @@ def test_tapping_a_discovered_concept_brings_it_back(shell: GameShell) -> None:
     _home(shell)._play()
     screen = _memory(shell)
     for _ in range(2):
-        index = next(i for i in range(16) if not screen.game.is_revealed(i))
-        _tap(screen, index)
-        _tap(screen, _pair_of(screen, index))
+        _match(screen, next(i for i in range(16) if not screen.game.is_revealed(i)))
     first, second = screen.game.learned
     assert screen.last_concept is second
     items = screen.learned_row.controls
@@ -317,7 +328,7 @@ def test_right_answer_gets_a_highlighted_celebration(shell: GameShell) -> None:
     celebration = screen.feedback_switcher.content
     texts = _texts(celebration)
     assert "🎉" in texts and screen.challenge_feedback in texts
-    assert "Ana, a vez continua sua!" in texts
+    assert "+5 pontos! Ana, a vez continua sua!" in texts
     big = next(c for c in walk(celebration) if isinstance(c, ft.Text) and c.value == screen.challenge_feedback)
     assert big.size >= 26 and big.weight == ft.FontWeight.W_900
     assert celebration.gradient is not None
@@ -377,11 +388,47 @@ def test_duel_result_reports_challenges(shell: GameShell) -> None:
     assert any("Desafios certos" in t and "Ana: 7/7" in t for t in texts)
 
 
-def test_solo_never_shows_the_challenge(shell: GameShell) -> None:
+def test_solo_challenge_gives_points_and_time_bonus(shell: GameShell) -> None:
+    _home(shell)._play()
+    screen = _memory(shell)
+    screen.game.elapsed = 30
+    _find_pair(screen)
+    assert screen.overlay.visible and screen.challenge is not None
+    assert "Vale +5 pontos e −5 s no relógio!" in _texts(screen.overlay)
+    _choose(screen, correct=True)
+    assert "+5 pontos e −5 s no relógio!" in _texts(screen.feedback_switcher.content)
+    assert screen.continue_button.content.controls[1].value == "CONTINUAR JOGANDO"
+    screen._close_challenge()
+    assert screen.game.elapsed == 25 and screen.game.points[0] == 15
+    assert "15 pts" in _texts(screen.stats)
+
+
+def test_solo_wrong_answer_keeps_playing(shell: GameShell) -> None:
     _home(shell)._play()
     screen = _memory(shell)
     _find_pair(screen)
-    assert not screen.overlay.visible and screen.challenge is None
+    _choose(screen, correct=False)
+    texts = _texts(screen.feedback_switcher.content)
+    assert "Siga jogando!" in texts and not any("vez passa" in t for t in texts)
+    assert screen.continue_button.content.controls[1].value == "CONTINUAR JOGANDO"
+    screen._close_challenge()
+    assert screen.game.points[0] == 10 and screen.game.active
+
+
+def test_combo_shows_on_the_second_pair_in_a_row(shell: GameShell) -> None:
+    _home(shell)._play()
+    screen = _memory(shell)
+    page: FakePage = shell.page  # type: ignore[assignment]
+    _match(screen, next(i for i in range(16) if not screen.game.is_revealed(i)))
+    assert not any("COMBO" in t for t in _texts(screen.stats))
+    _find_pair(screen)
+    assert "🔥 COMBO x2! +20 pontos" in [d.content.value for d in page.dialogs if isinstance(d, ft.SnackBar)]
+    assert "COMBO x2" in _texts(screen.stats)
+    assert "Vale +10 pontos e −5 s no relógio!" in _texts(screen.overlay)  # desafio também dobra
+    _choose(screen, correct=False)
+    assert "Seu combo zerou. Siga jogando!" in _texts(screen.feedback_switcher.content)
+    screen._close_challenge()
+    assert not any("COMBO" in t for t in _texts(screen.stats))
 
 
 # ------------------------------------------------------------------ Nível 2

@@ -77,6 +77,9 @@ def test_memory_game_sounds(tmp_path: Path) -> None:
         if not screen.game.is_revealed(index):
             _tap(screen, index)
             _tap(screen, _pair_of(screen, index))
+            if screen.challenge is not None:  # no Solo também há Desafio Relâmpago
+                screen._answer_challenge(SimpleNamespace(control=SimpleNamespace(data=screen.challenge.answer_index)))
+                screen._close_challenge()
     assert history[-1] == "vitoria"
     assert history.count("vitoria") == 1
 
