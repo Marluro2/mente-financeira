@@ -42,3 +42,13 @@ def test_invalid_financial_inputs_are_rejected() -> None:
         commercial_discount_net(100, "0.5", 3)
     with pytest.raises(ValueError):
         monthly_to_annual("-1")
+
+
+def test_payback_and_net_present_value() -> None:
+    from mente_financeira.finance import net_present_value, simple_payback
+
+    assert simple_payback(12_000, 250) == 48
+    assert net_present_value(9_000, [12_100], "0.10") == Decimal(2_000)
+    assert net_present_value(10_000, [0, 12_100], "0.10") == 0
+    with pytest.raises(ValueError):
+        simple_payback(1_000, 0)

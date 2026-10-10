@@ -110,3 +110,52 @@ def test_content_errors_point_to_the_problem(overrides: dict, message: str) -> N
 def test_unknown_track_is_reported() -> None:
     with pytest.raises(ContentError):
         load_track("nao_existe")
+
+
+# ------------------------------------------------------------ Engenharia de Produção
+ENGINEERING = load_track("engenharia")
+
+
+def test_engineering_track_has_payback_and_npv_phases() -> None:
+    assert "engenharia" in available_tracks()
+    assert [phase.calculator for phase in ENGINEERING.phases] == ["payback", "npv"]
+    for index, phase in enumerate(ENGINEERING.phases):
+        pairs = [phase.render(scenario) for scenario in phase.scenarios]
+        # Respostas diferentes: no jogo da memória cada resolução tem um só par.
+        assert len({pair.resolution for pair in pairs}) == len(pairs)
+        assert len(ENGINEERING.build_phase(index, random.Random(index))) == ENGINEERING.pairs_per_phase
+
+
+def test_engineering_answers_are_right() -> None:
+    payback, npv = ENGINEERING.phases
+    robot = payback.render(next(s for s in payback.scenarios if s["id"] == "robot"))
+    assert robot.resolution == "Payback: 24 meses" and "(2 anos)" in robot.explanation
+    line = npv.render(next(s for s in npv.scenarios if s["id"] == "line"))
+    # −100.000 + 40.000/1,1 + 40.000/1,1² + 40.000/1,1³ = −525,92
+    assert line.resolution == "VPL: −R$ 525,92 (não vale a pena)"
+    assert "R$ 40.000,00 por ano durante 3 anos" in line.question
+    oven = npv.render(next(s for s in npv.scenarios if s["id"] == "oven"))
+    assert oven.resolution == "VPL: R$ 9.140,40 (vale a pena)"
+    assert "R$ 20.000,00, R$ 25.000,00 e R$ 30.000,00 nos anos 1, 2 e 3" in oven.question
+
+
+def test_payback_must_be_whole_months() -> None:
+    data = {
+        "id": "x",
+        "name": "X",
+        "description": "X",
+        "pairs_per_phase": 1,
+        "phases": [
+            {
+                "id": "f1",
+                "title": "F",
+                "short_title": "F",
+                "objective": "F",
+                "calculator": "payback",
+                "templates": {"default": {"question": "{investment}", "resolution": "{periods}", "explanation": "-"}},
+                "scenarios": [{"id": "a", "investment": 1000, "gain": 300}],
+            }
+        ],
+    }
+    with pytest.raises(ContentError, match="meses inteiros"):
+        parse_track(data)

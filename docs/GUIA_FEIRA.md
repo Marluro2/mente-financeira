@@ -43,8 +43,9 @@ quando a pessoa sai.
 1. Conectar no Wi-Fi do estande.
 2. Escanear o QR code da mesa (ou digitar o endereço).
 3. Digitar um apelido. Uma pessoa toca em **Criar sala**, escolhendo a
-   trilha (Fundamental 1 ou 2), e mostra o código ou o QR code da sala. A
-   outra escaneia esse QR code ou digita o código e toca em **Entrar**.
+   trilha (Fundamental 1, Fundamental 2 ou Engenharia de Produção), e mostra
+   o código ou o QR code da sala. A outra escaneia esse QR code ou digita o
+   código e toca em **Entrar**.
 
 ## Sugestões dos visitantes
 

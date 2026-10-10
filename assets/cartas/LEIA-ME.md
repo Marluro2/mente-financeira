@@ -50,3 +50,24 @@ Orçamento e Objetivo reaproveitam `poupanca.svg`, `orcamento.svg` e `meta.svg`.
 | `fundamental1/preco.svg` | Preço (etiqueta e moeda) |
 | `fundamental1/trabalho.svg` | Trabalho (maleta) |
 | `fundamental1/cuidar.svg` | Cuidar das coisas (bola e coração) |
+
+## Engenharia de Produção
+
+O baralho da Engenharia de Produção fica em
+`mente_financeira/content/memoria_engenharia.toml` (12 conceitos de engenharia
+econômica, 8 sorteados por partida). As ilustrações estão em `engenharia/`:
+
+| Arquivo | Conceito |
+|---|---|
+| `fluxo_caixa.svg` | Fluxo de caixa (barras que sobem e descem) |
+| `vpl.svg` | VPL (dinheiro do futuro trazido para hoje) |
+| `tir.svg` | TIR (mostrador no verde) |
+| `tma.svg` | TMA (sarrafo do salto em altura) |
+| `payback.svg` | Payback (ampulheta enchendo de moedas) |
+| `custo_oportunidade.svg` | Custo de oportunidade (placas apontando dois caminhos) |
+| `ponto_equilibrio.svg` | Ponto de equilíbrio (balança equilibrada) |
+| `depreciacao.svg` | Depreciação (máquina e gráfico em queda) |
+| `sac_price.svg` | SAC x Price (parcelas que caem e parcelas iguais) |
+| `custos.svg` | Custo fixo e variável (galpão e caixas) |
+| `valor_presente.svg` | Dinheiro no tempo (relógio e moedas) |
+| `margem_contribuicao.svg` | Margem de contribuição (etiqueta com a fatia do lucro) |

@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Fluxo de caixa: entradas sobem, saídas descem -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4FE3D1"/>
+      <stop offset="1" stop-color="#0B9486"/>
+    </linearGradient>
+    <clipPath id="clip"><rect width="200" height="200" rx="36"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+  <rect width="200" height="200" rx="36" fill="url(#bg)"/>
+  <circle cx="30" cy="172" r="46" fill="#FFFFFF" opacity="0.12"/>
+  <circle cx="176" cy="22" r="34" fill="#FFFFFF" opacity="0.1"/>
+  <g transform="translate(0 12)">
+  <!-- grade -->
+  <g stroke="#FFFFFF" stroke-width="2" opacity="0.25">
+    <path d="M22 60 h156 M22 148 h156"/>
+  </g>
+  <!-- barras: entradas (verdes, para cima) e saídas (vermelhas, para baixo) -->
+  <g stroke="#2B2D42" stroke-width="4" stroke-linejoin="round">
+    <path d="M26 104 V66 a6 6 0 0 1 6 -6 h20 a6 6 0 0 1 6 6 V104 Z" fill="#2EE59D"/>
+    <path d="M64 104 V142 a6 6 0 0 0 6 6 h20 a6 6 0 0 0 6 -6 V104 Z" fill="#FF6B6B"/>
+    <path d="M102 104 V44 a6 6 0 0 1 6 -6 h20 a6 6 0 0 1 6 6 V104 Z" fill="#2EE59D"/>
+    <path d="M140 104 V128 a6 6 0 0 0 6 6 h20 a6 6 0 0 0 6 -6 V104 Z" fill="#FF6B6B"/>
+  </g>
+  <!-- setas dentro das barras -->
+  <g fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M42 96 V72 M34 80 L42 72 L50 80"/>
+    <path d="M80 112 V138 M72 130 L80 138 L88 130"/>
+    <path d="M118 96 V52 M110 60 L118 52 L126 60"/>
+    <path d="M156 111 V126 M149 119 L156 126 L163 119"/>
+  </g>
+  <!-- linha do tempo -->
+  <path d="M16 104 h168" stroke="#2B2D42" stroke-width="6" stroke-linecap="round"/>
+  <!-- moeda -->
+  <circle cx="157" cy="64" r="20" fill="#FFD23F" stroke="#D99400" stroke-width="4"/>
+  <circle cx="157" cy="64" r="9" fill="none" stroke="#D99400" stroke-width="3"/>
+  </g>
+  <!-- brilhos -->
+  <path d="M40 30 v14 M33 37 h14" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+  <path d="M116 164 v10 M111 169 h10" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round"/>
+  </g>
+</svg>

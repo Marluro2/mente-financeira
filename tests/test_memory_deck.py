@@ -8,8 +8,8 @@ from mente_financeira.content.memory_deck import load_memory_deck, parse_deck
 
 ASSETS = Path(__file__).resolve().parents[1] / "assets"
 DECK = load_memory_deck()
-# Baralhos do Ensino Fundamental 2 (memoria) e do Ensino Fundamental 1.
-DECK_NAMES = ("memoria", "memoria_fundamental1")
+# Baralhos do Ensino Fundamental 2 (memoria), do Fundamental 1 e da Engenharia.
+DECK_NAMES = ("memoria", "memoria_fundamental1", "memoria_engenharia")
 DECKS = [load_memory_deck(name) for name in DECK_NAMES]
 
 

@@ -135,7 +135,7 @@ def load_track(track_id: str) -> Track:
     return parse_track(data)
 
 
-NON_TRACK_FILES = {"memoria", "memoria_fundamental1"}  # baralhos do jogo da memória, não são trilhas
+NON_TRACK_FILES = {"memoria", "memoria_fundamental1", "memoria_engenharia"}  # baralhos do jogo da memória, não são trilhas
 
 
 def available_tracks() -> list[str]:

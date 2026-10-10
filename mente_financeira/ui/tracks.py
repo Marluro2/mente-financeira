@@ -68,7 +68,7 @@ TRACKS: tuple[TrackOption, ...] = (
         "Fluxo de caixa, VPL, TIR e análise de investimentos",
         ft.Icons.PRECISION_MANUFACTURING_ROUNDED,
         (s.GREEN, "#0B9486"),
-        available=False,
+        available=True,
     ),
 )
 

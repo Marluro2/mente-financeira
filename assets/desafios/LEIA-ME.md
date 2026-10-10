@@ -28,3 +28,18 @@ Os itens, preços e frases ficam em `mente_financeira/core/percent_challenge.py`
 (lista `ITEMS`). Para acrescentar uma situação: crie o SVG aqui, acrescente um
 `Item(...)` na lista e rode `python -m pytest` (os testes conferem se toda
 imagem existe e é usada).
+
+## Engenharia de Produção
+
+O Desafio Relâmpago da Engenharia de Produção (payback, valor presente e VPL)
+usa as ilustrações de `engenharia/`. Os investimentos, valores e frases ficam
+em `mente_financeira/core/engineering_challenge.py` (lista `INVESTMENTS`).
+
+| Arquivo | Situação |
+|---|---|
+| `engenharia/maquina.svg` | Máquina nova da fábrica |
+| `engenharia/placa_solar.svg` | Placas solares |
+| `engenharia/impressora_3d.svg` | Impressora 3D |
+| `engenharia/food_truck.svg` | Food truck |
+| `engenharia/lampada_led.svg` | Iluminação LED |
+| `engenharia/carro_app.svg` | Carro de aplicativo |

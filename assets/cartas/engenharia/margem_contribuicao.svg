@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Margem de contribuição: a fatia do preço que sobra depois dos custos variáveis -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FF9AD0"/>
+      <stop offset="1" stop-color="#FF3D8B"/>
+    </linearGradient>
+    <clipPath id="clip"><rect width="200" height="200" rx="36"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+  <rect width="200" height="200" rx="36" fill="url(#bg)"/>
+  <circle cx="170" cy="30" r="46" fill="#FFFFFF" opacity="0.12"/>
+  <circle cx="26" cy="178" r="38" fill="#FFFFFF" opacity="0.09"/>
+  <g transform="rotate(-16 100 104)">
+    <!-- parte maior: custo -->
+    <path d="M22 104 L56 66 H124 V142 H56 Z" fill="#FFFFFF" stroke="#2B2D42" stroke-width="5" stroke-linejoin="round"/>
+    <!-- cordão -->
+    <path d="M48 104 C34 100 22 92 16 74 C12 62 18 52 28 50" fill="none" stroke="#2B2D42" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="48" cy="104" r="7" fill="#FF6FA8" stroke="#2B2D42" stroke-width="4"/>
+    <path d="M70 90 H110 M70 106 H102 M70 122 H106" stroke="#C9CED6" stroke-width="7" stroke-linecap="round"/>
+    <!-- fatia destacada: margem -->
+    <path d="M134 60 H170 a10 10 0 0 1 10 10 V128 a10 10 0 0 1 -10 10 H134 Z" fill="#2EE59D" stroke="#2B2D42" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M157 122 V82 M146 93 L157 82 L168 93" fill="none" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <!-- brilhos -->
+  <path d="M164 150 v14 M157 157 h14" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+  <path d="M40 34 v10 M35 39 h10" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round"/>
+  </g>
+</svg>

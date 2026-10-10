@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Payback: o tempo até o dinheiro investido voltar -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFC45C"/>
+      <stop offset="1" stop-color="#FF7A1A"/>
+    </linearGradient>
+    <clipPath id="clip"><rect width="200" height="200" rx="36"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+  <rect width="200" height="200" rx="36" fill="url(#bg)"/>
+  <circle cx="172" cy="172" r="46" fill="#FFFFFF" opacity="0.12"/>
+  <circle cx="24" cy="24" r="34" fill="#FFFFFF" opacity="0.1"/>
+  <!-- seta circular de retorno -->
+  <path d="M27.5 69.2 A80 80 0 1 1 34.5 148.9" fill="none" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round"/>
+  <path d="M24.5 134.4 L48.6 145.3 L27.0 161.1 Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="4" stroke-linejoin="round"/>
+  <!-- vidro da ampulheta -->
+  <path d="M72 46 C72 80 94 90 94 103 C94 116 72 126 72 160 H128 C128 126 106 116 106 103 C106 90 128 80 128 46 Z" fill="#E6F7FF"/>
+  <!-- moedas: poucas em cima, muitas embaixo -->
+  <g fill="#FFD23F" stroke="#D99400" stroke-width="2.5">
+    <circle cx="100" cy="66" r="7"/>
+    <circle cx="100" cy="114" r="4.5"/>
+    <circle cx="100" cy="128" r="7"/>
+    <circle cx="92" cy="140" r="7"/>
+    <circle cx="108" cy="140" r="7"/>
+    <circle cx="84" cy="152" r="7"/>
+    <circle cx="100" cy="152" r="7"/>
+    <circle cx="116" cy="152" r="7"/>
+  </g>
+  <path d="M72 46 C72 80 94 90 94 103 C94 116 72 126 72 160 H128 C128 126 106 116 106 103 C106 90 128 80 128 46 Z" fill="none" stroke="#2B2D42" stroke-width="4.5" stroke-linejoin="round"/>
+  <path d="M80 56 C82 72 88 80 92 84" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round"/>
+  <!-- tampas de madeira -->
+  <g fill="#8A5A36" stroke="#2B2D42" stroke-width="4">
+    <rect x="64" y="34" width="72" height="14" rx="5"/>
+    <rect x="64" y="158" width="72" height="14" rx="5"/>
+  </g>
+  <!-- brilhos -->
+  <path d="M170 26 v14 M163 33 h14" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+  <path d="M160 116 v10 M155 121 h10" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round"/>
+  </g>
+</svg>

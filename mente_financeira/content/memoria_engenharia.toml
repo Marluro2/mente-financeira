@@ -1,0 +1,107 @@
+# Baralho da Memória Financeira — Engenharia de Produção
+#
+# Mesmo formato de memoria.toml: cada [[concepts]] vira um par de cartas e a
+# cada partida são sorteados `pairs` conceitos. O tema é engenharia econômica
+# (decisões de uma fábrica), e cada exemplo liga a conta a uma decisão da
+# empresa ou da vida pessoal. Confira as contas ao editar.
+#
+# Ilustrações: assets/cartas/engenharia/ (SVG de 200 × 200).
+
+pairs = 8
+back_image = "cartas/verso.svg"
+
+[[concepts]]
+id = "fluxo_caixa"
+name = "Fluxo de caixa"
+image = "cartas/engenharia/fluxo_caixa.svg"
+color = "#0B9486"
+tip = "É o registro de todo dinheiro que entra e sai, mês a mês. Lucro no papel não paga as contas: quem paga é o caixa."
+example = "Uma oficina recebe R$ 30.000 no mês e paga R$ 22.000 de salários, peças e aluguel: fluxo de caixa de + R$ 8.000."
+
+[[concepts]]
+id = "vpl"
+name = "VPL"
+image = "cartas/engenharia/vpl.svg"
+color = "#1459D9"
+tip = "Valor Presente Líquido: traz os ganhos futuros para hoje, descontados pela TMA, e tira o investimento. VPL positivo, vale a pena."
+example = "Máquina de R$ 9.000 que rende R$ 12.100 daqui a 2 anos, com TMA de 10% ao ano: 12.100 ÷ 1,1² = R$ 10.000 hoje. VPL = R$ 1.000."
+
+[[concepts]]
+id = "tir"
+name = "TIR"
+image = "cartas/engenharia/tir.svg"
+color = "#7B1FD6"
+tip = "Taxa Interna de Retorno: é o quanto o próprio projeto rende, a taxa que zera o VPL. Se a TIR passa da TMA, o projeto vale a pena."
+example = "Aplicar R$ 1.000 num projeto e receber R$ 1.100 em um ano dá TIR de 10% ao ano. Ganha de uma poupança a 7%, perde de um CDB a 12%."
+
+[[concepts]]
+id = "tma"
+name = "TMA"
+image = "cartas/engenharia/tma.svg"
+color = "#D62839"
+tip = "Taxa Mínima de Atratividade: o mínimo que um investimento precisa render para valer a pena, em geral o que uma aplicação segura paga."
+example = "Se uma aplicação segura rende 10% ao ano, um negócio que promete 8% ao ano não compensa: tem mais risco e rende menos."
+
+[[concepts]]
+id = "payback"
+name = "Payback"
+image = "cartas/engenharia/payback.svg"
+color = "#FF7A1A"
+tip = "É o tempo que um investimento leva para se pagar. Quanto menor o payback, mais cedo o dinheiro volta e menor o risco."
+example = "Placas solares de R$ 12.000 que economizam R$ 250 por mês na conta de luz se pagam em 12.000 ÷ 250 = 48 meses (4 anos)."
+
+[[concepts]]
+id = "custo_oportunidade"
+name = "Custo de oportunidade"
+image = "cartas/engenharia/custo_oportunidade.svg"
+color = "#F2A900"
+tip = "É o que você deixa de ganhar ao escolher uma opção em vez de outra. Toda escolha tem um custo, mesmo sem sair dinheiro do bolso."
+example = "Deixar R$ 20.000 parados na conta em vez de aplicar a 1% ao mês custa R$ 200 por mês de rendimento perdido."
+
+[[concepts]]
+id = "ponto_equilibrio"
+name = "Ponto de equilíbrio"
+image = "cartas/engenharia/ponto_equilibrio.svg"
+color = "#00798C"
+tip = "É a quantidade vendida em que a receita paga todos os custos e o lucro é zero. Acima dele começa o lucro."
+example = "Custos fixos de R$ 6.000 por mês, camiseta vendida a R$ 50 e produzida por R$ 20: equilíbrio em 6.000 ÷ (50 − 20) = 200 camisetas."
+
+[[concepts]]
+id = "depreciacao"
+name = "Depreciação"
+image = "cartas/engenharia/depreciacao.svg"
+color = "#3F4460"
+tip = "Máquinas, carros e computadores perdem valor com o uso e o tempo. Contar essa perda evita achar que o lucro é maior do que é."
+example = "Um notebook de R$ 4.000 com vida útil de 4 anos perde R$ 1.000 por ano (depreciação linear). Depois de 2 anos, vale R$ 2.000."
+
+[[concepts]]
+id = "sac_price"
+name = "SAC x Price"
+image = "cartas/engenharia/sac_price.svg"
+color = "#4331D6"
+tip = "No SAC as parcelas começam altas e caem; na Price são todas iguais. No total, o SAC costuma cobrar menos juros."
+example = "R$ 12.000 em 12 meses a 1% ao mês: no SAC a 1ª parcela é 1.000 + 120 = R$ 1.120 e a última, R$ 1.010. Na Price, todas ficam em R$ 1.066,19."
+
+[[concepts]]
+id = "custos"
+name = "Custo fixo e variável"
+image = "cartas/engenharia/custos.svg"
+color = "#3E9A1E"
+tip = "Custo fixo não muda com a produção, como o aluguel. Custo variável cresce com ela, como a matéria-prima."
+example = "Padaria com R$ 3.000 de aluguel e R$ 0,40 de farinha por pão: fazendo 5.000 pães, o custo total é 3.000 + 5.000 × 0,40 = R$ 5.000."
+
+[[concepts]]
+id = "valor_presente"
+name = "Dinheiro no tempo"
+image = "cartas/engenharia/valor_presente.svg"
+color = "#1FA45C"
+tip = "R$ 100 hoje valem mais que R$ 100 daqui a um ano, porque hoje já podem render. Por isso se comparam valores na mesma data."
+example = "Com juros de 10% ao ano, receber R$ 1.100 daqui a 1 ano equivale a ter R$ 1.000 hoje: 1.100 ÷ 1,10 = R$ 1.000."
+
+[[concepts]]
+id = "margem_contribuicao"
+name = "Margem de contribuição"
+image = "cartas/engenharia/margem_contribuicao.svg"
+color = "#FF3D8B"
+tip = "É o que sobra de cada venda para pagar os custos fixos e dar lucro: preço de venda menos custo variável."
+example = "Hambúrguer vendido a R$ 25 com R$ 10 de ingredientes deixa R$ 15 de margem. Com R$ 4.500 de custos fixos, são 300 lanches para empatar."

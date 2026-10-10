@@ -10,6 +10,7 @@ import pytest
 
 from fakes import FakePage, walk
 from mente_financeira.core.coin_challenge import COIN_KIT
+from mente_financeira.core.engineering_challenge import ENGINEERING_KIT
 from mente_financeira.core.memory_game import Mode
 from mente_financeira.storage import SettingsStore
 from mente_financeira.ui import tracks as tracks_module
@@ -40,7 +41,7 @@ def test_game_opens_on_the_tracks_page(shell: GameShell) -> None:
     texts = _texts(shell.page.controls[-1])
     for title in ("Ensino Fundamental 1", "Ensino Fundamental 2", "Ensino Médio", "Engenharia de Produção", "Qual é a sua trilha?"):
         assert title in texts
-    assert texts.count("EM BREVE") == 2
+    assert texts.count("EM BREVE") == 1  # só o Ensino Médio
     assert [t.key for t in TRACKS] == [FUNDAMENTAL_1, FUNDAMENTAL, MEDIO, ENGENHARIA]  # ordem dos botões
 
 
@@ -70,10 +71,26 @@ def test_fundamental1_opens_its_own_memory_game(shell: GameShell) -> None:
     assert shell.deck.concepts[0].id == "poupanca"
 
 
-@pytest.mark.parametrize("key", [MEDIO, ENGENHARIA])
-def test_other_tracks_only_announce_coming_soon(shell: GameShell, key: str) -> None:
+def test_engineering_opens_its_own_game_and_level2(shell: GameShell) -> None:
+    _click(shell.current, ENGENHARIA)
+    assert isinstance(shell.current, HomeScreen)
+    assert shell.deck.concepts[0].id == "fluxo_caixa"  # baralho de engenharia econômica
+    shell.play_memory(Mode.DUEL, ("Ana", "Bruno"))
+    screen: MemoryScreen = shell.current  # type: ignore[assignment]
+    assert {c.id for c in screen.game.cards} <= {c.id for c in shell.deck.concepts}
+    assert screen.challenges is ENGINEERING_KIT  # payback e VPL
+    shell.open_level2()
+    assert shell.current.session.track.id == "engenharia"  # type: ignore[attr-defined]
+    # As outras trilhas continuam com o Nível 2 do Ensino Médio.
+    shell.show_tracks()
+    _click(shell.current, FUNDAMENTAL)
+    shell.open_level2()
+    assert shell.current.session.track.id == "medio"  # type: ignore[attr-defined]
+
+
+def test_medio_only_announces_coming_soon(shell: GameShell) -> None:
     screen = shell.current
-    _click(screen, key)
+    _click(screen, MEDIO)
     assert shell.current is screen  # continua na página inicial
     assert "em construção" in shell.page.dialogs[-1].content.value
 
