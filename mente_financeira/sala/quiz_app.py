@@ -17,6 +17,7 @@ import flet as ft
 
 from mente_financeira.sala.app import ROOM_TRACKS, Messenger, SessionStore
 from mente_financeira.sala.quiz import Phase, Quiz, QuizError
+from mente_financeira.sala.ranking import QUIZ, FairRanking
 from mente_financeira.sala.salas import NICKNAME_MAX, NicknameError
 from mente_financeira.sugestoes import Suggestion
 from mente_financeira.ui import style as s
@@ -145,9 +146,19 @@ class QuizScreen:
 class QuizHost(QuizScreen):
     """Tela do notebook (ligada no telão ou virada para o público)."""
 
-    def __init__(self, page: ft.Page, quiz: Quiz, messenger: Messenger, *, session_id: str, join_url: str = "") -> None:
+    def __init__(
+        self,
+        page: ft.Page,
+        quiz: Quiz,
+        messenger: Messenger,
+        *,
+        session_id: str,
+        join_url: str = "",
+        ranking: FairRanking | None = None,
+    ) -> None:
         super().__init__(page, quiz, messenger, session_id=session_id)
         self.join_url = join_url  # endereço escrito embaixo do QR code
+        self.ranking = ranking  # o pódio de cada rodada vai para o ranking do estande
         self.answered_text = ft.Text()
         self.countdown_text = ft.Text()
         self.countdown_ring = ft.ProgressRing()
@@ -186,6 +197,9 @@ class QuizHost(QuizScreen):
 
     def _next(self, _: Any = None) -> None:
         if self.quiz.advance(self.quiz.number):
+            if self.quiz.phase is Phase.FINISHED and self.ranking is not None:
+                results = [(p.nickname, p.score) for p in self.quiz.ranking()]
+                self.ranking.record(QUIZ, self.quiz.round, results, track_title(self.quiz.track))
             self.broadcast("phase")
 
     def _restart(self, _: Any = None) -> None:
@@ -748,7 +762,7 @@ class QuizPhone(QuizScreen):
             ),
             self.name_field,
             s.pill_button("ENTRAR NO QUIZ", ft.Icons.LOGIN_ROUNDED, self._join, height=56),
-            self._center("Só pedimos um apelido (não use seu nome completo). Nada fica guardado.", 12, color=s.MUTED, weight=ft.FontWeight.NORMAL),
+            self._center("Só pedimos um apelido (não use seu nome completo). Ele pode aparecer no ranking do estande até o fim do dia; nada fica gravado.", 12, color=s.MUTED, weight=ft.FontWeight.NORMAL),
         ]
 
     def _lobby_items(self) -> list[ft.Control]:

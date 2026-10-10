@@ -91,6 +91,7 @@ class Quiz:
         self.questions: list[Challenge] = []
         self.index = -1
         self.deadline = 0.0
+        self.round = 0  # quantas rodadas já começaram (para o ranking não somar duas vezes)
 
     # ------------------------------------------------------------ consulta
     @property
@@ -185,6 +186,7 @@ class Quiz:
             if not self.players:
                 raise QuizError("Espere pelo menos uma pessoa entrar.")
             self.questions = draw_questions(self.kits[self.track], self.count, self.rng)
+            self.round += 1
             for player in self.players.values():
                 player.score = player.correct = player.streak = 0
                 player.clear_answer()

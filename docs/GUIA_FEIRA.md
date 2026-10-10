@@ -5,8 +5,8 @@ jogam pelo navegador, **sem internet**. Uma pessoa cria a sala e recebe um
 código, como `GATO-42`. A outra digita o código ou escaneia o QR code, e o
 Duelo começa nos dois celulares.
 
-O jogo pede só um apelido e não guarda nada. O apelido e a partida somem
-quando a pessoa sai.
+O jogo pede só um apelido e não grava nada. O apelido pode aparecer no
+ranking do cartaz até o servidor fechar; a partida some quando a pessoa sai.
 
 ## Antes da feira (em casa, com internet)
 
@@ -67,7 +67,20 @@ Quem acerta mais rápido ganha mais pontos, e o placar aparece a cada pergunta.
    **pódio**. **Novo quiz** começa outra rodada com as mesmas pessoas.
 
 Quem chega atrasado pode entrar no meio do quiz. Como no Duelo, só pedimos um
-apelido e nada é guardado.
+apelido e nada é gravado.
+
+## Ranking do dia
+
+O cartaz do notebook (`http://localhost:8000/mesa`) mostra, ao lado do QR
+code, os 5 melhores apelidos do **Duelo em sala** e do **Quiz ao vivo**. Ele
+atualiza sozinho a cada partida que termina. Cada apelido aparece uma vez por
+placar, com o melhor resultado.
+
+- O ranking fica só na memória do notebook: some quando a janela preta fecha.
+- Apelido ofensivo? No cartaz aberto no próprio notebook, clique no **✕** ao
+  lado dele. **Limpar ranking** zera os dois placares. Esses botões não
+  aparecem nem funcionam nos celulares.
+- Na impressão (Ctrl+P) o ranking não sai, só o QR code.
 
 ## Sugestões dos visitantes
 
