@@ -63,9 +63,12 @@ def test_site_button_appears_only_with_a_form(tmp_path: Path, monkeypatch: pytes
     for size in ((1280, 720), (360, 740)):
         shell = GameShell(FakePage(*size), store=SettingsStore(tmp_path), rng=random.Random(2))  # type: ignore[arg-type]
         button = _button(shell.page)
-        assert button is not None
-        button.on_click(None)
-        assert shell.page.tasks[-1] == (shell.page.launch_url, ("https://forms.gle/exemplo",))
+        assert button is not None and button.on_click is None
+        # Links abertos pelo próprio navegador: page.launch_url quebrava no site
+        # ("handler must be a coroutine function").
+        links = [c.url for c in walk(shell.page.controls[-1]) if getattr(c, "url", None)]
+        assert len(links) == 2  # botão e QR code
+        assert all(link.url == "https://forms.gle/exemplo" and link.target == ft.UrlTarget.BLANK for link in links)
 
 
 def test_site_without_form_has_no_button(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

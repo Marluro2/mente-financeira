@@ -11,11 +11,20 @@ from mente_financeira.sugestoes import LEVELS, TEXT_MAX, Suggestion, SuggestionE
 from mente_financeira.ui import style as s
 
 
-def suggestion_button(on_click: Callable[[Any], None]) -> ft.Control:
+def form_link(url: str) -> ft.Url:
+    """Link para o formulário, em outra aba (o navegador abre direto, sem passar pelo Python)."""
+
+    return ft.Url(url, target=ft.UrlTarget.BLANK)
+
+
+def suggestion_button(on_click: Callable[[Any], None] | None = None, *, url: str | None = None) -> ft.Control:
+    """Com ``on_click``, abre o formulário do jogo (feira); com ``url``, abre o Formulário Google (site)."""
+
     return ft.OutlinedButton(
         "Deixe sua sugestão",
         icon=ft.Icons.LIGHTBULB_OUTLINE_ROUNDED,
         on_click=on_click,
+        url=form_link(url) if url else None,
         style=ft.ButtonStyle(
             color=s.YELLOW,
             side=ft.BorderSide(2, s.YELLOW),
@@ -53,11 +62,11 @@ def suggestion_qr(caption: str, *, size: float = 92, button: ft.Control | None =
     )
 
 
-def suggestion_qr_tile(on_click: Callable[[Any], None], *, size: float = 96) -> ft.Control:
+def suggestion_qr_tile(url: str, *, size: float = 96) -> ft.Control:
     """QR code compacto, ao lado do título: escaneia ou toca para abrir o formulário."""
 
     return ft.Container(
-        on_click=on_click,
+        url=form_link(url),
         tooltip="Deixe sua sugestão",
         content=ft.Column(
             [

@@ -85,15 +85,10 @@ class GameShell:
             load_memory_deck(),
             on_select=self.open_track,
             rng=self.rng,
-            on_suggest=self.open_suggestion_form if sugestoes.FORM_URL else None,
+            suggest_url=sugestoes.FORM_URL or None,
         )
         self._activate(tracks)
         tracks.show()
-
-    def open_suggestion_form(self) -> None:
-        """Abre o Formulário Google de sugestões em outra aba."""
-
-        self.page.run_task(self.page.launch_url, sugestoes.FORM_URL)
 
     def open_track(self, key: str) -> None:
         # Por enquanto só os Ensinos Fundamentais 1 e 2 estão disponíveis; as
