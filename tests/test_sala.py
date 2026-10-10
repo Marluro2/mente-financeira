@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import asyncio
-from collections.abc import Awaitable, Callable
 from pathlib import Path
 import random
 from types import SimpleNamespace
@@ -13,7 +12,7 @@ import flet as ft
 import pytest
 from fastapi.testclient import TestClient
 
-from fakes import FakePage, walk
+from fakes import FakeHub, FakePage, walk
 from mente_financeira.content.memory_deck import load_memory_deck
 from mente_financeira.sala.app import RoomApp, SessionStore, code_from_route, new_lobby, room_qr_path
 from mente_financeira.sala.salas import ANIMALS, Lobby, NicknameError, RoomError, clean_nickname, normalize_code
@@ -23,45 +22,11 @@ from mente_financeira.ui.memory_screen import MemoryScreen
 from mente_financeira.ui.tracks import FUNDAMENTAL, FUNDAMENTAL_1, MEDIO
 import servidor_sala
 
-Handler = Callable[[dict[str, Any]], Awaitable[None]]
-
 
 @pytest.fixture(autouse=True)
 def _no_delays(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(memory_module, "MISMATCH_DELAY_SECONDS", 0)
     monkeypatch.setattr(memory_module, "RESULT_DELAY_SECONDS", 0)
-
-
-class FakeHub:
-    """Faz o papel do pubsub do Flet: guarda os recados e entrega com ``flush``."""
-
-    def __init__(self) -> None:
-        self.handlers: dict[str, list[tuple[str, Handler]]] = {}
-        self.queue: list[tuple[str, dict[str, Any]]] = []
-
-    def messenger(self, owner: str) -> FakeMessenger:
-        return FakeMessenger(self, owner)
-
-    def flush(self) -> None:
-        while self.queue:
-            topic, message = self.queue.pop(0)
-            for _, handler in list(self.handlers.get(topic, [])):
-                asyncio.run(handler(message))
-
-
-class FakeMessenger:
-    def __init__(self, hub: FakeHub, owner: str) -> None:
-        self.hub, self.owner = hub, owner
-
-    def subscribe(self, topic: str, handler: Handler) -> None:
-        self.hub.handlers.setdefault(topic, []).append((self.owner, handler))
-
-    def send(self, topic: str, message: dict[str, Any]) -> None:
-        self.hub.queue.append((topic, message))
-
-    def close(self) -> None:
-        for topic, handlers in self.hub.handlers.items():
-            self.hub.handlers[topic] = [(o, h) for o, h in handlers if o != self.owner]
 
 
 def _lobby() -> Lobby:
@@ -331,6 +296,22 @@ def test_server_serves_emojis_locally(client: TestClient) -> None:
     response = client.get("/assets/fonts/notocoloremoji/v32/qualquer.7.woff2")
     assert response.status_code == 200 and response.headers["content-type"] == "font/woff2"
     assert len(response.content) > 10_000
+
+
+def test_offline_emoji_font_has_every_emoji_of_the_game() -> None:
+    """Emoji novo no jogo? Rode ferramentas/gerar_fonte_emoji.py (senão vira um quadrado na feira)."""
+
+    pytest.importorskip("brotli")
+    ttlib = pytest.importorskip("fontTools.ttLib")
+    root = Path(servidor_sala.__file__).parent
+    used = {
+        ch
+        for path in [*root.glob("mente_financeira/**/*.py"), *root.glob("mente_financeira/**/*.toml")]
+        for ch in path.read_text(encoding="utf-8")
+        if ord(ch) >= 0x1F000 or 0x2300 <= ord(ch) < 0x2400
+    }
+    font = ttlib.TTFont(servidor_sala.EMOJI_FONT).getBestCmap()
+    assert sorted(ch for ch in used if ord(ch) not in font) == []
 
 
 def test_server_draws_qr_codes(client: TestClient) -> None:

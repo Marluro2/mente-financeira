@@ -6,6 +6,9 @@ uma pessoa cria a sala e a outra entra com o código (ex.: GATO-42) ou pelo QR
 code. Tudo vem do notebook, inclusive os emojis. Nada é gravado: apelidos e
 partidas ficam só na memória e somem quando a pessoa sai.
 
+Quiz ao vivo: o notebook abre http://localhost:8000/?quiz=apresentar (vira o
+telão) e o público responde pelo celular, entrando pelo QR code da tela.
+
 Iniciar:  python servidor_sala.py      (no Windows: JOGAR_FEIRA.bat)
 Guia da feira: docs/GUIA_FEIRA.md
 """
@@ -18,6 +21,7 @@ import os
 from pathlib import Path
 import socket
 import threading
+from urllib.parse import urlparse
 import webbrowser
 
 from fastapi import FastAPI, Request
@@ -25,7 +29,9 @@ from fastapi.responses import FileResponse, HTMLResponse, Response
 import flet_web.fastapi as flet_fastapi
 import segno
 
-from mente_financeira.sala.app import make_main, new_lobby
+from mente_financeira.sala.app import new_lobby
+from mente_financeira.sala.entrada import make_main
+from mente_financeira.sala.quiz_app import PLAY, PRESENT, new_quiz
 from mente_financeira.sala.salas import RoomError, normalize_code
 from mente_financeira.sugestoes import SuggestionBox
 
@@ -37,6 +43,8 @@ SUGGESTIONS_FILE = ROOT / "sugestoes" / "sugestoes.csv"
 PORT = int(os.getenv("PORT", "8000"))
 SESSION_TIMEOUT_SECONDS = 30  # quem fecha a página sai da sala depois disso
 LOCAL_HOSTS = ("localhost", "127.0.0.1", "::1")
+QUIZ_PLAY_PATH = f"/?quiz={PLAY}"
+QUIZ_HOST_PATH = f"/?quiz={PRESENT}"
 
 
 def lan_address() -> str:
@@ -60,6 +68,7 @@ def qr_png(text: str) -> Response:
 
 def create_app(lan_url: str | None = None, suggestions: SuggestionBox | None = None) -> FastAPI:
     lobby = new_lobby()
+    quiz = new_quiz()
     suggestions = suggestions or SuggestionBox(SUGGESTIONS_FILE)
     lan_url = lan_url or f"http://{lan_address()}:{PORT}"
     server = FastAPI(title="Mente Financeira em sala", docs_url=None, redoc_url=None, openapi_url=None)
@@ -78,6 +87,10 @@ def create_app(lan_url: str | None = None, suggestions: SuggestionBox | None = N
             return Response(status_code=404)
         return qr_png(f"{public_url(request)}/?sala={code}")
 
+    @server.get("/qr/quiz.png")
+    def quiz_qr(request: Request) -> Response:
+        return qr_png(public_url(request) + QUIZ_PLAY_PATH)
+
     @server.get("/qr/mesa.png")
     def table_qr(request: Request) -> Response:
         return qr_png(public_url(request) + "/")
@@ -87,7 +100,7 @@ def create_app(lan_url: str | None = None, suggestions: SuggestionBox | None = N
         """Cartaz para a mesa do estande: QR code e endereço do jogo."""
 
         address = html.escape(public_url(request))
-        return TABLE_PAGE.replace("{address}", address)
+        return TABLE_PAGE.replace("{address}", address).replace("{quiz_host}", QUIZ_HOST_PATH)
 
     @server.get("/assets/fonts/notocoloremoji/{rest:path}")
     def emoji_font(rest: str) -> FileResponse:
@@ -98,7 +111,13 @@ def create_app(lan_url: str | None = None, suggestions: SuggestionBox | None = N
     server.mount(
         "/",
         flet_fastapi.app(
-            make_main(lobby, suggestions.save),
+            make_main(
+                lobby,
+                quiz,
+                suggestions.save,
+                join_url=lan_url + QUIZ_PLAY_PATH,
+                own_ips=[urlparse(lan_url).hostname or ""],
+            ),
             assets_dir=str(ASSETS_DIR),
             app_name="Mente Financeira",
             no_cdn=True,  # sem internet: o Flet usa só os arquivos instalados
@@ -122,7 +141,9 @@ TABLE_PAGE = """<!doctype html>
   ol { font-size: 22px; line-height: 1.6; text-align: left; display: inline-block; margin: 24px 0 8px; }
   code { font-size: 26px; color: #FFD23F; }
   p { color: #CFC7F2; }
-  @media print { body { background: #fff; color: #000; } h1, h2, code { color: #000; } p { color: #333; } }
+  .quiz a { display: inline-block; margin-top: 12px; padding: 12px 22px; border-radius: 999px;
+            background: #FF3D8B; color: #fff; font-weight: 800; text-decoration: none; }
+  @media print { body { background: #fff; color: #000; } h1, h2, code { color: #000; } p { color: #333; } .quiz { display: none; } }
 </style></head>
 <body><main>
   <h1>MENTE FINANCEIRA</h1>
@@ -134,6 +155,7 @@ TABLE_PAGE = """<!doctype html>
     <li>Uma pessoa cria a sala; a outra entra com o código.</li>
   </ol>
   <p>Se o celular avisar "sem internet", escolha continuar conectado neste Wi-Fi.</p>
+  <p class="quiz"><a href="{quiz_host}">Abrir o Quiz ao vivo (tela do notebook)</a></p>
 </main></body></html>
 """
 
@@ -146,6 +168,7 @@ def main() -> None:
     print(" Mente Financeira • Duelo em sala")
     print(f" Celulares (mesmo Wi-Fi): {lan_url}")
     print(f" Cartaz com QR code:      http://localhost:{PORT}/mesa")
+    print(f" Quiz ao vivo (telão):    http://localhost:{PORT}{QUIZ_HOST_PATH}")
     print(f" Sugestões ficam em:     {SUGGESTIONS_FILE}")
     print(" Para encerrar, feche esta janela.")
     print("=" * 60)
