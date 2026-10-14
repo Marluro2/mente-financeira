@@ -82,6 +82,7 @@ class TracksScreen:
         on_select: Callable[[str], None],
         rng: random.Random | None = None,
         suggest_url: str | None = None,
+        on_theme: Callable[[str], None] | None = None,
     ) -> None:
         self.page = page
         self.deck = deck
@@ -94,6 +95,8 @@ class TracksScreen:
         self.switchers: list[ft.AnimatedSwitcher] = []
         self.card_size = 100.0
         self.open_card: int | None = None
+        self.on_theme = on_theme  # sem ele, o botão de cores não aparece
+        self.picker_open = False
 
     # ------------------------------------------------------------ ciclo
     def show(self) -> None:
@@ -163,9 +166,16 @@ class TracksScreen:
             text_align=ft.TextAlign.CENTER if self.compact else ft.TextAlign.START,
         )
         badge = ft.Row(
-            [s.chip("PROJETO IFSP • EDUCAÇÃO FINANCEIRA", icon=ft.Icons.AUTO_AWESOME, color=s.YELLOW, size=11)],
+            [
+                s.chip("PROJETO IFSP • EDUCAÇÃO FINANCEIRA", icon=ft.Icons.AUTO_AWESOME, color=s.YELLOW, size=11),
+                *([self._theme_button()] if self.on_theme else []),
+            ],
             alignment=ft.MainAxisAlignment.CENTER if self.compact else ft.MainAxisAlignment.START,
+            vertical_alignment=ft.CrossAxisAlignment.CENTER,
+            spacing=10,
         )
+        if self.on_theme and self.picker_open:
+            badge = ft.Column([badge, self._theme_picker()], spacing=12, horizontal_alignment=ft.CrossAxisAlignment.STRETCH)
         buttons = ft.Column([self._track_button(track) for track in TRACKS], spacing=12 if short else 16)
         footer = ft.Text(
             "Um jogo, quatro trilhas: das primeiras contas com dinheiro à análise de investimentos.",
@@ -276,10 +286,92 @@ class TracksScreen:
             **decoration,
         )
 
+    def _theme_button(self) -> ft.Container:
+        """Botão redondo com paleta: abre e fecha a escolha de cores."""
+
+        return ft.Container(
+            width=40,
+            height=40,
+            border_radius=20,
+            bgcolor=ft.Colors.with_opacity(0.30 if self.picker_open else 0.12, s.FRAME),
+            border=ft.Border.all(1.5, ft.Colors.with_opacity(0.8, s.FRAME)),
+            alignment=ft.Alignment.CENTER,
+            ink=True,
+            tooltip="Escolher as cores",
+            on_click=self._toggle_picker,
+            content=ft.Icon(ft.Icons.PALETTE_ROUNDED, color=s.WHITE, size=22, semantics_label="Escolher as cores"),
+        )
+
+    def _theme_picker(self) -> ft.Container:
+        """Bolinhas com os temas: o fundo e as caixinhas mudam juntos."""
+
+        swatches: list[ft.Control] = []
+        dot = 40 if self.compact else 44
+        for theme in s.THEMES:
+            selected = theme.key == s.theme_key
+            swatches.append(
+                ft.Container(
+                    data=theme.key,
+                    on_click=self._pick_theme,
+                    ink=True,
+                    border_radius=14,
+                    padding=ft.Padding.symmetric(horizontal=2, vertical=4),
+                    width=56 if self.compact else 64,
+                    content=ft.Column(
+                        [
+                            ft.Container(
+                                width=dot,
+                                height=dot,
+                                border_radius=dot / 2,
+                                gradient=ft.LinearGradient(
+                                    begin=ft.Alignment.TOP_LEFT,
+                                    end=ft.Alignment.BOTTOM_RIGHT,
+                                    colors=[theme.background[1], theme.frame],
+                                ),
+                                border=ft.Border.all(3 if selected else 1.5, s.WHITE if selected else ft.Colors.with_opacity(0.35, s.WHITE)),
+                                alignment=ft.Alignment.CENTER,
+                                content=ft.Icon(ft.Icons.CHECK_ROUNDED, color=s.WHITE, size=24) if selected else None,
+                            ),
+                            ft.Text(
+                                theme.name,
+                                size=11,
+                                weight=ft.FontWeight.W_900 if selected else ft.FontWeight.W_600,
+                                color=s.WHITE if selected else s.MUTED,
+                                text_align=ft.TextAlign.CENTER,
+                            ),
+                        ],
+                        spacing=4,
+                        tight=True,
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                    ),
+                )
+            )
+        return s.glass(
+            ft.Column(
+                [
+                    ft.Text("Escolha as cores da tela e das caixinhas", size=13, weight=ft.FontWeight.BOLD, color=s.WHITE),
+                    ft.Row(swatches, spacing=2 if self.compact else 4, wrap=True, run_spacing=6, alignment=ft.MainAxisAlignment.CENTER if self.compact else ft.MainAxisAlignment.START),
+                ],
+                spacing=8,
+                tight=True,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER if self.compact else ft.CrossAxisAlignment.START,
+            ),
+            padding=12,
+            radius=20,
+        )
+
+    def _toggle_picker(self, _: Any = None) -> None:
+        self.picker_open = not self.picker_open
+        self.show()
+
+    def _pick_theme(self, event: Any) -> None:
+        if self.on_theme is not None:
+            self.on_theme(event.control.data)
+
     def _back(self, index: int) -> ft.Image:
         return ft.Image(
             key=f"verso-{index}",
-            src=self.deck.back_image,
+            src=s.card_back(self.deck.back_image),
             width=self.card_size,
             height=self.card_size,
             fit=ft.BoxFit.COVER,
@@ -322,8 +414,8 @@ class TracksScreen:
             padding=gap + 6,
             border_radius=32,
             bgcolor=ft.Colors.with_opacity(0.08, s.WHITE),
-            border=ft.Border.all(1.5, ft.Colors.with_opacity(0.5, s.CYAN)),
-            shadow=ft.BoxShadow(blur_radius=50, color=ft.Colors.with_opacity(0.35, s.CYAN)),
+            border=ft.Border.all(1.5, ft.Colors.with_opacity(0.5, s.FRAME)),
+            shadow=ft.BoxShadow(blur_radius=50, color=ft.Colors.with_opacity(0.35, s.FRAME)),
             content=ft.Column(lines, spacing=gap, tight=True),
         )
 
@@ -337,7 +429,7 @@ class TracksScreen:
         self.page.show_dialog(
             ft.SnackBar(
                 ft.Text(f"A trilha {track.title} está em construção. Em breve! 🚧", color=s.WHITE, weight=ft.FontWeight.BOLD),
-                bgcolor="#E63A1C9C",
+                bgcolor=ft.Colors.with_opacity(0.9, s.BOX),
                 behavior=ft.SnackBarBehavior.FLOATING,
                 duration=2200,
             )

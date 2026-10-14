@@ -106,7 +106,7 @@ def test_book_saves_only_medal_keys_with_the_preferences(tmp_path: Path) -> None
     assert [m.key for m in won] == ["primeira_partida", "trilha_fundamental"]
     assert book.record(BASE) == []
     saved = json.loads((tmp_path / "settings.json").read_text(encoding="utf-8"))
-    assert saved == {"palette": "neon", "dark_mode": False, "sound": False, "medals": ["primeira_partida", "trilha_fundamental"]}
+    assert saved == {"palette": "neon", "dark_mode": False, "theme": "neon", "sound": False, "medals": ["primeira_partida", "trilha_fundamental"]}
     assert [m.key for m in book.owned()] == ["primeira_partida", "trilha_fundamental"]
 
 

@@ -34,6 +34,7 @@ def default_data_dir() -> Path:
 class Settings:
     palette: str = "kids"
     dark_mode: bool = False
+    theme: str = "neon"  # tema de cores da página inicial (ui/style.py)
     sound: bool = True  # efeitos sonoros ligados
     medals: list[str] = field(default_factory=list)  # chaves das medalhas (core/medals.py)
 

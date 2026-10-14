@@ -54,7 +54,7 @@ def medals_dialog(page: Any, book: MedalBook) -> ft.AlertDialog:
     tiles = [medal_tile(medal, medal.key in owned, width=tile_width) for medal in MEDALS]
     dialog = ft.AlertDialog(
         modal=False,
-        bgcolor="#2A1A5E",
+        bgcolor=s.PANEL,
         title=ft.Row(
             [
                 ft.Text("Suas medalhas", weight=ft.FontWeight.W_900, color=s.WHITE, expand=True),

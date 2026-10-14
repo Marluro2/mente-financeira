@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Verso do tema por_do_sol (mesmo desenho de ../verso.svg, outras cores): listras escuras e um "?" amarelo, bem diferente das frentes -->
+  <defs>
+    <pattern id="stripes" width="20" height="20" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="20" height="20" fill="#5C1233"/>
+      <rect width="10" height="20" fill="#6E1A3E"/>
+    </pattern>
+    <clipPath id="clip"><rect width="200" height="200" rx="36"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+  <rect width="200" height="200" rx="36" fill="url(#stripes)"/>
+  <circle cx="100" cy="100" r="68" fill="#2A0A1E" stroke="#FFD23F" stroke-width="6"/>
+  <path d="M78 82 a22 22 0 1 1 31 20 c-7 4 -9 8 -9 17" fill="none" stroke="#FFD23F" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="100" cy="142" r="9" fill="#FFD23F"/>
+  </g>
+</svg>

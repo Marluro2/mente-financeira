@@ -209,8 +209,8 @@ class HomeScreen:
             padding=ft.Padding.symmetric(horizontal=12, vertical=24) if self.compact else (24 if self.short else 32),
             border_radius=28 if self.compact else 32,
             bgcolor=ft.Colors.with_opacity(0.10, s.WHITE),
-            border=ft.Border.all(1.5, ft.Colors.with_opacity(0.35, s.CYAN)),
-            shadow=ft.BoxShadow(blur_radius=60, color=ft.Colors.with_opacity(0.35, "#6C63FF")),
+            border=ft.Border.all(1.5, ft.Colors.with_opacity(0.35, s.FRAME)),
+            shadow=ft.BoxShadow(blur_radius=60, color=ft.Colors.with_opacity(0.35, s.FRAME)),
             content=ft.Column(
                 items,
                 spacing=14 if self.compact or self.short else 18,
@@ -380,10 +380,10 @@ class HomeScreen:
                 "gradient": ft.LinearGradient(
                     begin=ft.Alignment.TOP_LEFT,
                     end=ft.Alignment.BOTTOM_RIGHT,
-                    colors=[ft.Colors.with_opacity(0.40, s.CYAN), ft.Colors.with_opacity(0.30, "#6C63FF")],
+                    colors=[ft.Colors.with_opacity(0.40, s.FRAME), ft.Colors.with_opacity(0.30, s.BOX)],
                 ),
-                "border": ft.Border.all(2, s.CYAN),
-                "shadow": ft.BoxShadow(blur_radius=26, color=ft.Colors.with_opacity(0.45, s.CYAN), offset=ft.Offset(0, 6)),
+                "border": ft.Border.all(2, s.FRAME),
+                "shadow": ft.BoxShadow(blur_radius=26, color=ft.Colors.with_opacity(0.45, s.FRAME), offset=ft.Offset(0, 6)),
             }
         else:
             look = {
@@ -397,7 +397,7 @@ class HomeScreen:
                     height=46,
                     border_radius=23,
                     alignment=ft.Alignment.CENTER,
-                    bgcolor=ft.Colors.with_opacity(0.25 if selected else 0.10, s.CYAN if selected else s.WHITE),
+                    bgcolor=ft.Colors.with_opacity(0.25 if selected else 0.10, s.FRAME if selected else s.WHITE),
                     content=ft.Icon(icon, color=s.WHITE if selected else s.MUTED, size=26),
                 ),
                 ft.Text(title, size=17, weight=ft.FontWeight.W_900, color=s.WHITE),
