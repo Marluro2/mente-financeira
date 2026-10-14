@@ -18,6 +18,7 @@ ficam nítidas em qualquer tela, do celular ao projetor.
 | `renda.svg` | Renda (carteira com notas) |
 | `seguranca.svg` | Segurança digital (escudo e cadeado contra golpes) |
 | `verso.svg` | Verso de todas as cartas: "?" amarelo sobre listras escuras, no estilo carta de baralho (escolhido em 07/10/2026). O verso anterior, meio cérebro e meio gráfico, está em `opcoes_verso/D_cerebro_grafico.svg` |
+| `temas/verso_*.svg` | O mesmo verso nas cores dos temas escolhidos na página inicial (Oceano, Floresta, Pôr do Sol, Grafite) |
 
 A pasta `opcoes_verso/` guarda as outras propostas de verso (A, B, C, D) e o
 verso antigo com ponto de interrogação, caso se queira trocar no futuro.

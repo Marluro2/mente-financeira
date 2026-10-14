@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
+
 import flet as ft
 
 BG_TOP = "#12082E"
@@ -16,6 +18,55 @@ WHITE = "#FFFFFF"
 MUTED = "#C9BEF0"
 GLASS = "#1AFFFFFF"  # branco com ~10% de opacidade
 GLASS_BORDER = "#33FFFFFF"
+FRAME = CYAN  # contorno das caixas (tabuleiro, painéis, perguntas)
+PANEL = "#2A1A5E"  # fundo das janelas (medalhas, sugestão, avisos)
+BOX = "#3A1C8C"  # fundo das caixinhas de resposta
+CARD_BACK = "cartas/verso.svg"  # verso das cartas no tema atual
+
+
+@dataclass(frozen=True, slots=True)
+class Theme:
+    """Tema de cores escolhido na página inicial: fundo e caixinhas mudam juntos."""
+
+    key: str
+    name: str
+    background: tuple[str, str, str]  # degradê do fundo (topo, meio, base)
+    frame: str
+    panel: str
+    box: str
+    muted: str
+    card_back: str
+
+
+THEMES: tuple[Theme, ...] = (
+    Theme("neon", "Roxo Neon", (BG_TOP, BG_MID, BG_BOTTOM), CYAN, PANEL, BOX, MUTED, CARD_BACK),
+    Theme("oceano", "Oceano", ("#04122B", "#0A2F5C", "#0B4F7A"), "#3AE0FF", "#102E57", "#174A80", "#BFD9F2", "cartas/temas/verso_oceano.svg"),
+    Theme("floresta", "Floresta", ("#061A12", "#0D3B26", "#145A36"), "#B8F35A", "#133D2B", "#1C5A3E", "#C4E8D2", "cartas/temas/verso_floresta.svg"),
+    Theme("por_do_sol", "Pôr do Sol", ("#2A0A1E", "#5C1233", "#8A2A1C"), ORANGE, "#4A1530", "#6E2140", "#F2C9CF", "cartas/temas/verso_por_do_sol.svg"),
+    Theme("grafite", "Grafite", ("#111317", "#22262E", "#33373F"), YELLOW, "#2A2E36", "#3A3F49", "#C9CDD6", "cartas/temas/verso_grafite.svg"),
+)
+DEFAULT_THEME = "neon"
+theme_key = DEFAULT_THEME
+
+
+def theme_by_key(key: str) -> Theme:
+    return next((t for t in THEMES if t.key == key), THEMES[0])
+
+
+def apply_theme(key: str) -> Theme:
+    """Troca as cores usadas pelas telas. Vale a partir do próximo desenho.
+
+    As cores ficam no módulo, então valem para o processo inteiro. O jogo
+    (computador e site) tem um jogador por processo; o servidor da feira nunca
+    chama esta função e fica sempre no tema padrão.
+    """
+
+    global BG_TOP, BG_MID, BG_BOTTOM, FRAME, PANEL, BOX, MUTED, CARD_BACK, theme_key
+    theme = theme_by_key(key)
+    BG_TOP, BG_MID, BG_BOTTOM = theme.background
+    FRAME, PANEL, BOX, MUTED, CARD_BACK = theme.frame, theme.panel, theme.box, theme.muted, theme.card_back
+    theme_key = theme.key
+    return theme
 
 
 def background() -> ft.LinearGradient:
@@ -110,3 +161,9 @@ def chip(text: str, *, icon: ft.IconData | None = None, color: str = CYAN, size:
         border=ft.Border.all(1, ft.Colors.with_opacity(0.55, color)),
         content=ft.Row(controls, spacing=6, tight=True),
     )
+
+
+def card_back(src: str) -> str:
+    """Verso das cartas: o do baralho no tema padrão, o do tema nos demais."""
+
+    return src if theme_key == DEFAULT_THEME else CARD_BACK

@@ -23,6 +23,7 @@ from mente_financeira.ui.app import DEFAULT_TRACK, MemoryFinanceApp
 from mente_financeira.ui.factory_screen import FactoryScreen
 from mente_financeira.ui.home import HomeScreen
 from mente_financeira.ui.memory_screen import MemoryScreen
+from mente_financeira.ui import style
 from mente_financeira.ui.sounds import SoundEffects
 from mente_financeira.ui.tracks import ENGENHARIA, FUNDAMENTAL, FUNDAMENTAL_1, TracksScreen
 
@@ -63,6 +64,7 @@ class GameShell:
         self.sounds = SoundEffects(page, self.store)
         self.sounds.preload()
         self.medals = MedalBook(self.store)  # conquistas, guardadas com as preferências
+        style.apply_theme(self.store.load().theme)  # tema escolhido na página inicial
         self.page.title = "Mente Financeira"
         self.page.padding = 0
         self.page.spacing = 0
@@ -95,9 +97,22 @@ class GameShell:
             on_select=self.open_track,
             rng=self.rng,
             suggest_url=sugestoes.FORM_URL or None,
+            on_theme=self.choose_theme,
         )
         self._activate(tracks)
         tracks.show()
+
+    def choose_theme(self, key: str) -> None:
+        """Troca o tema de cores, guarda a escolha e redesenha a página inicial."""
+
+        theme = style.apply_theme(key)
+        settings = self.store.load()
+        settings.theme = theme.key
+        self.store.save(settings)
+        if isinstance(self.current, TracksScreen):
+            self.current.show()  # redesenha com as novas cores, seletor ainda aberto
+        else:
+            self.show_tracks()
 
     def open_track(self, key: str) -> None:
         # Só as trilhas com jogo da memória abrem; o Ensino Médio aparece como

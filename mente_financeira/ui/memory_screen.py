@@ -282,7 +282,7 @@ class MemoryScreen:
         if not (self.game.is_revealed(index) or self.show_answers):
             return ft.Image(
                 key=f"verso-{index}",
-                src=self.game.deck.back_image,
+                src=s.card_back(self.game.deck.back_image),
                 width=size,
                 height=size,
                 fit=ft.BoxFit.COVER,
@@ -446,7 +446,7 @@ class MemoryScreen:
             gradient=ft.LinearGradient(
                 begin=ft.Alignment.TOP_LEFT,
                 end=ft.Alignment.BOTTOM_RIGHT,
-                colors=[concept.color, "#2A0E61"],
+                colors=[concept.color, s.BG_MID],
             ),
             shadow=ft.BoxShadow(blur_radius=24, color=ft.Colors.with_opacity(0.45, concept.color)),
             content=ft.Column(
@@ -716,9 +716,9 @@ class MemoryScreen:
         question_card = ft.Container(
             padding=18 if compact else 28,
             border_radius=28,
-            bgcolor="#E6241452",
-            border=ft.Border.all(2, ft.Colors.with_opacity(0.8, s.CYAN)),
-            shadow=ft.BoxShadow(blur_radius=30, color=ft.Colors.with_opacity(0.35, s.CYAN)),
+            bgcolor=ft.Colors.with_opacity(0.9, s.PANEL),
+            border=ft.Border.all(2, ft.Colors.with_opacity(0.8, s.FRAME)),
+            shadow=ft.BoxShadow(blur_radius=30, color=ft.Colors.with_opacity(0.35, s.FRAME)),
             expand=not compact,
             content=ft.Column(
                 [
@@ -739,9 +739,9 @@ class MemoryScreen:
             height=170 if compact else panel_side,
             padding=12,
             border_radius=28,
-            bgcolor="#E61B0B45",
-            border=ft.Border.all(2, ft.Colors.with_opacity(0.8, s.CYAN)),
-            shadow=ft.BoxShadow(blur_radius=30, color=ft.Colors.with_opacity(0.35, s.CYAN)),
+            bgcolor=ft.Colors.with_opacity(0.9, s.BG_TOP),
+            border=ft.Border.all(2, ft.Colors.with_opacity(0.8, s.FRAME)),
+            shadow=ft.BoxShadow(blur_radius=30, color=ft.Colors.with_opacity(0.35, s.FRAME)),
             alignment=ft.Alignment.CENTER,
             # Tamanho explícito: sem ele o SVG fica no tamanho natural (200 px).
             content=ft.Image(
@@ -847,7 +847,7 @@ class MemoryScreen:
             gradient=ft.LinearGradient(
                 begin=ft.Alignment.TOP_LEFT,
                 end=ft.Alignment.BOTTOM_RIGHT,
-                colors=["#12082E", "#2A0E61", "#4A0C6E"],
+                colors=[s.BG_TOP, s.BG_MID, s.BG_BOTTOM],
             ),
             content=self.overlay_scroll,
         )
@@ -928,13 +928,13 @@ class MemoryScreen:
         answered = choice is not None
         for index, box in enumerate(self.option_boxes):
             if not answered:
-                box.bgcolor, box.border = "#3A1C8C", ft.Border.all(1.5, ft.Colors.with_opacity(0.8, s.CYAN))
+                box.bgcolor, box.border = s.BOX, ft.Border.all(1.5, ft.Colors.with_opacity(0.8, s.FRAME))
             elif index == challenge.answer_index:
                 box.bgcolor, box.border = ft.Colors.with_opacity(0.45, s.GREEN), ft.Border.all(2.5, s.GREEN)
             elif index == choice:
                 box.bgcolor, box.border = ft.Colors.with_opacity(0.45, "#FF4D4D"), ft.Border.all(2.5, "#FF4D4D")
             else:
-                box.bgcolor, box.border = ft.Colors.with_opacity(0.25, "#3A1C8C"), ft.Border.all(1, s.GLASS_BORDER)
+                box.bgcolor, box.border = ft.Colors.with_opacity(0.25, s.BOX), ft.Border.all(1, s.GLASS_BORDER)
             box.ink = not answered
             box.disabled = answered
 
@@ -1079,7 +1079,7 @@ class MemoryScreen:
         self.page.show_dialog(
             ft.AlertDialog(
                 modal=True,
-                bgcolor="#2A1A5E",
+                bgcolor=s.PANEL,
                 title=ft.Text(title, weight=ft.FontWeight.W_900, color=s.WHITE),
                 # scrollable (e não uma Column com rolagem): a janela fica do
                 # tamanho do conteúdo e só rola se não couber na tela.

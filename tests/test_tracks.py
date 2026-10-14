@@ -13,6 +13,7 @@ from mente_financeira.core.coin_challenge import COIN_KIT
 from mente_financeira.core.engineering_challenge import ENGINEERING_KIT
 from mente_financeira.core.memory_game import Mode
 from mente_financeira.storage import SettingsStore
+from mente_financeira.ui import style
 from mente_financeira.ui import tracks as tracks_module
 from mente_financeira.ui.home import HomeScreen
 from mente_financeira.ui.memory_screen import MemoryScreen
@@ -21,6 +22,14 @@ from mente_financeira.ui.suggestion_form import SUGGESTION_QR
 from mente_financeira.ui.tracks import ENGENHARIA, FUNDAMENTAL, FUNDAMENTAL_1, MEDIO, TRACKS, TracksScreen
 
 PHONE, NOTEBOOK, DESKTOP = (360, 740), (1536, 785), (1920, 1000)
+
+
+@pytest.fixture(autouse=True)
+def default_theme():
+    """As cores ficam no módulo de estilo: cada teste termina no tema padrão."""
+
+    yield
+    style.apply_theme(style.DEFAULT_THEME)
 
 
 @pytest.fixture(params=[PHONE, NOTEBOOK, DESKTOP], ids=["celular", "notebook", "computador"])
@@ -136,3 +145,64 @@ def test_no_expanded_child_inside_wrapping_row(shell: GameShell) -> None:
         if child.expand
     ]
     assert offenders == []
+
+
+# ====================================================================== cores
+def _theme_button(page: FakePage) -> ft.Container:
+    return next(c for c in walk(page.controls[-1]) if isinstance(c, ft.Container) and c.tooltip == "Escolher as cores")
+
+
+def _swatches(page: FakePage) -> list[ft.Container]:
+    keys = {theme.key for theme in style.THEMES}
+    return [c for c in walk(page.controls[-1]) if isinstance(c, ft.Container) and c.data in keys]
+
+
+def test_color_picker_opens_with_the_five_themes(shell: GameShell) -> None:
+    assert _swatches(shell.page) == []  # fechado ao abrir o jogo
+    _theme_button(shell.page).on_click(None)
+    assert [c.data for c in _swatches(shell.page)] == ["neon", "oceano", "floresta", "por_do_sol", "grafite"]
+    texts = _texts(shell.page.controls[-1])
+    assert "Escolha as cores da tela e das caixinhas" in texts
+    assert {"Roxo Neon", "Oceano", "Floresta", "Pôr do Sol", "Grafite"} <= set(texts)
+    _theme_button(shell.page).on_click(None)
+    assert _swatches(shell.page) == []
+
+
+def test_choosing_a_theme_recolors_screen_and_cards_and_is_remembered(shell: GameShell, tmp_path: Path) -> None:
+    screen: TracksScreen = shell.current  # type: ignore[assignment]
+    assert screen.switchers[0].content.src == "cartas/verso.svg"
+    _theme_button(shell.page).on_click(None)
+    oceano = next(c for c in _swatches(shell.page) if c.data == "oceano")
+    oceano.on_click(SimpleNamespace(control=oceano))
+
+    assert shell.current is screen and screen.picker_open  # continua aberto para comparar
+    assert shell.page.bgcolor == "#04122B"
+    assert screen.switchers[0].content.src == "cartas/temas/verso_oceano.svg"
+    assert (tmp_path / "settings.json").exists() and SettingsStore(tmp_path).load().theme == "oceano"
+    assert (Path("assets") / "cartas/temas/verso_oceano.svg").is_file()
+
+    # Ao abrir o jogo de novo, o tema volta; e vale nas outras telas.
+    style.apply_theme(style.DEFAULT_THEME)
+    again = GameShell(FakePage(*PHONE), store=SettingsStore(tmp_path), rng=random.Random(2))  # type: ignore[arg-type]
+    assert again.page.bgcolor == "#04122B"
+    _click(again.current, FUNDAMENTAL)
+    assert again.page.bgcolor == "#04122B"
+    again.play_memory(Mode.SOLO, ("Ana", None))
+    memory: MemoryScreen = again.current  # type: ignore[assignment]
+    backs = [c for c in walk(again.page.controls[-1]) if isinstance(c, ft.Image) and c.semantics_label == "Carta virada"]
+    assert backs and all(b.src == "cartas/temas/verso_oceano.svg" for b in backs)
+    assert isinstance(memory, MemoryScreen)
+
+
+def test_every_theme_has_its_card_back_file() -> None:
+    for theme in style.THEMES:
+        assert (Path("assets") / theme.card_back).is_file(), theme.key
+
+
+def test_unknown_saved_theme_falls_back_to_the_default(tmp_path: Path) -> None:
+    store = SettingsStore(tmp_path)
+    settings = store.load()
+    settings.theme = "arco-iris"
+    store.save(settings)
+    GameShell(FakePage(*PHONE), store=store, rng=random.Random(2))  # type: ignore[arg-type]
+    assert style.theme_key == style.DEFAULT_THEME and style.BG_TOP == "#12082E"

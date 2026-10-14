@@ -125,7 +125,7 @@ class SuggestionForm:
         )
         self.dialog = ft.AlertDialog(
             modal=True,
-            bgcolor="#2A1A5E",
+            bgcolor=s.PANEL,
             title=ft.Text("Deixe sua sugestão 💡", weight=ft.FontWeight.W_900, color=s.WHITE),
             content=ft.Column(
                 [
@@ -170,7 +170,7 @@ class SuggestionForm:
         self.page.show_dialog(
             ft.SnackBar(
                 ft.Text("Obrigado pela sugestão! 💡", color=s.WHITE, weight=ft.FontWeight.BOLD),
-                bgcolor="#E63A1C9C",
+                bgcolor=ft.Colors.with_opacity(0.9, s.BOX),
                 behavior=ft.SnackBarBehavior.FLOATING,
                 duration=2500,
             )
