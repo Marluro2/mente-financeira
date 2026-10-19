@@ -107,6 +107,7 @@ PHONE, NOTEBOOK = (360, 740), (1366, 768)
 def shell(request: pytest.FixtureRequest, tmp_path: Path) -> GameShell:
     shell = GameShell(FakePage(*request.param), store=SettingsStore(tmp_path), rng=random.Random(3))  # type: ignore[arg-type]
     shell.open_track(ENGENHARIA)
+    shell.choose_level("nivel1")  # a Engenharia passa pela escolha do nível
     return shell
 
 

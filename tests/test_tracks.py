@@ -16,6 +16,7 @@ from mente_financeira.storage import SettingsStore
 from mente_financeira.ui import style
 from mente_financeira.ui import tracks as tracks_module
 from mente_financeira.ui.home import HomeScreen
+from mente_financeira.ui.levels import LevelsScreen
 from mente_financeira.ui.memory_screen import MemoryScreen
 from mente_financeira.ui.shell import GameShell
 from mente_financeira.ui.suggestion_form import SUGGESTION_QR
@@ -82,6 +83,8 @@ def test_fundamental1_opens_its_own_memory_game(shell: GameShell) -> None:
 
 def test_engineering_opens_its_own_game_and_level2(shell: GameShell) -> None:
     _click(shell.current, ENGENHARIA)
+    assert isinstance(shell.current, LevelsScreen)  # antes do jogo, a escolha do nível
+    shell.current._choose(SimpleNamespace(control=SimpleNamespace(data="nivel1")))
     assert isinstance(shell.current, HomeScreen)
     assert shell.deck.concepts[0].id == "fluxo_caixa"  # baralho de engenharia econômica
     shell.play_memory(Mode.DUEL, ("Ana", "Bruno"))
