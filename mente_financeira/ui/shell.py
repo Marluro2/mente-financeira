@@ -22,6 +22,7 @@ from mente_financeira.ui.admin_screen import AdminScreen
 from mente_financeira.ui.app import DEFAULT_TRACK, MemoryFinanceApp
 from mente_financeira.ui.factory_screen import FactoryScreen
 from mente_financeira.ui.home import HomeScreen
+from mente_financeira.ui.levels import LevelsScreen, level_by_key
 from mente_financeira.ui.memory_screen import MemoryScreen
 from mente_financeira.ui import style
 from mente_financeira.ui.sounds import SoundEffects
@@ -58,6 +59,7 @@ class GameShell:
         self.store = store or SettingsStore()
         self.rng = rng or random.Random()
         self.track = FUNDAMENTAL
+        self.level: str | None = None  # nível escolhido na Engenharia de Produção
         self.current: Screen | None = None
         # Efeitos sonoros compartilhados por todas as telas (carregados já na
         # abertura para o primeiro toque não atrasar).
@@ -119,11 +121,29 @@ class GameShell:
         # "Em breve" na página inicial.
         if key in MEMORY_TRACKS:
             self.track = key
-            self.show_home()
+            if key == ENGENHARIA:
+                self.show_levels()  # a Engenharia escolhe o nível antes do modo de jogo
+            else:
+                self.show_home()
+
+    def show_levels(self) -> None:
+        """Escolha do nível da Engenharia de Produção (todos abertos)."""
+
+        levels = LevelsScreen(self.page, on_select=self.choose_level, on_tracks=self.show_tracks, rng=self.rng)
+        self._activate(levels)
+        levels.show()
+
+    def choose_level(self, key: str) -> None:
+        # Por enquanto os três níveis usam as mesmas questões; o banco de cada
+        # nível entra depois.
+        self.level = key
+        self.show_home()
 
     def show_home(self) -> None:
         """Abertura da trilha aberta (Ensino Fundamental 1 ou 2, Engenharia)."""
 
+        engineering = self.track == ENGENHARIA
+        level = level_by_key(self.level) if engineering else None
         home = HomeScreen(
             self.page,
             self.deck,
@@ -131,9 +151,12 @@ class GameShell:
             on_level2=self.open_level2,
             # O painel do professor traz as questões do Ensino Fundamental 2.
             on_admin=self.open_admin if admin_ativo() and self.track == FUNDAMENTAL else None,
-            on_tracks=self.show_tracks,
+            # Na Engenharia, voltar leva à escolha do nível.
+            on_tracks=self.show_levels if engineering else self.show_tracks,
+            back_label="Níveis" if engineering else "Trilhas",
+            level_label=f"Nível {level.number} • {level.title}" if level else None,
             medals=self.medals,
-            on_factory=self.open_factory if self.track == ENGENHARIA else None,
+            on_factory=self.open_factory if engineering else None,
         )
         self._activate(home)
         home.show()

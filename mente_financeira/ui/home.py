@@ -61,6 +61,8 @@ class HomeScreen:
         on_tracks: Callable[[], None] | None = None,
         medals: MedalBook | None = None,
         on_factory: Callable[[], None] | None = None,
+        back_label: str = "Trilhas",
+        level_label: str | None = None,
     ) -> None:
         self.page = page
         self.medals = medals  # botão "Medalhas" no canto (veja medals_view)
@@ -69,7 +71,9 @@ class HomeScreen:
         self.on_play = on_play
         self.on_level2 = on_level2
         self.on_admin = on_admin  # só no modo administrador
-        self.on_tracks = on_tracks  # volta à página das trilhas
+        self.on_tracks = on_tracks  # volta à página das trilhas (ou dos níveis)
+        self.back_label = back_label
+        self.level_label = level_label  # nível escolhido, mostrado acima do título
         self.mode = Mode.SOLO
         self.layout = layout_for(page.width)
         self.generation = 0
@@ -199,6 +203,11 @@ class HomeScreen:
             self._names(),
             self._play_button(height=58 if self.compact or self.short else 66),
         ]
+        if self.level_label:
+            # No celular só "Nível N", para a etiqueta caber numa linha.
+            label = self.level_label.split(" • ")[0] if self.compact else self.level_label
+            chip = s.chip(label, icon=ft.Icons.FLAG_ROUNDED, color=s.GREEN, size=12)
+            items.insert(0, ft.Row([chip], alignment=ft.MainAxisAlignment.CENTER))
         if self.on_factory:
             items.append(self._factory_card())
         if self.on_admin:
@@ -220,7 +229,7 @@ class HomeScreen:
         # Espaço no topo para o botão "Trilhas", que fica no canto da tela.
         top = 64 if self.on_tracks is not None else 16
         return ft.Container(
-            padding=ft.Padding.only(left=12, right=12, top=top, bottom=16) if self.compact else ft.Padding.symmetric(horizontal=32, vertical=top),
+            padding=ft.Padding.only(left=12, right=12, top=top, bottom=16) if self.compact else ft.Padding.only(left=32, right=32, top=top, bottom=16),
             content=panel,
         )
 
@@ -314,7 +323,7 @@ class HomeScreen:
                 left=8,
                 top=8,
                 content=ft.TextButton(
-                    "Trilhas",
+                    self.back_label,
                     icon=ft.Icons.ARROW_BACK_ROUNDED,
                     on_click=self._back_to_tracks,
                     style=ft.ButtonStyle(
