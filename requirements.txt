@@ -1,3 +1,4 @@
 flet[web]==0.86.5
 flet-audio==0.86.5
 segno==1.6.6
+fastapi<0.145  # o FastAPI 0.145 removeu um parâmetro que o Flet 0.86.5 ainda usa
