@@ -1,0 +1,730 @@
+# Banco de questões — Duelo online da feira (só conceitos, sem contas)
+#
+# O Duelo online (Duelo em sala, servidor_sala.py) tem três níveis:
+#   1 = Ensino Fundamental, 2 = Ensino Médio, 3 = Ensino Superior.
+# A cada par formado sai uma questão do nível da sala, sem repetir até acabarem.
+# São perguntas simples, de ideia, para demonstrar o jogo: nenhuma pede cálculo.
+#
+# Mesmo formato do banco_engenharia.toml:
+# - `answer` é a alternativa certa e `wrong` as três erradas (o jogo embaralha);
+# - `explanation` aparece depois da resposta (\n quebra a linha);
+# - `item` é o título curto mostrado acima da pergunta.
+# As alternativas são curtas para caber nos botões do jogo (até ~35 letras).
+# Depois de editar, rode `python -m pytest`.
+
+# ----------------------------------------------------------------------
+# Ensino Fundamental
+
+[[topics]]
+level = 1
+name = "Dinheiro"
+label = "DINHEIRO"
+image = "cartas/fundamental1/dinheiro.svg"
+
+[[topics]]
+level = 1
+name = "Necessidade e desejo"
+label = "NECESSIDADE OU DESEJO"
+image = "cartas/fundamental1/necessidade.svg"
+
+[[topics]]
+level = 1
+name = "Guardar dinheiro"
+label = "GUARDAR DINHEIRO"
+image = "cartas/poupanca.svg"
+
+[[topics]]
+level = 1
+name = "Planejar os gastos"
+label = "PLANEJAR OS GASTOS"
+image = "cartas/orcamento.svg"
+
+[[topics]]
+level = 1
+name = "Comprar bem"
+label = "COMPRAR BEM"
+image = "cartas/fundamental1/preco.svg"
+
+[[topics]]
+level = 1
+name = "Trabalho e cuidado"
+label = "TRABALHO E CUIDADO"
+image = "cartas/fundamental1/trabalho.svg"
+
+[[questions]]
+id = "F-01"
+level = 1
+topic = "Dinheiro"
+item = "Para que serve?"
+question = "Para que serve o dinheiro?"
+answer = "Para trocar por coisas e serviços"
+wrong = ["Só para guardar na gaveta", "Para colecionar figurinhas", "Para nada, é só papel"]
+explanation = "O dinheiro é usado nas trocas: com ele compramos o que precisamos e pagamos por serviços."
+
+[[questions]]
+id = "F-02"
+level = 1
+topic = "Dinheiro"
+item = "De onde vem?"
+question = "De onde vem o dinheiro que uma família usa no mês?"
+answer = "Do trabalho das pessoas"
+wrong = ["Da máquina do banco, de graça", "Aparece sozinho na carteira", "Das lojas do bairro"]
+explanation = "O dinheiro da família vem, principalmente, do trabalho de quem trabalha na casa."
+
+[[questions]]
+id = "F-03"
+level = 1
+topic = "Dinheiro"
+item = "Dinheiro no cartão"
+question = "Quando alguém paga com cartão ou Pix, o dinheiro..."
+answer = "Sai da conta da pessoa"
+wrong = ["Não sai de lugar nenhum", "É pago pela loja", "Volta no dia seguinte"]
+explanation = "Cartão e Pix são outros jeitos de pagar. O dinheiro é de verdade e sai da conta de quem pagou."
+
+[[questions]]
+id = "F-04"
+level = 1
+topic = "Necessidade e desejo"
+item = "Comida"
+question = "Comer todos os dias é uma necessidade ou um desejo?"
+answer = "Necessidade"
+wrong = ["Desejo", "Nenhum dos dois", "Só um capricho"]
+explanation = "Necessidade é o que precisamos para viver bem, como comida, água, casa e saúde."
+
+[[questions]]
+id = "F-05"
+level = 1
+topic = "Necessidade e desejo"
+item = "Brinquedo novo"
+question = "Um brinquedo novo, quando já temos vários, é..."
+answer = "Um desejo"
+wrong = ["Uma necessidade", "Uma obrigação", "Um remédio"]
+explanation = "Desejo é algo que queremos, mas sem o qual dá para viver. Não é errado ter desejos: é bom pensar antes."
+
+[[questions]]
+id = "F-06"
+level = 1
+topic = "Necessidade e desejo"
+item = "O que vem primeiro?"
+question = "Com pouco dinheiro, o que devemos pagar primeiro?"
+answer = "As necessidades"
+wrong = ["Os desejos", "O que estiver na moda", "O que for mais bonito"]
+explanation = "Primeiro cuidamos do que é necessário. O que sobrar pode ir para os desejos ou para guardar."
+
+[[questions]]
+id = "F-07"
+level = 1
+topic = "Guardar dinheiro"
+item = "Cofrinho"
+question = "Para que serve um cofrinho?"
+answer = "Para juntar dinheiro aos poucos"
+wrong = ["Para gastar mais rápido", "Para esconder dos pais", "Para o dinheiro sumir"]
+explanation = "Guardando um pouco de cada vez, juntamos dinheiro para algo que queremos no futuro."
+
+[[questions]]
+id = "F-08"
+level = 1
+topic = "Guardar dinheiro"
+item = "Esperar vale a pena"
+question = "Quem guarda dinheiro em vez de gastar tudo hoje..."
+answer = "Pode comprar algo melhor depois"
+wrong = ["Perde todo o dinheiro", "Nunca pode usar o dinheiro", "Fica devendo para alguém"]
+explanation = "Esperar um pouco e guardar ajuda a conseguir coisas que custam mais do que temos agora."
+
+[[questions]]
+id = "F-09"
+level = 1
+topic = "Guardar dinheiro"
+item = "Objetivo"
+question = "O que é ter um objetivo com o dinheiro?"
+answer = "Saber para que estou guardando"
+wrong = ["Gastar sem pensar", "Pedir dinheiro todo dia", "Comprar tudo o que vejo"]
+explanation = "Um objetivo, como uma bicicleta, ajuda a ter paciência e a guardar com vontade."
+
+[[questions]]
+id = "F-10"
+level = 1
+topic = "Guardar dinheiro"
+item = "Imprevistos"
+question = "Por que é bom ter um dinheiro guardado?"
+answer = "Para ajudar em uma emergência"
+wrong = ["Para não precisar estudar", "Para gastar tudo de uma vez", "Não é bom guardar"]
+explanation = "Um dinheiro guardado ajuda quando acontece algo que não esperávamos, como um conserto."
+
+[[questions]]
+id = "F-11"
+level = 1
+topic = "Planejar os gastos"
+item = "Orçamento"
+question = "O que é fazer um orçamento?"
+answer = "Planejar como usar o dinheiro"
+wrong = ["Gastar tudo no primeiro dia", "Pegar dinheiro emprestado", "Esquecer quanto tenho"]
+explanation = "Orçamento é um plano: quanto entra, quanto vamos gastar e quanto vamos guardar."
+
+[[questions]]
+id = "F-12"
+level = 1
+topic = "Planejar os gastos"
+item = "Três potes"
+question = "Na ideia dos três potes, a mesada é dividida em..."
+answer = "Guardar, gastar e doar"
+wrong = ["Comer, dormir e brincar", "Só gastar", "Esconder, perder e achar"]
+explanation = "Separar a mesada em três partes ajuda a guardar, aproveitar e também ajudar os outros."
+
+[[questions]]
+id = "F-13"
+level = 1
+topic = "Planejar os gastos"
+item = "Anotar os gastos"
+question = "Por que é bom anotar o que gastamos?"
+answer = "Para saber para onde vai o dinheiro"
+wrong = ["Para gastar mais", "Para o dinheiro aumentar sozinho", "Não serve para nada"]
+explanation = "Anotando, descobrimos onde gastamos mais e onde dá para economizar."
+
+[[questions]]
+id = "F-14"
+level = 1
+topic = "Comprar bem"
+item = "Preço"
+question = "Antes de comprar, o que é bom fazer?"
+answer = "Comparar o preço em outras lojas"
+wrong = ["Comprar na primeira loja", "Pagar o mais caro sempre", "Não olhar o preço"]
+explanation = "O mesmo produto pode ter preços diferentes. Comparar ajuda a economizar."
+
+[[questions]]
+id = "F-15"
+level = 1
+topic = "Comprar bem"
+item = "Troco"
+question = "O que é o troco?"
+answer = "O que volta quando pagamos a mais"
+wrong = ["Um presente da loja", "Um desconto especial", "O preço do produto"]
+explanation = "Se pagamos com uma nota maior que o preço, a loja devolve a diferença: o troco. É bom conferir!"
+
+[[questions]]
+id = "F-16"
+level = 1
+topic = "Comprar bem"
+item = "Propaganda"
+question = "Uma propaganda diz: \"Compre já, você precisa!\". O melhor é..."
+answer = "Pensar se eu preciso mesmo"
+wrong = ["Comprar na hora", "Comprar dois iguais", "Pedir para comprar escondido"]
+explanation = "Propagandas querem vender. Pensar antes evita comprar o que não vamos usar."
+
+[[questions]]
+id = "F-17"
+level = 1
+topic = "Trabalho e cuidado"
+item = "Trabalho"
+question = "Por que as pessoas trabalham?"
+answer = "Para ganhar dinheiro e ajudar"
+wrong = ["Porque é proibido brincar", "Para gastar o tempo", "Ninguém precisa trabalhar"]
+explanation = "Com o trabalho as pessoas ganham dinheiro e também fazem coisas úteis para todos."
+
+[[questions]]
+id = "F-18"
+level = 1
+topic = "Trabalho e cuidado"
+item = "Cuidar das coisas"
+question = "Cuidar bem do material da escola ajuda a..."
+answer = "Economizar, pois dura mais"
+wrong = ["Gastar mais dinheiro", "Estragar mais rápido", "Não muda nada"]
+explanation = "O que dura mais não precisa ser comprado de novo. Cuidar também é economizar."
+
+[[questions]]
+id = "F-19"
+level = 1
+topic = "Trabalho e cuidado"
+item = "Desperdício"
+question = "Deixar a luz acesa sem ninguém no quarto é..."
+answer = "Desperdício de dinheiro"
+wrong = ["Um jeito de economizar", "Bom para a conta de luz", "Obrigatório"]
+explanation = "A conta de luz é paga com dinheiro. Apagar a luz ao sair economiza e ajuda o planeta."
+
+[[questions]]
+id = "F-20"
+level = 1
+topic = "Trabalho e cuidado"
+item = "Doar"
+question = "Doar um brinquedo que não usamos mais é..."
+answer = "Um jeito de ajudar outra pessoa"
+wrong = ["Jogar dinheiro fora", "Proibido", "Uma compra"]
+explanation = "O que não usamos mais pode fazer outra pessoa feliz. Doar também é cuidar."
+
+# ----------------------------------------------------------------------
+# Ensino Médio
+
+[[topics]]
+level = 2
+name = "Poupança e reserva"
+label = "RESERVA DE EMERGÊNCIA"
+image = "cartas/reserva_emergencia.svg"
+
+[[topics]]
+level = 2
+name = "Juros e inflação"
+label = "JUROS E INFLAÇÃO"
+image = "cartas/juros_compostos.svg"
+
+[[topics]]
+level = 2
+name = "Crédito e dívida"
+label = "CRÉDITO E DÍVIDA"
+image = "cartas/cartao_credito.svg"
+
+[[topics]]
+level = 2
+name = "Investimento"
+label = "INVESTIMENTO"
+image = "cartas/investimento.svg"
+
+[[topics]]
+level = 2
+name = "Orçamento e consumo"
+label = "CONSUMO CONSCIENTE"
+image = "cartas/consumo_consciente.svg"
+
+[[topics]]
+level = 2
+name = "Segurança digital"
+label = "SEGURANÇA DIGITAL"
+image = "cartas/seguranca.svg"
+
+[[questions]]
+id = "M-01"
+level = 2
+topic = "Poupança e reserva"
+item = "Guarda-chuva financeiro"
+question = "O que é uma reserva de emergência?"
+answer = "Dinheiro guardado para imprevistos"
+wrong = ["Dinheiro para viajar nas férias", "Um tipo de empréstimo", "O limite do cartão"]
+explanation = "A reserva cobre gastos inesperados, como perder o emprego ou uma doença, sem precisar se endividar."
+
+[[questions]]
+id = "M-02"
+level = 2
+topic = "Poupança e reserva"
+item = "Onde guardar a reserva"
+question = "A reserva de emergência deve ficar em um lugar..."
+answer = "Seguro e fácil de sacar"
+wrong = ["Arriscado, para render muito", "Que só libera daqui a anos", "Na mão de um amigo"]
+explanation = "Na emergência o dinheiro precisa estar disponível rápido e sem risco de perder valor."
+
+[[questions]]
+id = "M-03"
+level = 2
+topic = "Poupança e reserva"
+item = "Pagar-se primeiro"
+question = "\"Pagar-se primeiro\" significa..."
+answer = "Guardar assim que recebe"
+wrong = ["Gastar tudo e guardar o resto", "Comprar algo para si todo mês", "Pagar as dívidas dos outros"]
+explanation = "Separar a parte da poupança logo que o dinheiro entra evita que ela seja gasta sem perceber."
+
+[[questions]]
+id = "M-04"
+level = 2
+topic = "Juros e inflação"
+item = "Juros"
+question = "O que são juros?"
+answer = "O preço de usar dinheiro no tempo"
+wrong = ["Um imposto sobre compras", "Um desconto à vista", "O salário do mês"]
+explanation = "Quem pega emprestado paga juros; quem empresta ou investe recebe juros."
+
+[[questions]]
+id = "M-05"
+level = 2
+topic = "Juros e inflação"
+item = "Juros compostos"
+question = "Nos juros compostos, os juros são calculados sobre..."
+answer = "O valor inicial mais os juros"
+wrong = ["Só o valor inicial", "Só o primeiro mês", "Nada, não existem juros"]
+explanation = "São os \"juros sobre juros\": o valor cresce cada vez mais rápido, a favor de quem investe e contra quem deve."
+
+[[questions]]
+id = "M-06"
+level = 2
+topic = "Juros e inflação"
+item = "Inflação"
+question = "O que é inflação?"
+answer = "Alta geral dos preços"
+wrong = ["Queda de todos os preços", "Aumento do salário", "Um tipo de investimento"]
+explanation = "Com inflação, o mesmo dinheiro compra menos coisas com o passar do tempo."
+
+[[questions]]
+id = "M-07"
+level = 2
+topic = "Juros e inflação"
+item = "Poder de compra"
+question = "Dinheiro parado em casa, com inflação, faz o quê?"
+answer = "Perde poder de compra"
+wrong = ["Ganha valor sozinho", "Fica sempre igual", "Rende juros"]
+explanation = "A nota continua com o mesmo número, mas compra menos. Por isso vale investir o que está guardado."
+
+[[questions]]
+id = "M-08"
+level = 2
+topic = "Crédito e dívida"
+item = "Cartão de crédito"
+question = "Pagar só o mínimo da fatura do cartão..."
+answer = "Gera juros muito altos"
+wrong = ["Quita toda a dívida", "Dá desconto na fatura", "Não tem consequência"]
+explanation = "O restante vai para o rotativo, um dos juros mais caros do mercado. A dívida cresce rápido."
+
+[[questions]]
+id = "M-09"
+level = 2
+topic = "Crédito e dívida"
+item = "Limite do cartão"
+question = "O limite do cartão de crédito é..."
+answer = "Um empréstimo que precisa pagar"
+wrong = ["Dinheiro extra de presente", "Parte do salário", "Um investimento"]
+explanation = "Tudo o que se compra no cartão vira uma conta a pagar na fatura. Limite não é renda."
+
+[[questions]]
+id = "M-10"
+level = 2
+topic = "Crédito e dívida"
+item = "Endividamento"
+question = "Quando é mais perigoso fazer uma dívida?"
+answer = "Para pagar outra dívida ou supérfluo"
+wrong = ["Nunca é perigoso", "Quando tem dinheiro guardado", "Quando os juros são zero"]
+explanation = "Pegar crédito para pagar outra dívida ou para desejos pode virar uma bola de neve."
+
+[[questions]]
+id = "M-11"
+level = 2
+topic = "Crédito e dívida"
+item = "Parcelar"
+question = "Antes de parcelar uma compra, é importante ver..."
+answer = "Se cabe no orçamento dos meses"
+wrong = ["Só o valor da primeira parcela", "A cor da embalagem", "Se o vendedor é simpático"]
+explanation = "As parcelas somam nos próximos meses. Muitas parcelas juntas apertam o orçamento."
+
+[[questions]]
+id = "M-12"
+level = 2
+topic = "Investimento"
+item = "Investir"
+question = "Investir é..."
+answer = "Aplicar dinheiro para ele crescer"
+wrong = ["Gastar com o que gosta", "Pegar dinheiro emprestado", "Guardar debaixo do colchão"]
+explanation = "No investimento o dinheiro trabalha para você e rende ao longo do tempo."
+
+[[questions]]
+id = "M-13"
+level = 2
+topic = "Investimento"
+item = "Risco e retorno"
+question = "Em geral, um investimento que promete render mais..."
+answer = "Tem mais risco"
+wrong = ["Não tem risco nenhum", "É sempre garantido", "Rende menos que a poupança"]
+explanation = "Retorno maior costuma vir com risco maior. Promessa de ganho alto e sem risco é sinal de golpe."
+
+[[questions]]
+id = "M-14"
+level = 2
+topic = "Investimento"
+item = "Diversificar"
+question = "Diversificar os investimentos significa..."
+answer = "Não colocar tudo num lugar só"
+wrong = ["Investir só em uma empresa", "Trocar de banco todo mês", "Sacar tudo de uma vez"]
+explanation = "Espalhar o dinheiro em opções diferentes diminui o estrago se uma delas for mal."
+
+[[questions]]
+id = "M-15"
+level = 2
+topic = "Investimento"
+item = "Começar cedo"
+question = "Por que começar a investir cedo é vantajoso?"
+answer = "Os juros compostos têm mais tempo"
+wrong = ["Porque depois é proibido", "Porque jovem não paga imposto", "Não faz diferença"]
+explanation = "Quanto mais tempo o dinheiro fica aplicado, mais os juros sobre juros fazem efeito."
+
+[[questions]]
+id = "M-16"
+level = 2
+topic = "Orçamento e consumo"
+item = "Renda e despesa"
+question = "Um orçamento equilibrado é quando..."
+answer = "Gasto menos do que ganho"
+wrong = ["Gasto mais do que ganho", "Uso todo o limite do cartão", "Não anoto nada"]
+explanation = "Gastar menos do que se ganha sobra dinheiro para guardar e investir."
+
+[[questions]]
+id = "M-17"
+level = 2
+topic = "Orçamento e consumo"
+item = "Consumo consciente"
+question = "O que é consumo consciente?"
+answer = "Comprar pensando na real necessidade"
+wrong = ["Comprar tudo em promoção", "Nunca comprar nada", "Comprar só o mais caro"]
+explanation = "É pensar se precisa, se cabe no bolso e qual o impacto da compra antes de comprar."
+
+[[questions]]
+id = "M-18"
+level = 2
+topic = "Orçamento e consumo"
+item = "Compra por impulso"
+question = "Uma boa forma de evitar compra por impulso é..."
+answer = "Esperar um dia antes de decidir"
+wrong = ["Comprar antes que acabe", "Salvar o cartão no celular", "Seguir só a propaganda"]
+explanation = "Dar um tempo ajuda a perceber se é desejo do momento ou algo que vale a pena."
+
+[[questions]]
+id = "M-19"
+level = 2
+topic = "Segurança digital"
+item = "Golpe do Pix"
+question = "Alguém pede um Pix urgente dizendo ser um parente. O certo é..."
+answer = "Confirmar ligando para a pessoa"
+wrong = ["Fazer o Pix na hora", "Mandar a senha do banco", "Pedir o dobro para conferir"]
+explanation = "Golpistas usam a pressa e o nome de conhecidos. Confirme por outro meio antes de pagar."
+
+[[questions]]
+id = "M-20"
+level = 2
+topic = "Segurança digital"
+item = "Senha"
+question = "A senha do banco deve ser..."
+answer = "Secreta, sem passar a ninguém"
+wrong = ["Dita para o atendente por telefone", "A data de aniversário", "Anotada no cartão"]
+explanation = "Banco nenhum pede sua senha. Senha forte e secreta protege o seu dinheiro."
+
+# ----------------------------------------------------------------------
+# Ensino Superior
+
+[[topics]]
+level = 3
+name = "Fluxo de caixa e lucro"
+label = "FLUXO DE CAIXA"
+image = "cartas/engenharia/fluxo_caixa.svg"
+
+[[topics]]
+level = 3
+name = "Custos"
+label = "CUSTOS"
+image = "cartas/engenharia/custos.svg"
+
+[[topics]]
+level = 3
+name = "Avaliação de investimentos"
+label = "AVALIAÇÃO DE INVESTIMENTOS"
+image = "cartas/engenharia/vpl.svg"
+
+[[topics]]
+level = 3
+name = "Dinheiro no tempo"
+label = "DINHEIRO NO TEMPO"
+image = "cartas/engenharia/valor_presente.svg"
+
+[[topics]]
+level = 3
+name = "Operações"
+label = "OPERAÇÕES"
+image = "cartas/engenharia/gargalo.svg"
+
+[[topics]]
+level = 3
+name = "Risco e decisão"
+label = "RISCO E DECISÃO"
+image = "cartas/engenharia/risco.svg"
+
+[[questions]]
+id = "S-01"
+level = 3
+topic = "Fluxo de caixa e lucro"
+item = "Fluxo de caixa"
+question = "O que o fluxo de caixa registra?"
+answer = "Entradas e saídas de dinheiro"
+wrong = ["Só o estoque da fábrica", "O número de funcionários", "Só as vendas a prazo"]
+explanation = "O fluxo de caixa mostra quando o dinheiro entra e sai, período a período."
+
+[[questions]]
+id = "S-02"
+level = 3
+topic = "Fluxo de caixa e lucro"
+item = "Receita x lucro"
+question = "Qual a diferença entre receita e lucro?"
+answer = "Lucro é a receita menos os custos"
+wrong = ["São a mesma coisa", "Receita é sempre menor", "Lucro não considera custos"]
+explanation = "Receita é tudo o que entra com as vendas; lucro é o que sobra depois de pagar os custos."
+
+[[questions]]
+id = "S-03"
+level = 3
+topic = "Fluxo de caixa e lucro"
+item = "Lucro sem caixa"
+question = "Uma empresa pode ter lucro e faltar dinheiro no caixa?"
+answer = "Sim, se as vendas são a prazo"
+wrong = ["Não, lucro é dinheiro no caixa", "Só se não tiver custos", "Nunca acontece"]
+explanation = "Lucro é contábil; caixa é o dinheiro disponível. Vender a prazo dá lucro, mas o dinheiro só entra depois."
+
+[[questions]]
+id = "S-04"
+level = 3
+topic = "Custos"
+item = "Custo fixo"
+question = "O aluguel do galpão, que não muda com a produção, é um custo..."
+answer = "Fixo"
+wrong = ["Variável", "De oportunidade", "Unitário"]
+explanation = "Custo fixo não depende da quantidade produzida no mês, como aluguel e salários administrativos."
+
+[[questions]]
+id = "S-05"
+level = 3
+topic = "Custos"
+item = "Custo variável"
+question = "A matéria-prima de cada peça é um custo..."
+answer = "Variável"
+wrong = ["Fixo", "Afundado", "Indireto fixo"]
+explanation = "Custo variável cresce junto com a produção: quanto mais peças, mais matéria-prima."
+
+[[questions]]
+id = "S-06"
+level = 3
+topic = "Custos"
+item = "Depreciação"
+question = "O que é depreciação?"
+answer = "Perda de valor de um bem com o uso"
+wrong = ["Aumento do preço da máquina", "Um tipo de imposto", "O lucro de um equipamento"]
+explanation = "Máquinas e equipamentos se desgastam e ficam obsoletos; a depreciação registra essa perda."
+
+[[questions]]
+id = "S-07"
+level = 3
+topic = "Custos"
+item = "Margem de contribuição"
+question = "A margem de contribuição é..."
+answer = "Preço menos o custo variável"
+wrong = ["Preço menos o aluguel", "O lucro total do ano", "O custo fixo por peça"]
+explanation = "É o quanto cada unidade vendida sobra para pagar os custos fixos e gerar lucro."
+
+[[questions]]
+id = "S-08"
+level = 3
+topic = "Avaliação de investimentos"
+item = "VPL"
+question = "Um projeto com VPL positivo indica que..."
+answer = "Gera valor acima da TMA"
+wrong = ["Vai dar prejuízo", "Rende igual à poupança", "Não tem custos"]
+explanation = "VPL > 0: trazidos a valor presente, os ganhos superam o investimento e o retorno mínimo exigido."
+
+[[questions]]
+id = "S-09"
+level = 3
+topic = "Avaliação de investimentos"
+item = "TIR"
+question = "A TIR de um projeto é a taxa que..."
+answer = "Torna o VPL igual a zero"
+wrong = ["Dobra o investimento", "O banco cobra no empréstimo", "Mede a inflação"]
+explanation = "A TIR é o retorno do próprio projeto. Se for maior que a TMA, o projeto é atrativo."
+
+[[questions]]
+id = "S-10"
+level = 3
+topic = "Avaliação de investimentos"
+item = "Payback"
+question = "O que o payback mede?"
+answer = "Tempo para recuperar o investido"
+wrong = ["O lucro total do projeto", "A taxa de juros do banco", "O custo fixo mensal"]
+explanation = "Payback é quanto tempo leva para as entradas de caixa pagarem o que foi investido."
+
+[[questions]]
+id = "S-11"
+level = 3
+topic = "Avaliação de investimentos"
+item = "TMA"
+question = "A TMA (taxa mínima de atratividade) é..."
+answer = "O retorno mínimo que se aceita"
+wrong = ["A taxa máxima de juros", "O lucro garantido", "O imposto do projeto"]
+explanation = "É a régua da decisão: um projeto só vale a pena se render mais que a TMA."
+
+[[questions]]
+id = "S-12"
+level = 3
+topic = "Dinheiro no tempo"
+item = "Valor do dinheiro no tempo"
+question = "Por que um real hoje vale mais que um real daqui a um ano?"
+answer = "Hoje o dinheiro pode render juros"
+wrong = ["Porque a nota estraga", "Não valem mais, é igual", "Porque o banco cobra tarifa"]
+explanation = "O dinheiro de hoje pode ser investido; além disso, a inflação reduz o poder de compra do futuro."
+
+[[questions]]
+id = "S-13"
+level = 3
+topic = "Dinheiro no tempo"
+item = "Valor presente"
+question = "Trazer um valor futuro a valor presente é..."
+answer = "Descontá-lo por uma taxa de juros"
+wrong = ["Somar a inflação", "Multiplicar pelo prazo", "Ignorar o tempo"]
+explanation = "Descontar permite comparar, na mesma data, dinheiro que entra em momentos diferentes."
+
+[[questions]]
+id = "S-14"
+level = 3
+topic = "Dinheiro no tempo"
+item = "SAC x Price"
+question = "No sistema SAC de financiamento, a amortização é..."
+answer = "Igual em todas as parcelas"
+wrong = ["Crescente a cada mês", "Zero no começo", "Paga só no final"]
+explanation = "No SAC a amortização é constante e as parcelas caem; na Price as parcelas são iguais."
+
+[[questions]]
+id = "S-15"
+level = 3
+topic = "Operações"
+item = "Gargalo"
+question = "O gargalo de uma linha de produção é..."
+answer = "A etapa mais lenta, que limita tudo"
+wrong = ["A máquina mais nova", "O setor de vendas", "A etapa mais rápida"]
+explanation = "A linha só produz no ritmo da etapa mais lenta. Melhorar o gargalo aumenta a produção toda."
+
+[[questions]]
+id = "S-16"
+level = 3
+topic = "Operações"
+item = "Produtividade"
+question = "Produtividade é a relação entre..."
+answer = "O que se produz e os recursos usados"
+wrong = ["Preço e lucro", "Salário e imposto", "Estoque e vendas"]
+explanation = "Produzir mais com os mesmos recursos, ou o mesmo com menos, é ganhar produtividade."
+
+[[questions]]
+id = "S-17"
+level = 3
+topic = "Operações"
+item = "Ponto de equilíbrio"
+question = "No ponto de equilíbrio, a empresa..."
+answer = "Não tem lucro nem prejuízo"
+wrong = ["Tem o maior lucro possível", "Para de produzir", "Não tem custos fixos"]
+explanation = "É a quantidade de vendas em que a receita cobre exatamente todos os custos."
+
+[[questions]]
+id = "S-18"
+level = 3
+topic = "Operações"
+item = "Desperdício"
+question = "No Lean, retrabalho e estoque parado são..."
+answer = "Desperdícios"
+wrong = ["Investimentos", "Lucros", "Obrigações legais"]
+explanation = "Tudo o que consome recursos sem agregar valor ao cliente é desperdício e deve ser reduzido."
+
+[[questions]]
+id = "S-19"
+level = 3
+topic = "Risco e decisão"
+item = "Custo de oportunidade"
+question = "O custo de oportunidade é..."
+answer = "O ganho da melhor opção recusada"
+wrong = ["O preço da matéria-prima", "O custo fixo do mês", "Um desconto do fornecedor"]
+explanation = "Ao escolher um caminho, abrimos mão do que ganharíamos no melhor caminho alternativo."
+
+[[questions]]
+id = "S-20"
+level = 3
+topic = "Risco e decisão"
+item = "Análise de cenários"
+question = "Para que serve analisar cenários pessimista, provável e otimista?"
+answer = "Para ver o risco da decisão"
+wrong = ["Para garantir o lucro", "Para eliminar os custos", "Para não precisar decidir"]
+explanation = "Ver como o resultado muda em cada cenário mostra o quanto o projeto é arriscado."

@@ -15,7 +15,7 @@ from urllib.parse import parse_qs, urlparse
 
 import flet as ft
 
-from mente_financeira.sala.app import ROOM_TRACKS, Messenger, SessionStore
+from mente_financeira.sala.app import Messenger, SessionStore
 from mente_financeira.sala.quiz import Phase, Quiz, QuizError
 from mente_financeira.sala.ranking import QUIZ, FairRanking
 from mente_financeira.sala.salas import NICKNAME_MAX, NicknameError
@@ -24,13 +24,16 @@ from mente_financeira.ui import style as s
 from mente_financeira.ui.shell import MEMORY_TRACKS
 from mente_financeira.ui.sounds import SoundEffects
 from mente_financeira.ui.suggestion_form import SuggestionForm, suggestion_button, suggestion_qr
-from mente_financeira.ui.tracks import FUNDAMENTAL
+from mente_financeira.ui.tracks import FUNDAMENTAL, TRACKS
 
 QUIZ_TOPIC = "quiz"
 PRESENT, PLAY = "apresentar", "jogar"  # ?quiz=apresentar (notebook) e ?quiz=jogar (celular)
 QUIZ_QR_PATH = "/qr/quiz.png"  # desenhado pelo servidor, aponta para ?quiz=jogar
 CLOCK_STEP_SECONDS = 0.25
 LOCAL_IPS = ("127.0.0.1", "::1", "::ffff:127.0.0.1", "localhost")
+
+# O quiz do telão segue com as trilhas do jogo (o Duelo online tem os seus níveis).
+ROOM_TRACKS = tuple(t for t in TRACKS if t.key in MEMORY_TRACKS)
 
 LETTERS = "ABCD"
 OPTION_COLORS = ("#E0306F", "#1F6FE0", "#D98200", "#14A06E")
