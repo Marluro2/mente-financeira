@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Produtividade: mais peças no mesmo tempo (cronômetro e caixas) -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8FD8FF"/>
+      <stop offset="1" stop-color="#0369A1"/>
+    </linearGradient>
+    <clipPath id="clip"><rect width="200" height="200" rx="36"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+  <rect width="200" height="200" rx="36" fill="url(#bg)"/>
+  <circle cx="170" cy="30" r="46" fill="#FFFFFF" opacity="0.12"/>
+  <circle cx="26" cy="180" r="38" fill="#FFFFFF" opacity="0.09"/>
+  <!-- cronômetro -->
+  <rect x="58" y="22" width="20" height="12" rx="3" fill="#2B2D42"/>
+  <path d="M100 46 L108 38" stroke="#2B2D42" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="68" cy="84" r="46" fill="#FFFFFF" stroke="#2B2D42" stroke-width="5"/>
+  <path d="M68 84 L68 52" stroke="#2B2D42" stroke-width="6" stroke-linecap="round"/>
+  <path d="M68 84 L90 96" stroke="#D62839" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="68" cy="84" r="6" fill="#2B2D42"/>
+  <path d="M68 42 v6 M110 84 h-6 M68 126 v-6 M26 84 h6" stroke="#2B2D42" stroke-width="4" stroke-linecap="round"/>
+  <!-- caixas em degraus -->
+  <g fill="#E0A86A" stroke="#2B2D42" stroke-width="3.5" stroke-linejoin="round">
+    <rect x="104" y="150" width="24" height="24" rx="2"/>
+    <rect x="132" y="150" width="24" height="24" rx="2"/>
+    <rect x="132" y="124" width="24" height="24" rx="2"/>
+    <rect x="160" y="150" width="24" height="24" rx="2"/>
+    <rect x="160" y="124" width="24" height="24" rx="2"/>
+    <rect x="160" y="98" width="24" height="24" rx="2"/>
+  </g>
+  <path d="M116 152 v7 M144 152 v7 M144 126 v7 M172 152 v7 M172 126 v7 M172 100 v7" stroke="#F4D6A0" stroke-width="4"/>
+  <!-- seta de alta -->
+  <path d="M112 136 L140 108" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"/>
+  <path d="M130 100 L152 96 L146 118 Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="3" stroke-linejoin="round"/>
+  <!-- chão -->
+  <path d="M96 175 H192" stroke="#2B2D42" stroke-width="5" stroke-linecap="round"/>
+  <!-- brilhos -->
+  <path d="M30 150 v14 M23 157 h14" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+  </g>
+</svg>

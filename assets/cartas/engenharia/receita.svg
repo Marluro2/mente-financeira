@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Receita: caixas vendidas viram moedas (preço × quantidade) -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8EF0B8"/>
+      <stop offset="1" stop-color="#11915A"/>
+    </linearGradient>
+    <clipPath id="clip"><rect width="200" height="200" rx="36"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+  <rect width="200" height="200" rx="36" fill="url(#bg)"/>
+  <circle cx="168" cy="30" r="46" fill="#FFFFFF" opacity="0.12"/>
+  <circle cx="26" cy="180" r="38" fill="#FFFFFF" opacity="0.09"/>
+  <!-- caixas (produtos) -->
+  <g fill="#E0A86A" stroke="#2B2D42" stroke-width="4" stroke-linejoin="round">
+    <rect x="18" y="124" width="36" height="36" rx="3"/>
+    <rect x="58" y="124" width="36" height="36" rx="3"/>
+    <rect x="38" y="86" width="36" height="36" rx="3"/>
+  </g>
+  <path d="M36 126 v11 M76 126 v11 M56 88 v11" stroke="#F4D6A0" stroke-width="5"/>
+  <!-- etiqueta de preço -->
+  <g transform="rotate(-14 66 62)">
+    <path d="M44 50 H82 L92 62 L82 74 H44 a4 4 0 0 1 -4 -4 V54 a4 4 0 0 1 4 -4 Z" fill="#FFFFFF" stroke="#2B2D42" stroke-width="4" stroke-linejoin="round"/>
+    <circle cx="82" cy="62" r="3.5" fill="#2B2D42"/>
+    <path d="M52 62 H72" stroke="#11915A" stroke-width="5" stroke-linecap="round"/>
+  </g>
+  <!-- seta para o caixa -->
+  <path d="M100 118 H128" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round"/>
+  <path d="M124 106 L142 118 L124 130 Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="3" stroke-linejoin="round"/>
+  <!-- pilhas de moedas -->
+  <g stroke="#D99400" stroke-width="3" stroke-linejoin="round">
+    <path d="M146 150 v12 a16 5.5 0 0 0 32 0 v-12" fill="#FFD23F"/>
+    <ellipse cx="162" cy="150" rx="16" ry="5.5" fill="#FFE27A"/>
+    <path d="M146 136 v10 a16 5.5 0 0 0 32 0 v-10" fill="#FFD23F"/>
+    <ellipse cx="162" cy="136" rx="16" ry="5.5" fill="#FFE27A"/>
+    <path d="M146 122 v10 a16 5.5 0 0 0 32 0 v-10" fill="#FFD23F"/>
+    <ellipse cx="162" cy="122" rx="16" ry="5.5" fill="#FFE27A"/>
+  </g>
+  <circle cx="162" cy="84" r="20" fill="#FFD23F" stroke="#D99400" stroke-width="4"/>
+  <circle cx="162" cy="84" r="9" fill="none" stroke="#D99400" stroke-width="3"/>
+  <!-- chão -->
+  <path d="M10 164 H100 M140 170 H190" stroke="#2B2D42" stroke-width="5" stroke-linecap="round"/>
+  <!-- brilhos -->
+  <path d="M128 40 v14 M121 47 h14" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+  <path d="M24 34 v10 M19 39 h10" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round"/>
+  </g>
+</svg>

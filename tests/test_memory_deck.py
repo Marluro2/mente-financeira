@@ -86,3 +86,23 @@ def test_deck_errors_are_reported(overrides: dict, message: str) -> None:
 def test_deck_errors_name_the_file() -> None:
     with pytest.raises(ContentError, match="memoria_fundamental1.toml"):
         parse_deck(_deck(pairs=2), "memoria_fundamental1.toml")
+
+
+def test_engineering_cards_are_split_by_level() -> None:
+    deck = load_memory_deck("memoria_engenharia")
+    assert deck.levels == (1, 2, 3)
+    names = {level: {c.name for c in deck.for_level(level).concepts} for level in deck.levels}
+    assert all(len(level_names) == deck.pairs for level_names in names.values())
+    assert {"Fluxo de caixa", "Lucro", "Juros simples"} <= names[1]
+    assert {"TIR", "VPL", "Payback"} <= names[2] and "TIR" not in names[1] | names[3]
+    assert {"Ponto de equilíbrio", "Produtividade", "Gargalo"} <= names[3]
+    assert sum(map(len, names.values())) == len(deck.concepts)  # sem nível: todas as cartas
+
+
+def test_a_level_needs_enough_cards() -> None:
+    concept = {"id": "a", "level": 1, "name": "A", "image": "cartas/a.svg", "color": "#112233", "tip": "D.", "example": "E. 1."}
+    with pytest.raises(ContentError, match="o nível 2 tem 1 cartas"):
+        parse_deck(_deck(pairs=2, concepts=[concept, {**concept, "id": "b"}, {**concept, "id": "c", "level": 2}]))
+    deck = parse_deck(_deck(concepts=[concept]))
+    with pytest.raises(ContentError, match="o nível 3 tem 0 cartas"):
+        deck.for_level(3)

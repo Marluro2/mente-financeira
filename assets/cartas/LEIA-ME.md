@@ -55,20 +55,34 @@ Orçamento e Objetivo reaproveitam `poupanca.svg`, `orcamento.svg` e `meta.svg`.
 ## Engenharia de Produção
 
 O baralho da Engenharia de Produção fica em
-`mente_financeira/content/memoria_engenharia.toml` (12 conceitos de engenharia
-econômica, 8 sorteados por partida). As ilustrações estão em `engenharia/`:
+`mente_financeira/content/memoria_engenharia.toml`: 24 conceitos, 8 por nível
+(campo `level`). Cada nível escolhido na página de níveis joga com as suas 8
+cartas; o Duelo online e o quiz do telão usam as 24. As ilustrações estão em
+`engenharia/`:
 
-| Arquivo | Conceito |
-|---|---|
-| `fluxo_caixa.svg` | Fluxo de caixa (barras que sobem e descem) |
-| `vpl.svg` | VPL (dinheiro do futuro trazido para hoje) |
-| `tir.svg` | TIR (mostrador no verde) |
-| `tma.svg` | TMA (sarrafo do salto em altura) |
-| `payback.svg` | Payback (ampulheta enchendo de moedas) |
-| `custo_oportunidade.svg` | Custo de oportunidade (placas apontando dois caminhos) |
-| `ponto_equilibrio.svg` | Ponto de equilíbrio (balança equilibrada) |
-| `depreciacao.svg` | Depreciação (máquina e gráfico em queda) |
-| `sac_price.svg` | SAC x Price (parcelas que caem e parcelas iguais) |
-| `custos.svg` | Custo fixo e variável (galpão e caixas) |
-| `valor_presente.svg` | Dinheiro no tempo (relógio e moedas) |
-| `margem_contribuicao.svg` | Margem de contribuição (etiqueta com a fatia do lucro) |
+| Arquivo | Conceito | Nível |
+|---|---|---|
+| `fluxo_caixa.svg` | Fluxo de caixa (barras que sobem e descem) | 1 |
+| `custos.svg` | Custo fixo e variável (galpão e caixas) | 1 |
+| `depreciacao.svg` | Depreciação (máquina e gráfico em queda) | 1 |
+| `margem_contribuicao.svg` | Margem de contribuição (etiqueta com a fatia do lucro) | 1 |
+| `receita.svg` | Receita (caixas vendidas viram moedas) | 1 |
+| `lucro.svg` | Lucro (saco de dinheiro e seta para cima) | 1 |
+| `porcentagem.svg` | Porcentagem (etiqueta com %) | 1 |
+| `juros_simples.svg` | Juros simples (pilhas que crescem sempre o mesmo tanto) | 1 |
+| `payback.svg` | Payback (ampulheta enchendo de moedas) | 2 |
+| `vpl.svg` | VPL (dinheiro do futuro trazido para hoje) | 2 |
+| `tir.svg` | TIR (mostrador no verde) | 2 |
+| `tma.svg` | TMA (sarrafo do salto em altura) | 2 |
+| `valor_presente.svg` | Dinheiro no tempo (relógio e moedas) | 2 |
+| `sac_price.svg` | SAC x Price (parcelas que caem e parcelas iguais) | 2 |
+| `custo_oportunidade.svg` | Custo de oportunidade (placas apontando dois caminhos) | 2 |
+| `risco.svg` | Risco (dados rolando e placa de atenção) | 2 |
+| `ponto_equilibrio.svg` | Ponto de equilíbrio (balança equilibrada) | 3 |
+| `custo_unitario.svg` | Custo unitário (máquina industrial) | 3 |
+| `produtividade.svg` | Produtividade (cronômetro e caixas) | 3 |
+| `desperdicio.svg` | Desperdício (lâmpada LED) | 3 |
+| `capacidade.svg` | Capacidade produtiva (fábrica e barra de uso) | 3 |
+| `pecas_boas.svg` | Peças boas (esteira com peças aprovadas e uma com defeito) | 3 |
+| `cenarios.svg` | Análise de cenários (pessimista, provável e otimista) | 3 |
+| `gargalo.svg` | Gargalo (peças em fila no gargalo da garrafa) | 3 |
