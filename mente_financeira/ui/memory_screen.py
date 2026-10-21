@@ -28,6 +28,7 @@ SCROLL_DELAY_SECONDS = 0.6
 FLIP_MS = 260
 CONCEPT_PANEL_MIN_WIDTH = 420
 COMPACT_TIP_HEIGHT = 150
+LONG_OPTION = 18  # acima disso, a alternativa usa letra menor e quebra a linha
 
 
 class OnlineSeat(Protocol):
@@ -685,31 +686,41 @@ class MemoryScreen:
         panel_side = 420
 
         # ---- alternativas em pílulas "A. R$ 48,00"
+        # Alternativas em frase (questões de conceito da Engenharia) usam letra
+        # menor e quebram em até duas linhas; no celular, uma por linha.
+        wordy = max(len(option) for option in challenge.options) > LONG_OPTION
+        stacked = compact and wordy
+        size = (14 if compact else 18) if wordy else (16 if compact else 24)
         self.option_boxes = [
             ft.Container(
                 expand=True,
-                height=58 if compact else 74,
+                height=(52 if stacked else 58) if compact else 74,
                 border_radius=40,
-                padding=ft.Padding.symmetric(horizontal=10 if compact else 26),
-                alignment=ft.Alignment.CENTER if compact else ft.Alignment.CENTER_LEFT,
+                padding=ft.Padding.symmetric(horizontal=(14 if wordy else 10) if compact else 26),
+                alignment=ft.Alignment.CENTER_LEFT if wordy or not compact else ft.Alignment.CENTER,
                 data=index,
                 on_click=self._answer_challenge,
                 animate=ft.Animation(250, ft.AnimationCurve.EASE_OUT),
                 content=ft.Row(
                     [
-                        ft.Text(f"{'ABCD'[index]}.", size=16 if compact else 24, weight=ft.FontWeight.W_900, color=s.YELLOW),
-                        ft.Text(option, size=16 if compact else 24, weight=ft.FontWeight.W_700, color=s.WHITE),
+                        ft.Text(f"{'ABCD'[index]}.", size=size, weight=ft.FontWeight.W_900, color=s.YELLOW),
+                        ft.Text(
+                            option,
+                            size=size,
+                            weight=ft.FontWeight.W_700,
+                            color=s.WHITE,
+                            max_lines=2 if wordy else None,
+                            expand=wordy,
+                        ),
                     ],
                     spacing=6 if compact else 8,
-                    tight=True,
+                    tight=not wordy,
                 ),
             )
             for index, option in enumerate(challenge.options)
         ]
-        options = ft.Column(
-            [ft.Row(self.option_boxes[0:2], spacing=12), ft.Row(self.option_boxes[2:4], spacing=12)],
-            spacing=12,
-        )
+        pairs = [self.option_boxes[i : i + 1] for i in range(4)] if stacked else [self.option_boxes[0:2], self.option_boxes[2:4]]
+        options = ft.Column([ft.Row(row, spacing=12) for row in pairs], spacing=10 if stacked else 12)
         admin_hint: list[ft.Control] = [s.admin_banner(f"Gabarito: {challenge.answer}")] if self.admin else []
 
         # ---- cartão da pergunta

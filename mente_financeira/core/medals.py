@@ -16,7 +16,7 @@ from mente_financeira.storage import SettingsStore
 
 # Chaves das trilhas (as mesmas de ui/tracks.py).
 TRACK_FUNDAMENTAL_1, TRACK_FUNDAMENTAL, TRACK_ENGENHARIA = "fundamental1", "fundamental", "engenharia"
-NPV_LABEL = "VPL: VALE A PENA?"  # rótulo do desafio de VPL (core/engineering_challenge.py)
+NPV_LABEL = "VPL"  # rótulo das questões de VPL (content/banco_engenharia.toml)
 
 FAST_SOLO_SECONDS = 90  # o relógio corre também durante os desafios
 FEW_MISTAKES = 2

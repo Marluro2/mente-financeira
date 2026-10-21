@@ -11,10 +11,10 @@ from mente_financeira.admin import admin_ativo
 from mente_financeira.content import load_track
 from mente_financeira.content.memory_deck import MemoryDeck, load_memory_deck
 from mente_financeira.core.coin_challenge import COIN_KIT
-from mente_financeira.core.engineering_challenge import ENGINEERING_KIT
+from mente_financeira.core.engineering_challenge import ENGINEERING_KIT, ENGINEERING_LEVEL_KITS
 from mente_financeira.core.medals import GameSummary, Medal, MedalBook
 from mente_financeira.core.memory_game import MemoryGame, Mode
-from mente_financeira.core.percent_challenge import PERCENT_KIT
+from mente_financeira.core.percent_challenge import PERCENT_KIT, ChallengeKit
 from mente_financeira.core.session import GameSession
 from mente_financeira.storage import SettingsStore
 from mente_financeira import sugestoes
@@ -134,8 +134,7 @@ class GameShell:
         levels.show()
 
     def choose_level(self, key: str) -> None:
-        # Por enquanto os três níveis usam as mesmas questões; o banco de cada
-        # nível entra depois.
+        # Cada nível tem o seu Desafio Relâmpago (content/banco_engenharia.toml).
         self.level = key
         self.show_home()
 
@@ -175,11 +174,19 @@ class GameShell:
             on_home=self.show_home,
             on_level2=self.open_level2,
             sounds=self.sounds,
-            challenges=MEMORY_TRACKS[self.track][1],
+            challenges=self._challenges(),
             medals=self._record_medals,
         )
         self._activate(screen)
         screen.show()
+
+    def _challenges(self) -> ChallengeKit:
+        """Desafio Relâmpago da trilha; na Engenharia, o do nível escolhido."""
+
+        level = level_by_key(self.level)
+        if self.track == ENGENHARIA and level is not None:
+            return ENGINEERING_LEVEL_KITS[level.number]
+        return MEMORY_TRACKS[self.track][1]
 
     def _record_medals(self, game: MemoryGame, right_labels: set[str]) -> list[Medal]:
         return self.medals.record(GameSummary.of(game, self.track, right_labels))
