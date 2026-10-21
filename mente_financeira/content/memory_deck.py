@@ -1,7 +1,8 @@
 """Baralhos da Memória Financeira.
 
 ``memoria.toml`` é o do Ensino Fundamental 2 e ``memoria_fundamental1.toml``
-o do Ensino Fundamental 1. Os dois têm o mesmo formato.
+o do Ensino Fundamental 1. Os dois têm o mesmo formato. No da Engenharia de
+Produção (``memoria_engenharia.toml``), cada carta diz também o seu nível.
 """
 
 from __future__ import annotations
@@ -25,6 +26,7 @@ class Concept:
     color: str
     tip: str
     example: str  # situação do dia a dia com números
+    level: int | None = None  # nível da Engenharia em que a carta aparece
 
 
 @dataclass(frozen=True, slots=True)
@@ -32,6 +34,18 @@ class MemoryDeck:
     pairs: int
     back_image: str
     concepts: tuple[Concept, ...]
+
+    @property
+    def levels(self) -> tuple[int, ...]:
+        return tuple(sorted({c.level for c in self.concepts if c.level is not None}))
+
+    def for_level(self, level: int) -> MemoryDeck:
+        """Só as cartas de um nível; sem nível (Duelo online, quiz), vale o baralho todo."""
+
+        concepts = tuple(c for c in self.concepts if c.level == level)
+        if len(concepts) < self.pairs:
+            raise ContentError(f"o nível {level} tem {len(concepts)} cartas; são necessárias {self.pairs}.")
+        return MemoryDeck(self.pairs, self.back_image, concepts)
 
 
 def parse_deck(data: dict, source: str = "memoria.toml") -> MemoryDeck:
@@ -44,6 +58,7 @@ def parse_deck(data: dict, source: str = "memoria.toml") -> MemoryDeck:
                 color=str(raw["color"]),
                 tip=str(raw["tip"]),
                 example=str(raw["example"]),
+                level=int(raw["level"]) if "level" in raw else None,
             )
             for raw in data["concepts"]
         )
@@ -56,6 +71,10 @@ def parse_deck(data: dict, source: str = "memoria.toml") -> MemoryDeck:
         raise ContentError(f"{source}: há conceitos com 'id' repetido.")
     if len(deck.concepts) < deck.pairs:
         raise ContentError(f"{source}: são necessários pelo menos {deck.pairs} conceitos; há {len(deck.concepts)}.")
+    for level in deck.levels:
+        count = sum(1 for concept in deck.concepts if concept.level == level)
+        if count < deck.pairs:
+            raise ContentError(f"{source}: o nível {level} tem {count} cartas; são necessárias pelo menos {deck.pairs}.")
     for concept in deck.concepts:
         if not concept.name.strip() or not concept.tip.strip() or not concept.example.strip():
             raise ContentError(f"{source}: o conceito '{concept.id}' precisa de nome, dica e exemplo.")

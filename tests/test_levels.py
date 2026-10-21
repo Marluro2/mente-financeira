@@ -8,10 +8,13 @@ import flet as ft
 import pytest
 
 from fakes import FakePage, walk
+from mente_financeira.core.engineering_challenge import ENGINEERING_LEVEL_KITS
+from mente_financeira.core.memory_game import Mode
 from mente_financeira.storage import SettingsStore
 from mente_financeira.ui import style
 from mente_financeira.ui.home import HomeScreen
 from mente_financeira.ui.levels import LEVELS, LevelsScreen
+from mente_financeira.ui.memory_screen import MemoryScreen
 from mente_financeira.ui.shell import GameShell
 from mente_financeira.ui.tracks import ENGENHARIA, FUNDAMENTAL, TracksScreen
 
@@ -82,6 +85,17 @@ def test_every_level_opens_the_game_with_its_name(shell: GameShell, key: str) ->
     assert isinstance(shell.current, LevelsScreen)
     _button(shell.page.controls[-1], "Trilhas").on_click(None)
     assert isinstance(shell.current, TracksScreen)
+
+
+@pytest.mark.parametrize("level", LEVELS, ids=lambda level: level.key)
+def test_each_level_plays_with_its_own_cards_and_questions(shell: GameShell, level) -> None:
+    shell.current._choose(SimpleNamespace(control=SimpleNamespace(data=level.key)))  # type: ignore[union-attr]
+    shell.play_memory(Mode.SOLO, ("Ana", None))
+    screen = shell.current
+    assert isinstance(screen, MemoryScreen)
+    assert {c.level for c in screen.game.cards} == {level.number}  # TIR não aparece no Nível 1
+    assert screen.challenges is ENGINEERING_LEVEL_KITS[level.number]
+    assert f"Nível {level.number} • Modo Solo" in _texts(shell.page.controls[-1])
 
 
 def test_other_tracks_skip_the_levels_page(tmp_path: Path) -> None:

@@ -52,9 +52,11 @@ class MemoryScreen:
         challenges: ChallengeKit = PERCENT_KIT,
         online: OnlineSeat | None = None,
         medals: Callable[[MemoryGame, set[str]], list[Medal]] | None = None,
+        level_number: int = 1,  # na Engenharia, o nível escolhido na página de níveis
     ) -> None:
         self.page = page
         self.game = game
+        self.level_number = level_number
         # Ao fim da partida, confere as metas e devolve as medalhas novas.
         self.medals = medals
         self.right_labels: set[str] = set()  # tipos de desafio acertados na partida
@@ -218,7 +220,7 @@ class MemoryScreen:
                 ft.Column(
                     [
                         s.gradient_text("MEMÓRIA FINANCEIRA", 18 if self.compact else 24, [s.YELLOW, s.PINK]),
-                        ft.Text(f"Nível 1 • {mode_text}", size=12, color=s.MUTED),
+                        ft.Text(f"Nível {self.level_number} • {mode_text}", size=12, color=s.MUTED),
                     ],
                     spacing=0,
                     expand=True,

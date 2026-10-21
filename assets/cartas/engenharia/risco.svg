@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Risco: dados rolando (o resultado pode variar) e placa de atenção -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFB38A"/>
+      <stop offset="1" stop-color="#C2410C"/>
+    </linearGradient>
+    <clipPath id="clip"><rect width="200" height="200" rx="36"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+  <rect width="200" height="200" rx="36" fill="url(#bg)"/>
+  <circle cx="30" cy="32" r="44" fill="#FFFFFF" opacity="0.12"/>
+  <circle cx="176" cy="178" r="38" fill="#FFFFFF" opacity="0.09"/>
+  <!-- dado 1 -->
+  <g transform="rotate(-14 66 126)">
+    <rect x="34" y="94" width="64" height="64" rx="12" fill="#FFFFFF" stroke="#2B2D42" stroke-width="5"/>
+    <g fill="#2B2D42">
+      <circle cx="50" cy="110" r="6"/><circle cx="82" cy="110" r="6"/>
+      <circle cx="66" cy="126" r="6"/>
+      <circle cx="50" cy="142" r="6"/><circle cx="82" cy="142" r="6"/>
+    </g>
+  </g>
+  <!-- dado 2 -->
+  <g transform="rotate(18 140 140)">
+    <rect x="112" y="112" width="56" height="56" rx="11" fill="#FFFFFF" stroke="#2B2D42" stroke-width="5"/>
+    <g fill="#D62839">
+      <circle cx="126" cy="126" r="5.5"/><circle cx="154" cy="154" r="5.5"/>
+    </g>
+  </g>
+  <!-- placa de atenção -->
+  <path d="M132 22 L176 98 H88 Z" fill="#FFD23F" stroke="#2B2D42" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M132 48 V72" stroke="#2B2D42" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="132" cy="86" r="5" fill="#2B2D42"/>
+  <!-- linhas de movimento -->
+  <path d="M18 92 h14 M14 104 h12" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+  <!-- brilhos -->
+  <path d="M40 40 v12 M34 46 h12" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+  </g>
+</svg>

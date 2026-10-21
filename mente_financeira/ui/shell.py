@@ -22,7 +22,7 @@ from mente_financeira.ui.admin_screen import AdminScreen
 from mente_financeira.ui.app import DEFAULT_TRACK, MemoryFinanceApp
 from mente_financeira.ui.factory_screen import FactoryScreen
 from mente_financeira.ui.home import HomeScreen
-from mente_financeira.ui.levels import LevelsScreen, level_by_key
+from mente_financeira.ui.levels import Level, LevelsScreen, level_by_key
 from mente_financeira.ui.memory_screen import MemoryScreen
 from mente_financeira.ui import style
 from mente_financeira.ui.sounds import SoundEffects
@@ -75,9 +75,14 @@ class GameShell:
 
     @property
     def deck(self) -> MemoryDeck:
-        """Baralho da trilha aberta."""
+        """Baralho da trilha aberta; na Engenharia, só as cartas do nível escolhido."""
 
-        return load_memory_deck(MEMORY_TRACKS[self.track][0])
+        deck = load_memory_deck(MEMORY_TRACKS[self.track][0])
+        level = self._engineering_level()
+        return deck.for_level(level.number) if level else deck
+
+    def _engineering_level(self) -> Level | None:
+        return level_by_key(self.level) if self.track == ENGENHARIA else None
 
     def _stop_current(self, _: Any = None) -> None:
         if self.current is not None:
@@ -142,7 +147,7 @@ class GameShell:
         """Abertura da trilha aberta (Ensino Fundamental 1 ou 2, Engenharia)."""
 
         engineering = self.track == ENGENHARIA
-        level = level_by_key(self.level) if engineering else None
+        level = self._engineering_level()
         home = HomeScreen(
             self.page,
             self.deck,
@@ -168,6 +173,7 @@ class GameShell:
     def play_memory(self, mode: Mode, names: tuple[str | None, str | None]) -> None:
         game = MemoryGame(self.deck, self.rng)
         game.new_game(mode, names)
+        level = self._engineering_level()
         screen = MemoryScreen(
             self.page,
             game,
@@ -176,6 +182,7 @@ class GameShell:
             sounds=self.sounds,
             challenges=self._challenges(),
             medals=self._record_medals,
+            level_number=level.number if level else 1,
         )
         self._activate(screen)
         screen.show()
@@ -183,10 +190,8 @@ class GameShell:
     def _challenges(self) -> ChallengeKit:
         """Desafio Relâmpago da trilha; na Engenharia, o do nível escolhido."""
 
-        level = level_by_key(self.level)
-        if self.track == ENGENHARIA and level is not None:
-            return ENGINEERING_LEVEL_KITS[level.number]
-        return MEMORY_TRACKS[self.track][1]
+        level = self._engineering_level()
+        return ENGINEERING_LEVEL_KITS[level.number] if level else MEMORY_TRACKS[self.track][1]
 
     def _record_medals(self, game: MemoryGame, right_labels: set[str]) -> list[Medal]:
         return self.medals.record(GameSummary.of(game, self.track, right_labels))

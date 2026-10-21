@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Juros simples: pilhas de moedas que crescem sempre o mesmo tanto -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#A7F3D0"/>
+      <stop offset="1" stop-color="#0F766E"/>
+    </linearGradient>
+    <clipPath id="clip"><rect width="200" height="200" rx="36"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+  <rect width="200" height="200" rx="36" fill="url(#bg)"/>
+  <circle cx="170" cy="30" r="46" fill="#FFFFFF" opacity="0.12"/>
+  <circle cx="26" cy="180" r="38" fill="#FFFFFF" opacity="0.09"/>
+  <g transform="translate(0 -6)">
+  <!-- base: o valor inicial (igual em todas as pilhas) -->
+  <g stroke="#D99400" stroke-width="3" stroke-linejoin="round">
+    <path d="M18 150 v14 a14 5 0 0 0 28 0 v-14" fill="#FFD23F"/>
+    <ellipse cx="32" cy="150" rx="14" ry="5" fill="#FFE27A"/>
+    <path d="M60 150 v14 a14 5 0 0 0 28 0 v-14" fill="#FFD23F"/>
+    <ellipse cx="74" cy="150" rx="14" ry="5" fill="#FFE27A"/>
+    <path d="M102 150 v14 a14 5 0 0 0 28 0 v-14" fill="#FFD23F"/>
+    <ellipse cx="116" cy="150" rx="14" ry="5" fill="#FFE27A"/>
+    <path d="M144 150 v14 a14 5 0 0 0 28 0 v-14" fill="#FFD23F"/>
+    <ellipse cx="158" cy="150" rx="14" ry="5" fill="#FFE27A"/>
+  </g>
+  <!-- juros: uma moeda verde a mais por período -->
+  <g stroke="#14804A" stroke-width="3" stroke-linejoin="round">
+    <path d="M60 134 v12 a14 5 0 0 0 28 0 v-12" fill="#2EE59D"/>
+    <ellipse cx="74" cy="134" rx="14" ry="5" fill="#8FF5C9"/>
+    <path d="M102 134 v12 a14 5 0 0 0 28 0 v-12" fill="#2EE59D"/>
+    <ellipse cx="116" cy="134" rx="14" ry="5" fill="#8FF5C9"/>
+    <path d="M102 118 v12 a14 5 0 0 0 28 0 v-12" fill="#2EE59D"/>
+    <ellipse cx="116" cy="118" rx="14" ry="5" fill="#8FF5C9"/>
+    <path d="M144 134 v12 a14 5 0 0 0 28 0 v-12" fill="#2EE59D"/>
+    <ellipse cx="158" cy="134" rx="14" ry="5" fill="#8FF5C9"/>
+    <path d="M144 118 v12 a14 5 0 0 0 28 0 v-12" fill="#2EE59D"/>
+    <ellipse cx="158" cy="118" rx="14" ry="5" fill="#8FF5C9"/>
+    <path d="M144 102 v12 a14 5 0 0 0 28 0 v-12" fill="#2EE59D"/>
+    <ellipse cx="158" cy="102" rx="14" ry="5" fill="#8FF5C9"/>
+  </g>
+  <!-- reta: cresce sempre o mesmo tanto -->
+  <path d="M32 126 L158 76" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" stroke-dasharray="2 10"/>
+  </g>
+  <!-- etiquetas "+" iguais -->
+  <g fill="#FFFFFF" stroke="#2B2D42" stroke-width="3.5">
+    <circle cx="58" cy="44" r="15"/>
+    <circle cx="100" cy="44" r="15"/>
+    <circle cx="142" cy="44" r="15"/>
+  </g>
+  <path d="M51 44 h14 M58 37 v14 M93 44 h14 M100 37 v14 M135 44 h14 M142 37 v14" stroke="#0F766E" stroke-width="4.5" stroke-linecap="round"/>
+  <!-- chão -->
+  <path d="M10 172 H190" stroke="#2B2D42" stroke-width="5" stroke-linecap="round"/>
+  </g>
+</svg>
