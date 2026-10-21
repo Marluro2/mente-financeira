@@ -12,6 +12,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from fakes import FakeHub, FakePage, walk
+from mente_financeira.core.engineering_challenge import BANK
 from mente_financeira.core.percent_challenge import PERCENT_KIT
 from mente_financeira.sala import quiz_app
 from mente_financeira.sala.app import RoomApp, new_lobby
@@ -170,7 +171,7 @@ def test_track_changes_only_in_the_lobby_and_restart_keeps_people(clock: Clock) 
     quiz.choose_track(ENGENHARIA)
     quiz.join("a", "Ana")
     quiz.start()
-    assert quiz.question is not None and quiz.question.label in {"PAYBACK", "VALOR PRESENTE", "VPL: VALE A PENA?"}
+    assert quiz.question is not None and quiz.question.label in {t.label for t in {q.topic for q in BANK}}
     quiz.choose_track(FUNDAMENTAL)
     assert quiz.track == ENGENHARIA
     quiz.answer("a", _right(quiz))

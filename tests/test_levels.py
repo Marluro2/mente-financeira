@@ -51,7 +51,7 @@ def test_engineering_shows_the_three_levels_and_floating_topics(shell: GameShell
     texts = _texts(shell.page.controls[-1])
     for title in ("Fundamentos financeiros e de custos", "Avaliação de investimentos", "Operações e tomada de decisão"):
         assert title in texts
-    for topic in ("TIR", "VPL", "Fluxo de caixa", "Tomada de decisão"):
+    for topic in ("TIR", "VPL", "Fluxo de caixa", "Ponto de equilíbrio"):
         assert topic in texts
     assert len(screen.topics) == sum(len(level.topics) for level in LEVELS)
     assert shell.page.on_resize == screen.on_resize
@@ -61,7 +61,7 @@ def test_hovering_a_level_lights_up_its_topics(shell: GameShell) -> None:
     screen: LevelsScreen = shell.current  # type: ignore[assignment]
     _hover(screen, "nivel2")
     lit = {t.text for t in screen.topics if t.box.opacity == 1}
-    assert lit == {"TIR", "VPL", "Payback", "TMA", "SAC e Price"}
+    assert lit == {"Payback", "VPL", "TIR", "TMA", "Risco", "Financiamento"}
     assert "NÍVEL 2" in screen.caption.value
     _hover(screen, None)
     assert screen.highlight is None

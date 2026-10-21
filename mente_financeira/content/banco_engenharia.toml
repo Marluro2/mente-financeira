@@ -1,0 +1,1324 @@
+# Banco de questões — Engenharia de Produção (Desafio Relâmpago por nível)
+#
+# 120 questões objetivas: 40 por nível, 10 por assunto. A cada par formado no
+# jogo da memória (Solo e Duelo) sai uma questão do nível escolhido, sem
+# repetir até acabarem as 40; no Duelo online e no quiz do telão, que não têm
+# nível, as 120 se misturam.
+#
+# Base: banco de questões em PDF feito para o projeto, com cenários variados,
+# alternativas revistas e uma explicação curta para cada questão.
+#
+# Cada [[questions]]:
+# - `answer` é a alternativa certa e `wrong` as três erradas (o jogo embaralha);
+# - `explanation` aparece depois da resposta (\n quebra a linha);
+# - `item` é o título curto mostrado acima da pergunta.
+# As alternativas são curtas para caber nos botões do jogo (até ~35 letras).
+# Depois de editar, rode `python -m pytest`.
+
+[[topics]]
+level = 1
+name = "Fluxo de caixa"
+label = "FLUXO DE CAIXA"
+image = "cartas/engenharia/fluxo_caixa.svg"
+
+[[topics]]
+level = 1
+name = "Custos industriais"
+label = "CUSTOS INDUSTRIAIS"
+image = "cartas/engenharia/custos.svg"
+
+[[topics]]
+level = 1
+name = "Receita, lucro e margem"
+label = "LUCRO E MARGEM"
+image = "cartas/engenharia/margem_contribuicao.svg"
+
+[[topics]]
+level = 1
+name = "Porcentagens e juros"
+label = "PORCENTAGEM E JUROS"
+image = "cartas/juros_compostos.svg"
+
+[[topics]]
+level = 2
+name = "Payback"
+label = "PAYBACK"
+image = "cartas/engenharia/payback.svg"
+
+[[topics]]
+level = 2
+name = "VPL"
+label = "VPL"
+image = "cartas/engenharia/vpl.svg"
+
+[[topics]]
+level = 2
+name = "TIR"
+label = "TIR"
+image = "cartas/engenharia/tir.svg"
+
+[[topics]]
+level = 2
+name = "Decisões de investimento"
+label = "DECISÃO DE INVESTIMENTO"
+image = "cartas/engenharia/tma.svg"
+
+[[topics]]
+level = 3
+name = "Ponto de equilíbrio"
+label = "PONTO DE EQUILÍBRIO"
+image = "cartas/engenharia/ponto_equilibrio.svg"
+
+[[topics]]
+level = 3
+name = "Produtividade e custo unitário"
+label = "CUSTO UNITÁRIO"
+image = "desafios/engenharia/maquina.svg"
+
+[[topics]]
+level = 3
+name = "Desperdício e eficiência"
+label = "DESPERDÍCIO E EFICIÊNCIA"
+image = "desafios/engenharia/lampada_led.svg"
+
+[[topics]]
+level = 3
+name = "Cenários e decisões de produção"
+label = "DECISÃO DE PRODUÇÃO"
+image = "cartas/engenharia/custo_oportunidade.svg"
+
+# ----------------------------------------------------------------------
+# Nível 1 — Fluxo de caixa
+
+[[questions]]
+id = "N1-01"
+level = 1
+topic = "Fluxo de caixa"
+item = "Padaria industrial"
+question = "Em março, uma padaria industrial recebeu R$ 8.000,00 com vendas e pagou R$ 5.000,00 em despesas. Qual foi o fluxo de caixa líquido do mês?"
+answer = "R$ 3.000,00"
+wrong = ["R$ 1.500,00", "R$ 13.000,00", "R$ 5.500,00"]
+explanation = "Fluxo de caixa líquido = entradas − saídas.\nR$ 8.000,00 − R$ 5.000,00 = R$ 3.000,00."
+
+[[questions]]
+id = "N1-02"
+level = 1
+topic = "Fluxo de caixa"
+item = "Confecção"
+question = "Uma pequena confecção teve entradas de R$ 12.000,00 e saídas de R$ 7.500,00 na semana. Qual foi o fluxo de caixa líquido?"
+answer = "R$ 4.500,00"
+wrong = ["R$ 7.000,00", "R$ 3.000,00", "R$ 19.500,00"]
+explanation = "Fluxo de caixa líquido = entradas − saídas.\nR$ 12.000,00 − R$ 7.500,00 = R$ 4.500,00."
+
+[[questions]]
+id = "N1-03"
+level = 1
+topic = "Fluxo de caixa"
+item = "Metalúrgica"
+question = "Uma metalúrgica recebeu R$ 9.000,00 de clientes, mas pagou R$ 11.000,00 a fornecedores no mesmo mês. Qual foi o fluxo de caixa líquido?"
+answer = "−R$ 2.000,00"
+wrong = ["−R$ 3.500,00", "R$ 20.000,00", "R$ 500,00"]
+explanation = "Fluxo de caixa líquido = entradas − saídas.\nR$ 9.000,00 − R$ 11.000,00 = −R$ 2.000,00: saiu mais dinheiro do que entrou."
+
+[[questions]]
+id = "N1-04"
+level = 1
+topic = "Fluxo de caixa"
+item = "Fábrica de móveis"
+question = "Uma fábrica de móveis vendeu R$ 18.000,00 no mês e gastou R$ 12.000,00 com madeira, energia e salários. Qual foi o fluxo de caixa líquido?"
+answer = "R$ 6.000,00"
+wrong = ["R$ 8.500,00", "R$ 30.000,00", "R$ 4.500,00"]
+explanation = "Fluxo de caixa líquido = entradas − saídas.\nR$ 18.000,00 − R$ 12.000,00 = R$ 6.000,00."
+
+[[questions]]
+id = "N1-05"
+level = 1
+topic = "Fluxo de caixa"
+item = "Oficina de usinagem"
+question = "Uma oficina de usinagem recebeu R$ 15.000,00 por peças entregues e pagou R$ 4.800,00 de despesas. Qual foi o fluxo de caixa líquido?"
+answer = "R$ 10.200,00"
+wrong = ["R$ 12.700,00", "R$ 8.700,00", "R$ 19.800,00"]
+explanation = "Fluxo de caixa líquido = entradas − saídas.\nR$ 15.000,00 − R$ 4.800,00 = R$ 10.200,00."
+
+[[questions]]
+id = "N1-06"
+level = 1
+topic = "Fluxo de caixa"
+item = "Fábrica de embalagens"
+question = "No mês da reforma da linha, uma fábrica de embalagens teve entradas de R$ 20.000,00 e saídas de R$ 23.000,00. Qual foi o fluxo de caixa líquido?"
+answer = "−R$ 3.000,00"
+wrong = ["−R$ 500,00", "−R$ 4.500,00", "R$ 43.000,00"]
+explanation = "Fluxo de caixa líquido = entradas − saídas.\nR$ 20.000,00 − R$ 23.000,00 = −R$ 3.000,00: saiu mais dinheiro do que entrou."
+
+[[questions]]
+id = "N1-07"
+level = 1
+topic = "Fluxo de caixa"
+item = "Fábrica de sorvetes"
+question = "Uma fábrica de sorvetes recebeu R$ 25.000,00 em janeiro e teve R$ 16.000,00 de saídas. Qual foi o fluxo de caixa líquido?"
+answer = "R$ 9.000,00"
+wrong = ["R$ 41.000,00", "R$ 7.500,00", "R$ 11.500,00"]
+explanation = "Fluxo de caixa líquido = entradas − saídas.\nR$ 25.000,00 − R$ 16.000,00 = R$ 9.000,00."
+
+[[questions]]
+id = "N1-08"
+level = 1
+topic = "Fluxo de caixa"
+item = "Gráfica"
+question = "Uma gráfica recebeu R$ 14.500,00 por impressões e pagou R$ 3.500,00 em papel e tinta. Qual foi o fluxo de caixa líquido?"
+answer = "R$ 11.000,00"
+wrong = ["R$ 18.000,00", "R$ 13.500,00", "R$ 9.500,00"]
+explanation = "Fluxo de caixa líquido = entradas − saídas.\nR$ 14.500,00 − R$ 3.500,00 = R$ 11.000,00."
+
+[[questions]]
+id = "N1-09"
+level = 1
+topic = "Fluxo de caixa"
+item = "Fábrica de calçados"
+question = "Uma fábrica de calçados teve entradas de R$ 32.000,00 e saídas de R$ 24.000,00 no trimestre. Qual foi o fluxo de caixa líquido?"
+answer = "R$ 8.000,00"
+wrong = ["R$ 10.500,00", "R$ 6.500,00", "R$ 56.000,00"]
+explanation = "Fluxo de caixa líquido = entradas − saídas.\nR$ 32.000,00 − R$ 24.000,00 = R$ 8.000,00."
+
+[[questions]]
+id = "N1-10"
+level = 1
+topic = "Fluxo de caixa"
+item = "Laticínio"
+question = "Um laticínio recebeu R$ 45.000,00 pela venda de queijos e pagou R$ 37.500,00 no mês. Qual foi o fluxo de caixa líquido?"
+answer = "R$ 7.500,00"
+wrong = ["R$ 82.500,00", "R$ 6.000,00", "R$ 10.000,00"]
+explanation = "Fluxo de caixa líquido = entradas − saídas.\nR$ 45.000,00 − R$ 37.500,00 = R$ 7.500,00."
+
+# ----------------------------------------------------------------------
+# Nível 1 — Custos industriais
+
+[[questions]]
+id = "N1-11"
+level = 1
+topic = "Custos industriais"
+item = "Fábrica de sabonetes"
+question = "Uma fábrica de sabonetes tem custo fixo mensal de R$ 12.000,00 (aluguel e salários) e custo variável total de R$ 8.000,00 (matéria-prima). Qual é o custo total do mês?"
+answer = "R$ 20.000,00"
+wrong = ["R$ 18.500,00", "R$ 4.000,00", "R$ 22.000,00"]
+explanation = "Custo total = custo fixo + custo variável.\nR$ 12.000,00 + R$ 8.000,00 = R$ 20.000,00."
+
+[[questions]]
+id = "N1-12"
+level = 1
+topic = "Custos industriais"
+item = "Fábrica de garrafas"
+question = "Uma fábrica de garrafas teve custo variável total de R$ 11.000,00 para produzir 2.000 garrafas. Qual é o custo variável por garrafa?"
+answer = "R$ 5,50"
+wrong = ["R$ 7,50", "R$ 2,75", "R$ 10,50"]
+explanation = "Custo variável por garrafa = custo variável total ÷ quantidade.\nR$ 11.000,00 ÷ 2.000 = R$ 5,50."
+
+[[questions]]
+id = "N1-13"
+level = 1
+topic = "Custos industriais"
+item = "Tecelagem"
+question = "Uma tecelagem tem custo fixo de R$ 25.000,00 e custo variável total de R$ 16.000,00 no mês. Qual é o custo total?"
+answer = "R$ 41.000,00"
+wrong = ["R$ 9.000,00", "R$ 43.000,00", "R$ 39.500,00"]
+explanation = "Custo total = custo fixo + custo variável.\nR$ 25.000,00 + R$ 16.000,00 = R$ 41.000,00."
+
+[[questions]]
+id = "N1-14"
+level = 1
+topic = "Custos industriais"
+item = "Fábrica de parafusos"
+question = "Uma fábrica de parafusos teve custo variável total de R$ 6.500,00 para produzir 2.500 pacotes. Qual é o custo variável por pacote?"
+answer = "R$ 2,60"
+wrong = ["R$ 1,30", "R$ 7,60", "R$ 4,60"]
+explanation = "Custo variável por pacote = custo variável total ÷ quantidade.\nR$ 6.500,00 ÷ 2.500 = R$ 2,60."
+
+[[questions]]
+id = "N1-15"
+level = 1
+topic = "Custos industriais"
+item = "Fábrica de bicicletas"
+question = "Uma fábrica de bicicletas tem custo fixo de R$ 32.000,00 e custo variável total de R$ 24.000,00 no mês. Qual é o custo total?"
+answer = "R$ 56.000,00"
+wrong = ["R$ 58.000,00", "R$ 54.500,00", "R$ 8.000,00"]
+explanation = "Custo total = custo fixo + custo variável.\nR$ 32.000,00 + R$ 24.000,00 = R$ 56.000,00."
+
+[[questions]]
+id = "N1-16"
+level = 1
+topic = "Custos industriais"
+item = "Fábrica de brinquedos"
+question = "Uma fábrica de brinquedos teve custo variável total de R$ 9.500,00 para produzir 1.500 peças. Qual é o custo variável por peça, aproximadamente?"
+answer = "R$ 6,33"
+wrong = ["R$ 11,33", "R$ 3,17", "R$ 8,33"]
+explanation = "Custo variável por peça = custo variável total ÷ quantidade.\nR$ 9.500,00 ÷ 1.500 ≈ R$ 6,33."
+
+[[questions]]
+id = "N1-17"
+level = 1
+topic = "Custos industriais"
+item = "Indústria de alimentos"
+question = "Uma indústria de alimentos tem custo fixo de R$ 42.000,00 e custo variável total de R$ 30.000,00 no mês. Qual é o custo total?"
+answer = "R$ 72.000,00"
+wrong = ["R$ 12.000,00", "R$ 70.500,00", "R$ 74.000,00"]
+explanation = "Custo total = custo fixo + custo variável.\nR$ 42.000,00 + R$ 30.000,00 = R$ 72.000,00."
+
+[[questions]]
+id = "N1-18"
+level = 1
+topic = "Custos industriais"
+item = "Fábrica de mochilas"
+question = "Uma fábrica de mochilas teve custo variável total de R$ 18.000,00 para produzir 500 mochilas. Qual é o custo variável por mochila?"
+answer = "R$ 36,00"
+wrong = ["R$ 18,00", "R$ 41,00", "R$ 38,00"]
+explanation = "Custo variável por mochila = custo variável total ÷ quantidade.\nR$ 18.000,00 ÷ 500 = R$ 36,00."
+
+[[questions]]
+id = "N1-19"
+level = 1
+topic = "Custos industriais"
+item = "Usina de reciclagem"
+question = "Uma usina de reciclagem tem custo fixo de R$ 36.000,00 e custo variável total de R$ 22.500,00 no mês. Qual é o custo total?"
+answer = "R$ 58.500,00"
+wrong = ["R$ 13.500,00", "R$ 60.500,00", "R$ 57.000,00"]
+explanation = "Custo total = custo fixo + custo variável.\nR$ 36.000,00 + R$ 22.500,00 = R$ 58.500,00."
+
+[[questions]]
+id = "N1-20"
+level = 1
+topic = "Custos industriais"
+item = "Fábrica de luminárias"
+question = "Uma fábrica de luminárias teve custo variável total de R$ 36.500,00 para produzir 1.000 luminárias. Qual é o custo variável por luminária?"
+answer = "R$ 36,50"
+wrong = ["R$ 41,50", "R$ 38,50", "R$ 18,25"]
+explanation = "Custo variável por luminária = custo variável total ÷ quantidade.\nR$ 36.500,00 ÷ 1.000 = R$ 36,50."
+
+# ----------------------------------------------------------------------
+# Nível 1 — Receita, lucro e margem
+
+[[questions]]
+id = "N1-21"
+level = 1
+topic = "Receita, lucro e margem"
+item = "Caneca personalizada"
+question = "Uma caneca personalizada é vendida por R$ 100,00 e custa R$ 60,00 para ser produzida. Qual é a margem de lucro sobre o preço de venda?"
+answer = "40%"
+wrong = ["45%", "60%", "30%"]
+explanation = "Lucro: R$ 100,00 − R$ 60,00 = R$ 40,00.\nMargem = lucro ÷ preço de venda = R$ 40,00 ÷ R$ 100,00 = 40%."
+
+[[questions]]
+id = "N1-22"
+level = 1
+topic = "Receita, lucro e margem"
+item = "Ventilador"
+question = "Um ventilador é vendido por R$ 250,00 e custa R$ 175,00 para ser produzido. Qual é o lucro por unidade?"
+answer = "R$ 75,00"
+wrong = ["R$ 425,00", "R$ 65,00", "R$ 85,00"]
+explanation = "Lucro por unidade = preço de venda − custo.\nR$ 250,00 − R$ 175,00 = R$ 75,00."
+
+[[questions]]
+id = "N1-23"
+level = 1
+topic = "Receita, lucro e margem"
+item = "Cadeira de escritório"
+question = "Uma cadeira de escritório é vendida por R$ 400,00 e custa R$ 280,00 para ser produzida. Qual é o lucro por unidade?"
+answer = "R$ 120,00"
+wrong = ["R$ 680,00", "R$ 110,00", "R$ 130,00"]
+explanation = "Lucro por unidade = preço de venda − custo.\nR$ 400,00 − R$ 280,00 = R$ 120,00."
+
+[[questions]]
+id = "N1-24"
+level = 1
+topic = "Receita, lucro e margem"
+item = "Bicicleta"
+question = "Uma bicicleta é vendida por R$ 800,00 e custa R$ 600,00 para ser produzida. Qual é a margem de lucro sobre o preço de venda?"
+answer = "25%"
+wrong = ["75%", "30%", "15%"]
+explanation = "Lucro: R$ 800,00 − R$ 600,00 = R$ 200,00.\nMargem = lucro ÷ preço de venda = R$ 200,00 ÷ R$ 800,00 = 25%."
+
+[[questions]]
+id = "N1-25"
+level = 1
+topic = "Receita, lucro e margem"
+item = "Geladeira compacta"
+question = "Uma geladeira compacta é vendida por R$ 1.200,00 e custa R$ 900,00 para ser produzida. Qual é o lucro por unidade?"
+answer = "R$ 300,00"
+wrong = ["R$ 290,00", "R$ 2.100,00", "R$ 310,00"]
+explanation = "Lucro por unidade = preço de venda − custo.\nR$ 1.200,00 − R$ 900,00 = R$ 300,00."
+
+[[questions]]
+id = "N1-26"
+level = 1
+topic = "Receita, lucro e margem"
+item = "Par de tênis"
+question = "Um par de tênis é vendido por R$ 150,00 e custa R$ 90,00 para ser produzido. Qual é o lucro por par?"
+answer = "R$ 60,00"
+wrong = ["R$ 240,00", "R$ 50,00", "R$ 70,00"]
+explanation = "Lucro por unidade = preço de venda − custo.\nR$ 150,00 − R$ 90,00 = R$ 60,00."
+
+[[questions]]
+id = "N1-27"
+level = 1
+topic = "Receita, lucro e margem"
+item = "Forno elétrico"
+question = "Um forno elétrico é vendido por R$ 500,00 e custa R$ 350,00 para ser produzido. Qual é a margem de lucro sobre o preço de venda?"
+answer = "30%"
+wrong = ["20%", "35%", "70%"]
+explanation = "Lucro: R$ 500,00 − R$ 350,00 = R$ 150,00.\nMargem = lucro ÷ preço de venda = R$ 150,00 ÷ R$ 500,00 = 30%."
+
+[[questions]]
+id = "N1-28"
+level = 1
+topic = "Receita, lucro e margem"
+item = "Motor elétrico"
+question = "Um motor elétrico industrial é vendido por R$ 2.000,00 e custa R$ 1.500,00 para ser produzido. Qual é o lucro por unidade?"
+answer = "R$ 500,00"
+wrong = ["R$ 490,00", "R$ 510,00", "R$ 3.500,00"]
+explanation = "Lucro por unidade = preço de venda − custo.\nR$ 2.000,00 − R$ 1.500,00 = R$ 500,00."
+
+[[questions]]
+id = "N1-29"
+level = 1
+topic = "Receita, lucro e margem"
+item = "Garrafa térmica"
+question = "Uma garrafa térmica é vendida por R$ 75,00 e custa R$ 45,00 para ser produzida. Qual é o lucro por unidade?"
+answer = "R$ 30,00"
+wrong = ["R$ 40,00", "R$ 20,00", "R$ 120,00"]
+explanation = "Lucro por unidade = preço de venda − custo.\nR$ 75,00 − R$ 45,00 = R$ 30,00."
+
+[[questions]]
+id = "N1-30"
+level = 1
+topic = "Receita, lucro e margem"
+item = "Painel de controle"
+question = "Um painel de controle é vendido por R$ 1.000,00 e custa R$ 700,00 para ser produzido. Qual é a margem de lucro sobre o preço de venda?"
+answer = "30%"
+wrong = ["20%", "70%", "35%"]
+explanation = "Lucro: R$ 1.000,00 − R$ 700,00 = R$ 300,00.\nMargem = lucro ÷ preço de venda = R$ 300,00 ÷ R$ 1.000,00 = 30%."
+
+# ----------------------------------------------------------------------
+# Nível 1 — Porcentagens e juros
+
+[[questions]]
+id = "N1-31"
+level = 1
+topic = "Porcentagens e juros"
+item = "Peça de reposição"
+question = "Uma peça de reposição custa R$ 200,00 e recebe desconto de 10%. Qual é o preço final?"
+answer = "R$ 180,00"
+wrong = ["R$ 170,00", "R$ 220,00", "R$ 190,00"]
+explanation = "Desconto: 10% de R$ 200,00 = R$ 20,00.\nPreço final: R$ 200,00 − R$ 20,00 = R$ 180,00."
+
+[[questions]]
+id = "N1-32"
+level = 1
+topic = "Porcentagens e juros"
+item = "Matéria-prima"
+question = "Uma matéria-prima custava R$ 400,00 e teve aumento de 15%. Qual é o novo preço?"
+answer = "R$ 460,00"
+wrong = ["R$ 485,00", "R$ 415,00", "R$ 440,00"]
+explanation = "Aumento: 15% de R$ 400,00 = R$ 60,00.\nNovo valor: R$ 400,00 + R$ 60,00 = R$ 460,00."
+
+[[questions]]
+id = "N1-33"
+level = 1
+topic = "Porcentagens e juros"
+item = "Máquina de costura"
+question = "Uma máquina de costura industrial custa R$ 2.000,00 e recebe desconto de 20% à vista. Quanto será pago?"
+answer = "R$ 1.600,00"
+wrong = ["R$ 1.400,00", "R$ 1.800,00", "R$ 2.000,00"]
+explanation = "Desconto: 20% de R$ 2.000,00 = R$ 400,00.\nPreço final: R$ 2.000,00 − R$ 400,00 = R$ 1.600,00."
+
+[[questions]]
+id = "N1-34"
+level = 1
+topic = "Porcentagens e juros"
+item = "Compra a prazo"
+question = "Uma compra de R$ 800,00 em peças tem acréscimo de 5% para pagamento a prazo. Qual é o total?"
+answer = "R$ 840,00"
+wrong = ["R$ 880,00", "R$ 805,00", "R$ 820,00"]
+explanation = "Aumento: 5% de R$ 800,00 = R$ 40,00.\nNovo valor: R$ 800,00 + R$ 40,00 = R$ 840,00."
+
+[[questions]]
+id = "N1-35"
+level = 1
+topic = "Porcentagens e juros"
+item = "Aplicação do caixa"
+question = "A fábrica aplica R$ 1.000,00 do caixa a juros simples de 10% ao ano por 2 anos. Qual é o montante no fim?"
+answer = "R$ 1.200,00"
+wrong = ["R$ 1.300,00", "R$ 1.210,00", "R$ 1.100,00"]
+explanation = "Juros simples: 10% de R$ 1.000,00 = R$ 100,00 por ano × 2 anos = R$ 200,00.\nMontante: R$ 1.000,00 + R$ 200,00 = R$ 1.200,00."
+
+[[questions]]
+id = "N1-36"
+level = 1
+topic = "Porcentagens e juros"
+item = "Empréstimo"
+question = "Uma oficina pega um empréstimo de R$ 2.000,00 a juros simples de 5% ao ano por 3 anos. Quanto pagará ao final?"
+answer = "R$ 2.300,00"
+wrong = ["R$ 2.320,00", "R$ 2.600,00", "R$ 2.150,00"]
+explanation = "Juros simples: 5% de R$ 2.000,00 = R$ 100,00 por ano × 3 anos = R$ 300,00.\nMontante: R$ 2.000,00 + R$ 300,00 = R$ 2.300,00."
+
+[[questions]]
+id = "N1-37"
+level = 1
+topic = "Porcentagens e juros"
+item = "Lote de embalagens"
+question = "Um lote de embalagens de R$ 600,00 tem desconto de 25%. Qual é o preço final?"
+answer = "R$ 450,00"
+wrong = ["R$ 500,00", "R$ 400,00", "R$ 475,00"]
+explanation = "Desconto: 25% de R$ 600,00 = R$ 150,00.\nPreço final: R$ 600,00 − R$ 150,00 = R$ 450,00."
+
+[[questions]]
+id = "N1-38"
+level = 1
+topic = "Porcentagens e juros"
+item = "Conta de energia"
+question = "A conta de energia da fábrica era R$ 1.500,00 e aumentou 8%. Qual é o novo valor?"
+answer = "R$ 1.620,00"
+wrong = ["R$ 1.700,00", "R$ 1.580,00", "R$ 1.608,00"]
+explanation = "Aumento: 8% de R$ 1.500,00 = R$ 120,00.\nNovo valor: R$ 1.500,00 + R$ 120,00 = R$ 1.620,00."
+
+[[questions]]
+id = "N1-39"
+level = 1
+topic = "Porcentagens e juros"
+item = "Reserva da empresa"
+question = "Uma empresa aplica R$ 3.000,00 a juros simples de 4% ao ano durante 2 anos. Qual é o montante?"
+answer = "R$ 3.240,00"
+wrong = ["R$ 3.300,00", "R$ 3.480,00", "R$ 3.120,00"]
+explanation = "Juros simples: 4% de R$ 3.000,00 = R$ 120,00 por ano × 2 anos = R$ 240,00.\nMontante: R$ 3.000,00 + R$ 240,00 = R$ 3.240,00."
+
+[[questions]]
+id = "N1-40"
+level = 1
+topic = "Porcentagens e juros"
+item = "Ferramenta"
+question = "Uma ferramenta custava R$ 250,00 e teve aumento de 12%. Qual é o novo preço?"
+answer = "R$ 280,00"
+wrong = ["R$ 275,00", "R$ 262,00", "R$ 300,00"]
+explanation = "Aumento: 12% de R$ 250,00 = R$ 30,00.\nNovo valor: R$ 250,00 + R$ 30,00 = R$ 280,00."
+
+# ----------------------------------------------------------------------
+# Nível 2 — Payback
+
+[[questions]]
+id = "N2-01"
+level = 2
+topic = "Payback"
+item = "Prensa hidráulica"
+question = "Uma metalúrgica compra uma prensa hidráulica por R$ 24.000,00, que gera retorno líquido de R$ 2.000,00 por mês. Qual é o payback simples?"
+answer = "12 meses"
+wrong = ["14 meses", "16 meses", "10 meses"]
+explanation = "Payback = investimento ÷ retorno por mês.\nR$ 24.000,00 ÷ R$ 2.000,00 = 12 meses."
+
+[[questions]]
+id = "N2-02"
+level = 2
+topic = "Payback"
+item = "Robô de solda"
+question = "Um robô de solda custa R$ 48.000,00 e gera retorno líquido de R$ 3.000,00 por mês. Qual é o payback simples?"
+answer = "16 meses"
+wrong = ["20 meses", "14 meses", "18 meses"]
+explanation = "Payback = investimento ÷ retorno por mês.\nR$ 48.000,00 ÷ R$ 3.000,00 = 16 meses."
+
+[[questions]]
+id = "N2-03"
+level = 2
+topic = "Payback"
+item = "Esteira automática"
+question = "Uma esteira automática custa R$ 70.000,00 e gera retorno líquido de R$ 5.000,00 por mês. Qual é o payback simples?"
+answer = "14 meses"
+wrong = ["12 meses", "16 meses", "10 meses"]
+explanation = "Payback = investimento ÷ retorno por mês.\nR$ 70.000,00 ÷ R$ 5.000,00 = 14 meses."
+
+[[questions]]
+id = "N2-04"
+level = 2
+topic = "Payback"
+item = "Compressor"
+question = "Um compressor mais econômico custa R$ 18.000,00 e gera retorno líquido de R$ 1.500,00 por mês. Qual é o payback simples?"
+answer = "12 meses"
+wrong = ["16 meses", "14 meses", "10 meses"]
+explanation = "Payback = investimento ÷ retorno por mês.\nR$ 18.000,00 ÷ R$ 1.500,00 = 12 meses."
+
+[[questions]]
+id = "N2-05"
+level = 2
+topic = "Payback"
+item = "Forno industrial"
+question = "Uma padaria industrial investe R$ 36.000,00 em um forno que gera retorno líquido de R$ 4.500,00 por mês. Qual é o payback simples?"
+answer = "8 meses"
+wrong = ["6 meses", "12 meses", "10 meses"]
+explanation = "Payback = investimento ÷ retorno por mês.\nR$ 36.000,00 ÷ R$ 4.500,00 = 8 meses."
+
+[[questions]]
+id = "N2-06"
+level = 2
+topic = "Payback"
+item = "Energia solar"
+question = "Placas solares para o galpão custam R$ 62.500,00 e economizam R$ 6.250,00 por mês. Qual é o payback simples?"
+answer = "10 meses"
+wrong = ["16 meses", "12 meses", "14 meses"]
+explanation = "Payback = investimento ÷ retorno por mês.\nR$ 62.500,00 ÷ R$ 6.250,00 = 10 meses."
+
+[[questions]]
+id = "N2-07"
+level = 2
+topic = "Payback"
+item = "Software de gestão"
+question = "Um software de gestão da produção custa R$ 30.000,00 e gera retorno líquido de R$ 2.500,00 por mês. Qual é o payback simples?"
+answer = "12 meses"
+wrong = ["14 meses", "16 meses", "10 meses"]
+explanation = "Payback = investimento ÷ retorno por mês.\nR$ 30.000,00 ÷ R$ 2.500,00 = 12 meses."
+
+[[questions]]
+id = "N2-08"
+level = 2
+topic = "Payback"
+item = "Empilhadeira"
+question = "Uma empilhadeira elétrica custa R$ 56.000,00 e gera retorno líquido de R$ 3.500,00 por mês. Qual é o payback simples?"
+answer = "16 meses"
+wrong = ["10 meses", "14 meses", "12 meses"]
+explanation = "Payback = investimento ÷ retorno por mês.\nR$ 56.000,00 ÷ R$ 3.500,00 = 16 meses."
+
+[[questions]]
+id = "N2-09"
+level = 2
+topic = "Payback"
+item = "Cortadora a laser"
+question = "Uma cortadora a laser custa R$ 54.000,00 e gera retorno líquido de R$ 4.500,00 por mês. Qual é o payback simples?"
+answer = "12 meses"
+wrong = ["16 meses", "14 meses", "10 meses"]
+explanation = "Payback = investimento ÷ retorno por mês.\nR$ 54.000,00 ÷ R$ 4.500,00 = 12 meses."
+
+[[questions]]
+id = "N2-10"
+level = 2
+topic = "Payback"
+item = "Iluminação LED"
+question = "Trocar a iluminação da fábrica por LED custa R$ 16.000,00 e economiza R$ 2.000,00 por mês. Qual é o payback simples?"
+answer = "8 meses"
+wrong = ["6 meses", "10 meses", "12 meses"]
+explanation = "Payback = investimento ÷ retorno por mês.\nR$ 16.000,00 ÷ R$ 2.000,00 = 8 meses."
+
+# ----------------------------------------------------------------------
+# Nível 2 — VPL
+
+[[questions]]
+id = "N2-11"
+level = 2
+topic = "VPL"
+item = "Melhoria na linha"
+question = "Uma melhoria na linha custa R$ 1.000,00 hoje e traz R$ 1.100,00 daqui a um ano. Com TMA de 10% ao ano, qual é o VPL?"
+answer = "R$ 0,00"
+wrong = ["R$ 100,00", "−R$ 100,00", "R$ 10,00"]
+explanation = "Valor de hoje da entrada: R$ 1.100,00 ÷ 1,10 = R$ 1.000,00.\nVPL = R$ 1.000,00 − R$ 1.000,00 = R$ 0,00: o projeto rende exatamente a TMA."
+
+[[questions]]
+id = "N2-12"
+level = 2
+topic = "VPL"
+item = "Molde novo"
+question = "Um molde novo custa R$ 1.000,00 hoje e gera R$ 1.200,00 daqui a um ano. Com TMA de 10% ao ano, qual é o VPL, aproximadamente?"
+answer = "R$ 90,91"
+wrong = ["R$ 190,91", "−R$ 9,09", "R$ 200,00"]
+explanation = "Valor de hoje da entrada: R$ 1.200,00 ÷ 1,10 ≈ R$ 1.090,91.\nVPL = R$ 1.090,91 − R$ 1.000,00 = R$ 90,91: o projeto rende mais que a TMA e vale a pena."
+
+[[questions]]
+id = "N2-13"
+level = 2
+topic = "VPL"
+item = "Sensor de qualidade"
+question = "Um sensor de qualidade custa R$ 2.000,00 e deve gerar R$ 2.420,00 de economia daqui a um ano. Com TMA de 10% ao ano, qual é o VPL?"
+answer = "R$ 200,00"
+wrong = ["R$ 420,00", "R$ 400,00", "R$ 0,00"]
+explanation = "Valor de hoje da entrada: R$ 2.420,00 ÷ 1,10 = R$ 2.200,00.\nVPL = R$ 2.200,00 − R$ 2.000,00 = R$ 200,00: o projeto rende mais que a TMA e vale a pena."
+
+[[questions]]
+id = "N2-14"
+level = 2
+topic = "VPL"
+item = "Ferramenta nova"
+question = "Uma ferramenta nova custa R$ 1.000,00 e deve gerar R$ 990,00 daqui a um ano. Com TMA de 10% ao ano, qual é o VPL?"
+answer = "−R$ 100,00"
+wrong = ["R$ 0,00", "−R$ 10,00", "−R$ 200,00"]
+explanation = "Valor de hoje da entrada: R$ 990,00 ÷ 1,10 = R$ 900,00.\nVPL = R$ 900,00 − R$ 1.000,00 = −R$ 100,00: o projeto rende menos que a TMA e não vale a pena."
+
+[[questions]]
+id = "N2-15"
+level = 2
+topic = "VPL"
+item = "Ampliação do galpão"
+question = "Ampliar o galpão custa R$ 5.000,00 e traz R$ 6.000,00 daqui a um ano. Com TMA de 20% ao ano, qual é o VPL?"
+answer = "R$ 0,00"
+wrong = ["R$ 500,00", "−R$ 500,00", "R$ 1.000,00"]
+explanation = "Valor de hoje da entrada: R$ 6.000,00 ÷ 1,20 = R$ 5.000,00.\nVPL = R$ 5.000,00 − R$ 5.000,00 = R$ 0,00: o projeto rende exatamente a TMA."
+
+[[questions]]
+id = "N2-16"
+level = 2
+topic = "VPL"
+item = "Balança industrial"
+question = "Uma balança industrial custa R$ 3.000,00 e gera R$ 3.960,00 daqui a um ano. Com TMA de 10% ao ano, qual é o VPL?"
+answer = "R$ 600,00"
+wrong = ["R$ 900,00", "R$ 300,00", "R$ 960,00"]
+explanation = "Valor de hoje da entrada: R$ 3.960,00 ÷ 1,10 = R$ 3.600,00.\nVPL = R$ 3.600,00 − R$ 3.000,00 = R$ 600,00: o projeto rende mais que a TMA e vale a pena."
+
+[[questions]]
+id = "N2-17"
+level = 2
+topic = "VPL"
+item = "Máquina de embalar"
+question = "Uma máquina de embalar custa R$ 4.000,00 e gera R$ 4.840,00 daqui a um ano. Com TMA de 10% ao ano, qual é o VPL?"
+answer = "R$ 400,00"
+wrong = ["−R$ 400,00", "R$ 840,00", "R$ 0,00"]
+explanation = "Valor de hoje da entrada: R$ 4.840,00 ÷ 1,10 = R$ 4.400,00.\nVPL = R$ 4.400,00 − R$ 4.000,00 = R$ 400,00: o projeto rende mais que a TMA e vale a pena."
+
+[[questions]]
+id = "N2-18"
+level = 2
+topic = "VPL"
+item = "Treinamento da equipe"
+question = "Um treinamento da equipe custa R$ 2.500,00 e traz R$ 3.300,00 de ganho daqui a um ano. Com TMA de 10% ao ano, qual é o VPL?"
+answer = "R$ 500,00"
+wrong = ["R$ 800,00", "R$ 250,00", "R$ 750,00"]
+explanation = "Valor de hoje da entrada: R$ 3.300,00 ÷ 1,10 = R$ 3.000,00.\nVPL = R$ 3.000,00 − R$ 2.500,00 = R$ 500,00: o projeto rende mais que a TMA e vale a pena."
+
+[[questions]]
+id = "N2-19"
+level = 2
+topic = "VPL"
+item = "Impressora 3D"
+question = "Uma impressora 3D custa R$ 6.000,00 e gera R$ 7.260,00 com encomendas daqui a um ano. Com TMA de 10% ao ano, qual é o VPL?"
+answer = "R$ 600,00"
+wrong = ["R$ 1.260,00", "R$ 0,00", "−R$ 600,00"]
+explanation = "Valor de hoje da entrada: R$ 7.260,00 ÷ 1,10 = R$ 6.600,00.\nVPL = R$ 6.600,00 − R$ 6.000,00 = R$ 600,00: o projeto rende mais que a TMA e vale a pena."
+
+[[questions]]
+id = "N2-20"
+level = 2
+topic = "VPL"
+item = "Nova linha de produção"
+question = "Uma nova linha de produção custa R$ 10.000,00 e gera R$ 12.100,00 daqui a um ano. Com TMA de 10% ao ano, qual é o VPL?"
+answer = "R$ 1.000,00"
+wrong = ["R$ 0,00", "R$ 2.000,00", "R$ 2.100,00"]
+explanation = "Valor de hoje da entrada: R$ 12.100,00 ÷ 1,10 = R$ 11.000,00.\nVPL = R$ 11.000,00 − R$ 10.000,00 = R$ 1.000,00: o projeto rende mais que a TMA e vale a pena."
+
+# ----------------------------------------------------------------------
+# Nível 2 — TIR
+
+[[questions]]
+id = "N2-21"
+level = 2
+topic = "TIR"
+item = "Ferramenta de corte"
+question = "Uma oficina investe R$ 1.000,00 hoje em uma ferramenta de corte e recebe R$ 1.100,00 de volta daqui a um ano. Qual é a TIR, ao ano?"
+answer = "10%"
+wrong = ["15%", "5%", "20%"]
+explanation = "Com uma única entrada depois de 1 ano, a TIR é o quanto o dinheiro cresceu.\nR$ 1.100,00 ÷ R$ 1.000,00 = 1,10, ou seja, TIR = 10% ao ano."
+
+[[questions]]
+id = "N2-22"
+level = 2
+topic = "TIR"
+item = "Reforma de máquina"
+question = "Reformar uma máquina custa R$ 2.000,00 hoje e traz R$ 2.300,00 daqui a um ano. Qual é a TIR, ao ano?"
+answer = "15%"
+wrong = ["20%", "25%", "10%"]
+explanation = "Com uma única entrada depois de 1 ano, a TIR é o quanto o dinheiro cresceu.\nR$ 2.300,00 ÷ R$ 2.000,00 = 1,15, ou seja, TIR = 15% ao ano."
+
+[[questions]]
+id = "N2-23"
+level = 2
+topic = "TIR"
+item = "Lote de matéria-prima"
+question = "Uma fábrica compra R$ 5.000,00 em matéria-prima e, um ano depois, vende os produtos por R$ 6.000,00. Qual é a TIR, ao ano?"
+answer = "20%"
+wrong = ["15%", "30%", "25%"]
+explanation = "Com uma única entrada depois de 1 ano, a TIR é o quanto o dinheiro cresceu.\nR$ 6.000,00 ÷ R$ 5.000,00 = 1,20, ou seja, TIR = 20% ao ano."
+
+[[questions]]
+id = "N2-24"
+level = 2
+topic = "TIR"
+item = "Sistema de exaustão"
+question = "Um sistema de exaustão custa R$ 4.000,00 hoje e gera R$ 4.400,00 de economia daqui a um ano. Qual é a TIR, ao ano?"
+answer = "10%"
+wrong = ["20%", "5%", "15%"]
+explanation = "Com uma única entrada depois de 1 ano, a TIR é o quanto o dinheiro cresceu.\nR$ 4.400,00 ÷ R$ 4.000,00 = 1,10, ou seja, TIR = 10% ao ano."
+
+[[questions]]
+id = "N2-25"
+level = 2
+topic = "TIR"
+item = "Linha de montagem"
+question = "Ampliar uma linha de montagem custa R$ 10.000,00 hoje e traz R$ 12.500,00 daqui a um ano. Qual é a TIR, ao ano?"
+answer = "25%"
+wrong = ["35%", "20%", "30%"]
+explanation = "Com uma única entrada depois de 1 ano, a TIR é o quanto o dinheiro cresceu.\nR$ 12.500,00 ÷ R$ 10.000,00 = 1,25, ou seja, TIR = 25% ao ano."
+
+[[questions]]
+id = "N2-26"
+level = 2
+topic = "TIR"
+item = "Caldeira"
+question = "Trocar a caldeira custa R$ 8.000,00 hoje e gera R$ 8.800,00 de economia daqui a um ano. Qual é a TIR, ao ano?"
+answer = "10%"
+wrong = ["15%", "5%", "20%"]
+explanation = "Com uma única entrada depois de 1 ano, a TIR é o quanto o dinheiro cresceu.\nR$ 8.800,00 ÷ R$ 8.000,00 = 1,10, ou seja, TIR = 10% ao ano."
+
+[[questions]]
+id = "N2-27"
+level = 2
+topic = "TIR"
+item = "Estoque regulador"
+question = "Montar um estoque de peças custa R$ 3.000,00 hoje e rende R$ 3.450,00 daqui a um ano. Qual é a TIR, ao ano?"
+answer = "15%"
+wrong = ["25%", "20%", "10%"]
+explanation = "Com uma única entrada depois de 1 ano, a TIR é o quanto o dinheiro cresceu.\nR$ 3.450,00 ÷ R$ 3.000,00 = 1,15, ou seja, TIR = 15% ao ano."
+
+[[questions]]
+id = "N2-28"
+level = 2
+topic = "TIR"
+item = "Furadeira de bancada"
+question = "Uma furadeira de bancada custa R$ 6.000,00 hoje e gera R$ 7.200,00 daqui a um ano. Qual é a TIR, ao ano?"
+answer = "20%"
+wrong = ["15%", "30%", "25%"]
+explanation = "Com uma única entrada depois de 1 ano, a TIR é o quanto o dinheiro cresceu.\nR$ 7.200,00 ÷ R$ 6.000,00 = 1,20, ou seja, TIR = 20% ao ano."
+
+[[questions]]
+id = "N2-29"
+level = 2
+topic = "TIR"
+item = "Câmara fria"
+question = "Uma câmara fria custa R$ 2.500,00 hoje e gera R$ 3.000,00 daqui a um ano. Qual é a TIR, ao ano?"
+answer = "20%"
+wrong = ["30%", "15%", "25%"]
+explanation = "Com uma única entrada depois de 1 ano, a TIR é o quanto o dinheiro cresceu.\nR$ 3.000,00 ÷ R$ 2.500,00 = 1,20, ou seja, TIR = 20% ao ano."
+
+[[questions]]
+id = "N2-30"
+level = 2
+topic = "TIR"
+item = "Gerador"
+question = "Um gerador custa R$ 4.000,00 hoje e evita R$ 5.000,00 de prejuízo com quedas de energia daqui a um ano. Qual é a TIR, ao ano?"
+answer = "25%"
+wrong = ["35%", "30%", "20%"]
+explanation = "Com uma única entrada depois de 1 ano, a TIR é o quanto o dinheiro cresceu.\nR$ 5.000,00 ÷ R$ 4.000,00 = 1,25, ou seja, TIR = 25% ao ano."
+
+# ----------------------------------------------------------------------
+# Nível 2 — Decisões de investimento
+
+[[questions]]
+id = "N2-31"
+level = 2
+topic = "Decisões de investimento"
+item = "Escolha entre projetos"
+question = "Uma fábrica deve escolher entre dois projetos de mesmo risco. O projeto A tem VPL de R$ 8.000,00 e o B, de R$ 5.000,00. Qual cria mais valor?"
+answer = "Projeto A"
+wrong = ["Projeto B", "Os dois criam o mesmo valor", "Não dá para comparar VPLs"]
+explanation = "Com o mesmo risco, cria mais valor o projeto de maior VPL.\nR$ 8.000,00 (A) é maior que R$ 5.000,00 (B)."
+
+[[questions]]
+id = "N2-32"
+level = 2
+topic = "Decisões de investimento"
+item = "VPL positivo"
+question = "O VPL de um projeto, calculado com a TMA da empresa, deu positivo. O que isso indica?"
+answer = "Rende mais que a TMA"
+wrong = ["Se paga em menos de um ano", "Dá esse lucro todo ano", "A TIR é menor que a TMA"]
+explanation = "VPL positivo quer dizer que, descontadas pela TMA, as entradas valem hoje mais do que o investimento.\nO projeto rende mais que o mínimo exigido."
+
+[[questions]]
+id = "N2-33"
+level = 2
+topic = "Decisões de investimento"
+item = "TIR × TMA"
+question = "A TIR de um projeto é 18% ao ano e a TMA da empresa é 12% ao ano. Pela regra da TIR, o que fazer?"
+answer = "Aceitar: TIR maior que a TMA"
+wrong = ["Rejeitar: TIR maior que a TMA", "Aceitar só se a TIR = TMA", "Rejeitar: 6% é pouco"]
+explanation = "Regra da TIR: aceita-se o projeto quando a TIR é maior que a TMA.\n18% > 12%, então o projeto rende acima do mínimo exigido."
+
+[[questions]]
+id = "N2-34"
+level = 2
+topic = "Decisões de investimento"
+item = "VPL negativo"
+question = "O VPL de um projeto, calculado com a TMA da empresa, deu −R$ 2.000,00. Qual é a interpretação correta?"
+answer = "Rende menos que a TMA"
+wrong = ["Dá R$ 2.000,00 de prejuízo por ano", "Rende exatamente a TMA", "O payback é negativo"]
+explanation = "VPL negativo: descontadas pela TMA, as entradas valem hoje menos que o investimento.\nO projeto não paga o retorno mínimo; não quer dizer prejuízo de R$ 2.000,00 por ano."
+
+[[questions]]
+id = "N2-35"
+level = 2
+topic = "Decisões de investimento"
+item = "Duas máquinas"
+question = "Uma máquina custa R$ 20.000,00 e economiza R$ 4.000,00 por ano; outra custa R$ 25.000,00 e economiza R$ 6.000,00 por ano. O que mais é preciso saber antes de decidir?"
+answer = "Vida útil e manutenção"
+wrong = ["Nada: a mais cara é melhor", "Nada: a mais barata é melhor", "Só o preço à vista"]
+explanation = "Preço e economia anual não bastam: uma máquina que dura menos ou custa mais para manter pode render menos no total.\nPor isso se olha também a vida útil e os custos de operação e manutenção."
+
+[[questions]]
+id = "N2-36"
+level = 2
+topic = "Decisões de investimento"
+item = "Vidas úteis diferentes"
+question = "Uma fábrica compara dois investimentos: um dura 3 anos e o outro, 6 anos. Qual cuidado é importante?"
+answer = "Usar o mesmo horizonte"
+wrong = ["Comparar o VPL de cada um direto", "Escolher sempre o que dura mais", "Comparar só o preço de compra"]
+explanation = "VPLs de 3 e de 6 anos não se comparam direto.\nUsa-se o mesmo horizonte (repetindo o projeto mais curto) ou o valor anual equivalente."
+
+[[questions]]
+id = "N2-37"
+level = 2
+topic = "Decisões de investimento"
+item = "TMA"
+question = "A taxa mínima de atratividade (TMA) representa:"
+answer = "O retorno mínimo exigido"
+wrong = ["Os juros do financiamento", "O lucro do ano passado", "A TIR do projeto"]
+explanation = "A TMA é o mínimo que um investimento precisa render para valer a pena, em geral o que se ganharia em outra aplicação de risco parecido.\nA TIR é calculada; a TMA é escolhida pela empresa."
+
+[[questions]]
+id = "N2-38"
+level = 2
+topic = "Decisões de investimento"
+item = "Taxa de desconto"
+question = "Se a taxa de desconto aumenta e os fluxos futuros continuam iguais, o valor presente de uma entrada futura:"
+answer = "Diminui"
+wrong = ["Aumenta", "Fica igual", "Fica negativo"]
+explanation = "Valor presente = valor futuro ÷ (1 + taxa).\nCom a taxa maior, divide-se por um número maior e o valor de hoje fica menor."
+
+[[questions]]
+id = "N2-39"
+level = 2
+topic = "Decisões de investimento"
+item = "Financiamento"
+question = "Uma empresa vai financiar uma máquina. Além do preço, o que deve analisar?"
+answer = "Juros, tarifas e prazo"
+wrong = ["Só se a parcela cabe no caixa", "Só a taxa de juros anunciada", "Só o valor da entrada"]
+explanation = "Uma parcela que cabe no caixa pode esconder juros altos.\nO que importa é o custo total do financiamento: juros, tarifas, seguros e prazo (o CET)."
+
+[[questions]]
+id = "N2-40"
+level = 2
+topic = "Decisões de investimento"
+item = "Risco"
+question = "Ao comparar investimentos, por que é importante analisar o risco?"
+answer = "O futuro é incerto"
+wrong = ["Mais risco sempre rende mais", "Com pouco risco, o VPL é positivo", "Risco só importa em valores altos"]
+explanation = "Os fluxos de caixa futuros são estimativas e podem variar.\nAnalisar o risco mostra o quanto o resultado pode mudar; mais risco costuma exigir uma TMA maior."
+
+# ----------------------------------------------------------------------
+# Nível 3 — Ponto de equilíbrio
+
+[[questions]]
+id = "N3-01"
+level = 3
+topic = "Ponto de equilíbrio"
+item = "Fábrica de camisetas"
+question = "Uma fábrica de camisetas tem custos fixos de R$ 10.000,00 por mês. Cada camiseta é vendida por R$ 20,00 e tem custo variável de R$ 10,00. Quantas camisetas precisa vender para atingir o ponto de equilíbrio?"
+answer = "1.000 camisetas"
+wrong = ["900 camisetas", "1.100 camisetas", "500 camisetas"]
+explanation = "Cada camiseta deixa R$ 20,00 − R$ 10,00 = R$ 10,00 para pagar os custos fixos (margem de contribuição).\nPonto de equilíbrio = R$ 10.000,00 ÷ R$ 10,00 = 1.000 camisetas."
+
+[[questions]]
+id = "N3-02"
+level = 3
+topic = "Ponto de equilíbrio"
+item = "Fábrica de luminárias"
+question = "Uma fábrica de luminárias tem custos fixos de R$ 15.000,00 por mês. Cada luminária é vendida por R$ 50,00 e tem custo variável de R$ 20,00. Quantas luminárias precisa vender para atingir o ponto de equilíbrio?"
+answer = "500 luminárias"
+wrong = ["300 luminárias", "400 luminárias", "600 luminárias"]
+explanation = "Cada luminária deixa R$ 50,00 − R$ 20,00 = R$ 30,00 para pagar os custos fixos (margem de contribuição).\nPonto de equilíbrio = R$ 15.000,00 ÷ R$ 30,00 = 500 luminárias."
+
+[[questions]]
+id = "N3-03"
+level = 3
+topic = "Ponto de equilíbrio"
+item = "Fábrica de geleias"
+question = "Uma fábrica de geleias tem custos fixos de R$ 10.800,00 por mês. Cada pote é vendido por R$ 30,00 e tem custo variável de R$ 18,00. Quantos potes precisa vender para atingir o ponto de equilíbrio?"
+answer = "900 potes"
+wrong = ["1.100 potes", "1.000 potes", "360 potes"]
+explanation = "Cada pote deixa R$ 30,00 − R$ 18,00 = R$ 12,00 para pagar os custos fixos (margem de contribuição).\nPonto de equilíbrio = R$ 10.800,00 ÷ R$ 12,00 = 900 potes."
+
+[[questions]]
+id = "N3-04"
+level = 3
+topic = "Ponto de equilíbrio"
+item = "Fábrica de caixas"
+question = "Uma fábrica de caixas tem custos fixos de R$ 8.000,00 por mês. Cada caixa é vendida por R$ 25,00 e tem custo variável de R$ 17,00. Quantas caixas precisa vender para atingir o ponto de equilíbrio?"
+answer = "1.000 caixas"
+wrong = ["320 caixas", "1.100 caixas", "900 caixas"]
+explanation = "Cada caixa deixa R$ 25,00 − R$ 17,00 = R$ 8,00 para pagar os custos fixos (margem de contribuição).\nPonto de equilíbrio = R$ 8.000,00 ÷ R$ 8,00 = 1.000 caixas."
+
+[[questions]]
+id = "N3-05"
+level = 3
+topic = "Ponto de equilíbrio"
+item = "Fábrica de cadeiras"
+question = "Uma fábrica de cadeiras tem custos fixos de R$ 20.000,00 por mês. Cada cadeira é vendida por R$ 80,00 e tem custo variável de R$ 55,00. Quantas cadeiras precisa vender para atingir o ponto de equilíbrio?"
+answer = "800 cadeiras"
+wrong = ["250 cadeiras", "900 cadeiras", "700 cadeiras"]
+explanation = "Cada cadeira deixa R$ 80,00 − R$ 55,00 = R$ 25,00 para pagar os custos fixos (margem de contribuição).\nPonto de equilíbrio = R$ 20.000,00 ÷ R$ 25,00 = 800 cadeiras."
+
+[[questions]]
+id = "N3-06"
+level = 3
+topic = "Ponto de equilíbrio"
+item = "Fábrica de mochilas"
+question = "Uma fábrica de mochilas tem custos fixos de R$ 18.000,00 por mês. Cada mochila é vendida por R$ 60,00 e tem custo variável de R$ 30,00. Quantas mochilas precisa vender para atingir o ponto de equilíbrio?"
+answer = "600 mochilas"
+wrong = ["300 mochilas", "700 mochilas", "500 mochilas"]
+explanation = "Cada mochila deixa R$ 60,00 − R$ 30,00 = R$ 30,00 para pagar os custos fixos (margem de contribuição).\nPonto de equilíbrio = R$ 18.000,00 ÷ R$ 30,00 = 600 mochilas."
+
+[[questions]]
+id = "N3-07"
+level = 3
+topic = "Ponto de equilíbrio"
+item = "Fábrica de ventiladores"
+question = "Uma fábrica de ventiladores tem custos fixos de R$ 9.000,00 por mês. Cada ventilador é vendido por R$ 40,00 e tem custo variável de R$ 25,00. Quantos ventiladores precisa vender para atingir o ponto de equilíbrio?"
+answer = "600 ventiladores"
+wrong = ["225 ventiladores", "500 ventiladores", "700 ventiladores"]
+explanation = "Cada ventilador deixa R$ 40,00 − R$ 25,00 = R$ 15,00 para pagar os custos fixos (margem de contribuição).\nPonto de equilíbrio = R$ 9.000,00 ÷ R$ 15,00 = 600 ventiladores."
+
+[[questions]]
+id = "N3-08"
+level = 3
+topic = "Ponto de equilíbrio"
+item = "Fábrica de bicicletas infantis"
+question = "Uma fábrica de bicicletas infantis tem custos fixos de R$ 24.000,00 por mês. Cada bicicleta é vendida por R$ 100,00 e tem custo variável de R$ 60,00. Quantas bicicletas precisa vender para atingir o ponto de equilíbrio?"
+answer = "600 bicicletas"
+wrong = ["700 bicicletas", "240 bicicletas", "500 bicicletas"]
+explanation = "Cada bicicleta deixa R$ 100,00 − R$ 60,00 = R$ 40,00 para pagar os custos fixos (margem de contribuição).\nPonto de equilíbrio = R$ 24.000,00 ÷ R$ 40,00 = 600 bicicletas."
+
+[[questions]]
+id = "N3-09"
+level = 3
+topic = "Ponto de equilíbrio"
+item = "Fábrica de garrafas térmicas"
+question = "Uma fábrica de garrafas térmicas tem custos fixos de R$ 15.400,00 por mês. Cada garrafa é vendida por R$ 45,00 e tem custo variável de R$ 31,00. Quantas garrafas precisa vender para atingir o ponto de equilíbrio?"
+answer = "1.100 garrafas"
+wrong = ["1.000 garrafas", "900 garrafas", "342 garrafas"]
+explanation = "Cada garrafa deixa R$ 45,00 − R$ 31,00 = R$ 14,00 para pagar os custos fixos (margem de contribuição).\nPonto de equilíbrio = R$ 15.400,00 ÷ R$ 14,00 = 1.100 garrafas."
+
+[[questions]]
+id = "N3-10"
+level = 3
+topic = "Ponto de equilíbrio"
+item = "Fábrica de capacetes"
+question = "Uma fábrica de capacetes tem custos fixos de R$ 27.000,00 por mês. Cada capacete é vendido por R$ 90,00 e tem custo variável de R$ 60,00. Quantos capacetes precisa vender para atingir o ponto de equilíbrio?"
+answer = "900 capacetes"
+wrong = ["1.100 capacetes", "1.000 capacetes", "300 capacetes"]
+explanation = "Cada capacete deixa R$ 90,00 − R$ 60,00 = R$ 30,00 para pagar os custos fixos (margem de contribuição).\nPonto de equilíbrio = R$ 27.000,00 ÷ R$ 30,00 = 900 capacetes."
+
+# ----------------------------------------------------------------------
+# Nível 3 — Produtividade e custo unitário
+
+[[questions]]
+id = "N3-11"
+level = 3
+topic = "Produtividade e custo unitário"
+item = "Linha de ventiladores"
+question = "Uma linha de montagem produziu 800 ventiladores com custo total de R$ 40.000,00. Qual foi o custo médio por ventilador?"
+answer = "R$ 50,00"
+wrong = ["R$ 52,00", "R$ 55,00", "R$ 25,00"]
+explanation = "Custo médio = custo total ÷ quantidade produzida.\nR$ 40.000,00 ÷ 800 = R$ 50,00."
+
+[[questions]]
+id = "N3-12"
+level = 3
+topic = "Produtividade e custo unitário"
+item = "Linha de cadeiras"
+question = "Uma linha produziu 1.000 cadeiras no mês com custo total de R$ 60.000,00. Qual foi o custo médio por cadeira?"
+answer = "R$ 60,00"
+wrong = ["R$ 62,00", "R$ 65,00", "R$ 30,00"]
+explanation = "Custo médio = custo total ÷ quantidade produzida.\nR$ 60.000,00 ÷ 1.000 = R$ 60,00."
+
+[[questions]]
+id = "N3-13"
+level = 3
+topic = "Produtividade e custo unitário"
+item = "Linha de mochilas"
+question = "Uma linha produziu 1.500 mochilas com custo total de R$ 97.500,00. Qual foi o custo médio por mochila?"
+answer = "R$ 65,00"
+wrong = ["R$ 60,00", "R$ 30,00", "R$ 62,00"]
+explanation = "Custo médio = custo total ÷ quantidade produzida.\nR$ 97.500,00 ÷ 1.500 = R$ 65,00."
+
+[[questions]]
+id = "N3-14"
+level = 3
+topic = "Produtividade e custo unitário"
+item = "Linha de luminárias"
+question = "Uma linha produziu 1.200 luminárias com custo total de R$ 72.000,00. Qual foi o custo médio por luminária?"
+answer = "R$ 60,00"
+wrong = ["R$ 30,00", "R$ 62,00", "R$ 65,00"]
+explanation = "Custo médio = custo total ÷ quantidade produzida.\nR$ 72.000,00 ÷ 1.200 = R$ 60,00."
+
+[[questions]]
+id = "N3-15"
+level = 3
+topic = "Produtividade e custo unitário"
+item = "Linha de capacetes"
+question = "Uma linha produziu 2.000 capacetes com custo total de R$ 100.000,00. Qual foi o custo médio por capacete?"
+answer = "R$ 50,00"
+wrong = ["R$ 55,00", "R$ 25,00", "R$ 52,00"]
+explanation = "Custo médio = custo total ÷ quantidade produzida.\nR$ 100.000,00 ÷ 2.000 = R$ 50,00."
+
+[[questions]]
+id = "N3-16"
+level = 3
+topic = "Produtividade e custo unitário"
+item = "Linha de botas"
+question = "Uma linha produziu 600 pares de botas com custo total de R$ 48.000,00. Qual foi o custo médio por par?"
+answer = "R$ 80,00"
+wrong = ["R$ 40,00", "R$ 82,00", "R$ 85,00"]
+explanation = "Custo médio = custo total ÷ quantidade produzida.\nR$ 48.000,00 ÷ 600 = R$ 80,00."
+
+[[questions]]
+id = "N3-17"
+level = 3
+topic = "Produtividade e custo unitário"
+item = "Linha de cafeteiras"
+question = "Uma linha produziu 1.400 cafeteiras com custo total de R$ 86.800,00. Qual foi o custo médio por cafeteira?"
+answer = "R$ 62,00"
+wrong = ["R$ 30,00", "R$ 65,00", "R$ 60,00"]
+explanation = "Custo médio = custo total ÷ quantidade produzida.\nR$ 86.800,00 ÷ 1.400 = R$ 62,00."
+
+[[questions]]
+id = "N3-18"
+level = 3
+topic = "Produtividade e custo unitário"
+item = "Linha de ferros de passar"
+question = "Uma linha produziu 2.500 ferros de passar com custo total de R$ 150.000,00. Qual foi o custo médio por unidade?"
+answer = "R$ 60,00"
+wrong = ["R$ 65,00", "R$ 62,00", "R$ 30,00"]
+explanation = "Custo médio = custo total ÷ quantidade produzida.\nR$ 150.000,00 ÷ 2.500 = R$ 60,00."
+
+[[questions]]
+id = "N3-19"
+level = 3
+topic = "Produtividade e custo unitário"
+item = "Linha de liquidificadores"
+question = "Uma linha produziu 1.100 liquidificadores com custo total de R$ 71.500,00. Qual foi o custo médio por liquidificador?"
+answer = "R$ 65,00"
+wrong = ["R$ 60,00", "R$ 62,00", "R$ 30,00"]
+explanation = "Custo médio = custo total ÷ quantidade produzida.\nR$ 71.500,00 ÷ 1.100 = R$ 65,00."
+
+[[questions]]
+id = "N3-20"
+level = 3
+topic = "Produtividade e custo unitário"
+item = "Linha de secadores"
+question = "Uma linha produziu 1.600 secadores de cabelo com custo total de R$ 99.200,00. Qual foi o custo médio por secador?"
+answer = "R$ 62,00"
+wrong = ["R$ 30,00", "R$ 60,00", "R$ 65,00"]
+explanation = "Custo médio = custo total ÷ quantidade produzida.\nR$ 99.200,00 ÷ 1.600 = R$ 62,00."
+
+# ----------------------------------------------------------------------
+# Nível 3 — Desperdício e eficiência
+
+[[questions]]
+id = "N3-21"
+level = 3
+topic = "Desperdício e eficiência"
+item = "Matéria-prima"
+question = "Uma fábrica usa 1.000 kg de matéria-prima por mês e reduz o desperdício de 10% para 5%. Quantos kg deixa de desperdiçar?"
+answer = "50 kg"
+wrong = ["25 kg", "100 kg", "150 kg"]
+explanation = "Antes: 10% de 1.000 kg = 100 kg. Depois: 5% de 1.000 kg = 50 kg.\nDeixa de desperdiçar 100 − 50 = 50 kg."
+
+[[questions]]
+id = "N3-22"
+level = 3
+topic = "Desperdício e eficiência"
+item = "Consumo de energia"
+question = "Uma máquina consome 500 kWh por mês. Após uma melhoria, o consumo cai 20%. Quantos kWh são economizados por mês?"
+answer = "100 kWh"
+wrong = ["80 kWh", "120 kWh", "50 kWh"]
+explanation = "20% de 500 kWh = 500 × 0,20 = 100 kWh por mês."
+
+[[questions]]
+id = "N3-23"
+level = 3
+topic = "Desperdício e eficiência"
+item = "Peças descartadas"
+question = "Uma fábrica descarta 80 peças por semana e reduz as perdas em 25%. Quantas peças deixa de descartar por semana?"
+answer = "20 peças"
+wrong = ["15 peças", "60 peças", "25 peças"]
+explanation = "25% de 80 peças = 80 ÷ 4 = 20 peças por semana."
+
+[[questions]]
+id = "N3-24"
+level = 3
+topic = "Desperdício e eficiência"
+item = "Conta de energia"
+question = "Uma operação gasta R$ 2.000,00 por mês com energia e reduz esse gasto em 15%. Qual é a economia mensal?"
+answer = "R$ 300,00"
+wrong = ["R$ 200,00", "R$ 350,00", "R$ 150,00"]
+explanation = "15% de R$ 2.000,00 = R$ 2.000,00 × 0,15 = R$ 300,00 por mês."
+
+[[questions]]
+id = "N3-25"
+level = 3
+topic = "Desperdício e eficiência"
+item = "Controle de qualidade"
+question = "Uma linha fabrica 2.000 unidades e 4% apresentam defeito. Quantas unidades defeituosas são esperadas?"
+answer = "80 unidades"
+wrong = ["60 unidades", "100 unidades", "40 unidades"]
+explanation = "4% de 2.000 = 2.000 × 0,04 = 80 unidades com defeito."
+
+[[questions]]
+id = "N3-26"
+level = 3
+topic = "Desperdício e eficiência"
+item = "Tempo de produção"
+question = "Uma melhoria reduz o tempo de produção de 10 para 8 minutos por peça. Qual é a redução percentual do tempo?"
+answer = "20%"
+wrong = ["25%", "10%", "15%"]
+explanation = "Redução: 10 − 8 = 2 minutos.\n2 ÷ 10 = 0,20 = 20% (compara-se com o tempo de antes)."
+
+[[questions]]
+id = "N3-27"
+level = 3
+topic = "Desperdício e eficiência"
+item = "Consumo de água"
+question = "Uma fábrica consome 1.200 litros de água por dia e reduz o consumo em 10%. Quanto economiza por dia?"
+answer = "120 litros"
+wrong = ["100 litros", "110 litros", "150 litros"]
+explanation = "10% de 1.200 litros = 1.200 ÷ 10 = 120 litros por dia."
+
+[[questions]]
+id = "N3-28"
+level = 3
+topic = "Desperdício e eficiência"
+item = "Desperdício de material"
+question = "O desperdício de material custa R$ 4.000,00 por mês. Uma ação reduz esse desperdício em 30%. Qual é a economia mensal?"
+answer = "R$ 1.200,00"
+wrong = ["R$ 900,00", "R$ 1.000,00", "R$ 1.400,00"]
+explanation = "30% de R$ 4.000,00 = R$ 4.000,00 × 0,30 = R$ 1.200,00 por mês."
+
+[[questions]]
+id = "N3-29"
+level = 3
+topic = "Desperdício e eficiência"
+item = "Produção por turno"
+question = "Uma máquina produzia 400 peças por turno e passou a produzir 500. Qual é o aumento percentual da produção?"
+answer = "25%"
+wrong = ["30%", "20%", "40%"]
+explanation = "Aumento: 500 − 400 = 100 peças.\n100 ÷ 400 = 0,25 = 25% (compara-se com a produção de antes)."
+
+[[questions]]
+id = "N3-30"
+level = 3
+topic = "Desperdício e eficiência"
+item = "Retrabalho"
+question = "Uma empresa reduziu o retrabalho de 200 para 150 peças por mês. Qual é a redução percentual?"
+answer = "25%"
+wrong = ["20%", "30%", "50%"]
+explanation = "Redução: 200 − 150 = 50 peças.\n50 ÷ 200 = 0,25 = 25%."
+
+# ----------------------------------------------------------------------
+# Nível 3 — Cenários e decisões de produção
+
+[[questions]]
+id = "N3-31"
+level = 3
+topic = "Cenários e decisões de produção"
+item = "Qual máquina se paga antes?"
+question = "Uma fábrica pode comprar uma máquina de R$ 40.000,00 que economiza R$ 10.000,00 por ano, ou outra de R$ 50.000,00 que economiza R$ 15.000,00 por ano. Pelo payback simples, qual se paga antes?"
+answer = "A de R$ 50.000,00"
+wrong = ["A de R$ 40.000,00", "As duas no mesmo prazo", "Não dá para calcular"]
+explanation = "R$ 40.000,00 ÷ R$ 10.000,00 = 4 anos.\nR$ 50.000,00 ÷ R$ 15.000,00 ≈ 3,3 anos: a mais cara se paga antes."
+
+[[questions]]
+id = "N3-32"
+level = 3
+topic = "Cenários e decisões de produção"
+item = "Produtividade"
+question = "Uma linha produz 1.000 peças em 8 horas. Qual é a produtividade média por hora?"
+answer = "125 peças/hora"
+wrong = ["100 peças/hora", "800 peças/hora", "120 peças/hora"]
+explanation = "Produtividade = produção ÷ tempo.\n1.000 peças ÷ 8 horas = 125 peças por hora."
+
+[[questions]]
+id = "N3-33"
+level = 3
+topic = "Cenários e decisões de produção"
+item = "Receita total"
+question = "Uma fábrica vende 500 unidades por R$ 30,00 cada. Qual é a receita total?"
+answer = "R$ 15.000,00"
+wrong = ["R$ 12.000,00", "R$ 18.000,00", "R$ 10.000,00"]
+explanation = "Receita = quantidade × preço.\n500 × R$ 30,00 = R$ 15.000,00."
+
+[[questions]]
+id = "N3-34"
+level = 3
+topic = "Cenários e decisões de produção"
+item = "Lucro do mês"
+question = "Uma fábrica teve receita de R$ 50.000,00 e custos totais de R$ 38.000,00 no mês. Qual foi o lucro?"
+answer = "R$ 12.000,00"
+wrong = ["R$ 8.000,00", "R$ 10.000,00", "R$ 88.000,00"]
+explanation = "Lucro = receita − custos totais.\nR$ 50.000,00 − R$ 38.000,00 = R$ 12.000,00."
+
+[[questions]]
+id = "N3-35"
+level = 3
+topic = "Cenários e decisões de produção"
+item = "Economia líquida"
+question = "Uma máquina custa R$ 30.000,00. A manutenção anual é de R$ 2.000,00 e a economia anual esperada é de R$ 10.000,00. Qual é a economia líquida anual?"
+answer = "R$ 8.000,00"
+wrong = ["R$ 12.000,00", "R$ 10.000,00", "R$ 2.000,00"]
+explanation = "Economia líquida = economia − manutenção.\nR$ 10.000,00 − R$ 2.000,00 = R$ 8.000,00 por ano (o preço da máquina entra no payback, não nessa conta)."
+
+[[questions]]
+id = "N3-36"
+level = 3
+topic = "Cenários e decisões de produção"
+item = "Capacidade produtiva"
+question = "Uma fábrica tem capacidade para produzir 2.000 unidades por mês e produz 1.500. Qual é a utilização da capacidade?"
+answer = "75%"
+wrong = ["80%", "70%", "65%"]
+explanation = "Utilização = produção ÷ capacidade.\n1.500 ÷ 2.000 = 0,75 = 75%."
+
+[[questions]]
+id = "N3-37"
+level = 3
+topic = "Cenários e decisões de produção"
+item = "Economia incerta"
+question = "Uma empresa estima economia de R$ 12.000,00 por ano com uma melhoria, mas esse valor pode variar. O que fazer antes de aprovar o projeto?"
+answer = "Testar cenários"
+wrong = ["Usar só a estimativa de R$ 12.000,00", "Aprovar logo: economia é sempre boa", "Esperar a economia para calcular"]
+explanation = "Quando o valor pode variar, testa-se o projeto em cenários (pessimista, provável e otimista).\nSe ele vale a pena até no pessimista, a decisão é mais segura."
+
+[[questions]]
+id = "N3-38"
+level = 3
+topic = "Cenários e decisões de produção"
+item = "Rendimento"
+question = "Um processo produz 900 unidades boas de um total de 1.000 fabricadas. Qual é o rendimento de peças boas?"
+answer = "90%"
+wrong = ["9%", "10%", "110%"]
+explanation = "Rendimento = peças boas ÷ total fabricado.\n900 ÷ 1.000 = 0,90 = 90%."
+
+[[questions]]
+id = "N3-39"
+level = 3
+topic = "Cenários e decisões de produção"
+item = "Payback de melhoria"
+question = "Uma melhoria custa R$ 6.000,00 e economiza R$ 1.000,00 por mês. Qual é o payback simples?"
+answer = "6 meses"
+wrong = ["5 meses", "7 meses", "12 meses"]
+explanation = "Payback = investimento ÷ economia por mês.\nR$ 6.000,00 ÷ R$ 1.000,00 = 6 meses."
+
+[[questions]]
+id = "N3-40"
+level = 3
+topic = "Cenários e decisões de produção"
+item = "Dois bons projetos"
+question = "Dois projetos têm VPL positivo e riscos parecidos, mas a fábrica só pode fazer um. O que ajuda a decidir?"
+answer = "Prazo, recursos e objetivos"
+wrong = ["Sempre o de maior TIR", "Sempre o mais barato", "Sorteio: os dois são bons"]
+explanation = "Com VPLs positivos e riscos parecidos, entram outros critérios: em quanto tempo o dinheiro volta, se há recursos (dinheiro, pessoas, espaço) e o que combina com os objetivos da fábrica.\nEscolher só pela maior TIR pode levar ao projeto de menor VPL."

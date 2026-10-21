@@ -10,7 +10,7 @@ import pytest
 
 from fakes import FakePage, walk
 from mente_financeira.core.coin_challenge import COIN_KIT
-from mente_financeira.core.engineering_challenge import ENGINEERING_KIT
+from mente_financeira.core.engineering_challenge import ENGINEERING_LEVEL_KITS
 from mente_financeira.core.memory_game import Mode
 from mente_financeira.storage import SettingsStore
 from mente_financeira.ui import style
@@ -90,7 +90,7 @@ def test_engineering_opens_its_own_game_and_level2(shell: GameShell) -> None:
     shell.play_memory(Mode.DUEL, ("Ana", "Bruno"))
     screen: MemoryScreen = shell.current  # type: ignore[assignment]
     assert {c.id for c in screen.game.cards} <= {c.id for c in shell.deck.concepts}
-    assert screen.challenges is ENGINEERING_KIT  # payback e VPL
+    assert screen.challenges is ENGINEERING_LEVEL_KITS[1]  # questões do Nível 1
     shell.open_level2()
     assert shell.current.session.track.id == "engenharia"  # type: ignore[attr-defined]
     # As outras trilhas continuam com o Nível 2 do Ensino Médio.

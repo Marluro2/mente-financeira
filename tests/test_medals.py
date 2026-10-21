@@ -13,7 +13,7 @@ import flet as ft
 import pytest
 
 from fakes import FakePage, started_shell, walk
-from mente_financeira.core import engineering_challenge
+from mente_financeira.core.engineering_challenge import ENGINEERING_LEVEL_KITS
 from mente_financeira.core.medals import BY_KEY, MEDALS, NPV_LABEL, TRACK_MEDALS, GameSummary, MedalBook, new_medals
 from mente_financeira.content.memory_deck import load_memory_deck
 from mente_financeira.core.memory_game import MemoryGame, Mode
@@ -76,8 +76,9 @@ def test_duel_goals_count_for_either_player_but_not_solo_ones() -> None:
 
 
 def test_npv_medal_comes_from_a_right_npv_challenge() -> None:
-    challenge = engineering_challenge._npv(random.Random(1))
-    assert challenge.label == NPV_LABEL
+    rng = random.Random(1)
+    labels = {ENGINEERING_LEVEL_KITS[2].make(rng).label for _ in range(40)}  # VPL é do Nível 2
+    assert NPV_LABEL in labels
     engineering = replace(BASE, track=tracks.ENGENHARIA, right_labels=frozenset({NPV_LABEL}))
     assert "primeiro_vpl" in _keys(engineering)
     assert "primeiro_vpl" not in _keys(replace(engineering, right_labels=frozenset({"PAYBACK"})))
