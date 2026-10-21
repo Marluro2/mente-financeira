@@ -47,6 +47,11 @@ jobs:
           flet build web --yes --no-rich-output
           --base-url "/${{ github.event.repository.name }}/"
 
+      - name: Sempre baixar a versão nova do jogo
+        # Sem isto, quem já tinha aberto o site via a versão antiga por alguns
+        # minutos depois de publicar (veja ferramentas/site_sem_cache.py).
+        run: python ferramentas/site_sem_cache.py build/web
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: build/web
