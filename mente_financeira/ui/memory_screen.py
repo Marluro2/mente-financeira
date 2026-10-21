@@ -28,13 +28,14 @@ SCROLL_DELAY_SECONDS = 0.6
 FLIP_MS = 260
 CONCEPT_PANEL_MIN_WIDTH = 420
 COMPACT_TIP_HEIGHT = 150
-LONG_OPTION = 18  # acima disso, a alternativa usa letra menor e quebra a linha
+LONG_OPTION = 12  # acima disso, a alternativa usa letra menor e quebra a linha (no celular, uma por linha)
 
 
 class OnlineSeat(Protocol):
     """Lugar desta tela numa partida online (o jogo é compartilhado)."""
 
     seat: int  # 0 ou 1: qual jogador da partida está nesta tela
+    title: str  # nível da sala ("Ensino Médio"), no lugar do "Nível 1"
 
     def changed(self) -> None:
         """Avisa a tela do adversário que o jogo mudou."""
@@ -208,8 +209,9 @@ class MemoryScreen:
 
     def _top_bar(self) -> ft.Control:
         mode_text = "Modo Solo" if self.game.mode is Mode.SOLO else "Modo Duelo"
+        subtitle = f"Nível {self.level_number} • {mode_text}"
         if self.online is not None:
-            mode_text = "Duelo em sala"
+            subtitle = f"{self.online.title} • Duelo em sala"
         # Em sala não há "nova partida": os dois precisariam concordar.
         restart = [] if self.online is not None else [
             ft.IconButton(ft.Icons.REPLAY_ROUNDED, icon_color=s.WHITE, tooltip="Nova partida", on_click=self._restart)
@@ -220,7 +222,7 @@ class MemoryScreen:
                 ft.Column(
                     [
                         s.gradient_text("MEMÓRIA FINANCEIRA", 18 if self.compact else 24, [s.YELLOW, s.PINK]),
-                        ft.Text(f"Nível {self.level_number} • {mode_text}", size=12, color=s.MUTED),
+                        ft.Text(subtitle, size=12, color=s.MUTED),
                     ],
                     spacing=0,
                     expand=True,

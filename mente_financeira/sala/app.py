@@ -17,18 +17,38 @@ from urllib.parse import parse_qs, urlparse
 import flet as ft
 
 from mente_financeira.content.memory_deck import load_memory_deck
+from mente_financeira.core import concept_challenge as concepts
+from mente_financeira.core.percent_challenge import ChallengeKit
 from mente_financeira.sala.ranking import DUEL, FairRanking
 from mente_financeira.sala.salas import NICKNAME_MAX, Lobby, Match, NicknameError, Room, RoomError, normalize_code
 from mente_financeira.storage import Settings, SettingsStore
 from mente_financeira.sugestoes import Suggestion
 from mente_financeira.ui import style as s
 from mente_financeira.ui.memory_screen import MemoryScreen
-from mente_financeira.ui.shell import MEMORY_TRACKS
 from mente_financeira.ui.sounds import SoundEffects
 from mente_financeira.ui.suggestion_form import SuggestionForm, suggestion_button, suggestion_qr
-from mente_financeira.ui.tracks import FUNDAMENTAL, TRACKS
 
-ROOM_TRACKS = tuple(t for t in TRACKS if t.key in MEMORY_TRACKS)
+
+@dataclass(frozen=True, slots=True)
+class DuelLevel:
+    """Nível do Duelo online: as cartas de um baralho e perguntas só de conceito."""
+
+    key: str
+    title: str
+    icon: ft.IconData
+    colors: tuple[str, str]
+    deck: str  # baralho da Memória (content/<deck>.toml)
+    challenges: ChallengeKit
+
+
+# Na feira o Duelo online é um protótipo: três níveis, perguntas simples e sem contas
+# (content/banco_duelo_online.toml). O jogo do site continua com as suas trilhas.
+DUEL_LEVELS: tuple[DuelLevel, ...] = (
+    DuelLevel("fundamental", "Ensino Fundamental", ft.Icons.TOYS_ROUNDED, (s.YELLOW, s.ORANGE), "memoria_fundamental1", concepts.CONCEPT_KITS[concepts.FUNDAMENTAL]),
+    DuelLevel("medio", "Ensino Médio", ft.Icons.MENU_BOOK_ROUNDED, (s.CYAN, "#6C63FF"), "memoria", concepts.CONCEPT_KITS[concepts.MEDIO]),
+    DuelLevel("superior", "Ensino Superior", ft.Icons.SCHOOL_ROUNDED, (s.GREEN, "#0B9486"), "memoria_engenharia", concepts.CONCEPT_KITS[concepts.SUPERIOR]),
+)
+LEVELS_BY_KEY = {level.key: level for level in DUEL_LEVELS}
 
 
 def player_topic(player_id: str) -> str:
@@ -42,7 +62,7 @@ def room_qr_path(code: str) -> str:
 
 
 def new_lobby() -> Lobby:
-    return Lobby([t.key for t in ROOM_TRACKS], lambda track: load_memory_deck(MEMORY_TRACKS[track][0]))
+    return Lobby([level.key for level in DUEL_LEVELS], lambda track: load_memory_deck(LEVELS_BY_KEY[track].deck))
 
 
 def code_from_route(route: str | None) -> str | None:
@@ -102,6 +122,10 @@ class Seat:
     seat: int
     match: Match = field(repr=False)
 
+    @property
+    def title(self) -> str:
+        return LEVELS_BY_KEY[self.match.track].title
+
     def changed(self) -> None:
         self.app.match_changed(self.match)
         self.app.tell_opponent(self.match, {"kind": "sync"})
@@ -125,7 +149,7 @@ class RoomApp:
         self.lobby = lobby
         self.messenger = messenger
         self.player_id = player_id
-        self.track = FUNDAMENTAL
+        self.track = DUEL_LEVELS[0].key
         self.nickname = ""
         self.code = code or ""  # veio do QR code da sala: é só entrar
         self.sounds = SoundEffects(page, SessionStore())
@@ -160,7 +184,7 @@ class RoomApp:
         """Partida terminada: os pontos dos dois entram no ranking da feira."""
 
         if self.ranking is not None and match.game.is_complete:
-            title = next(t.title for t in ROOM_TRACKS if t.key == match.track)
+            title = LEVELS_BY_KEY[match.track].title
             self.ranking.record(DUEL, match.id, zip((p.nickname for p in match.players), match.game.points), title)
 
     # ------------------------------------------------------------ saídas
@@ -235,7 +259,7 @@ class RoomApp:
             on_home=self.back_to_start,
             on_level2=self.back_to_start,
             sounds=self.sounds,
-            challenges=MEMORY_TRACKS[match.track][1],
+            challenges=LEVELS_BY_KEY[match.track].challenges,
             online=Seat(self, seat, match),
         )
         self.game_screen = screen
@@ -322,7 +346,7 @@ class RoomApp:
     def _heading(self, text: str) -> ft.Text:
         return ft.Text(text, size=18, weight=ft.FontWeight.W_900, color=s.WHITE)
 
-    def _track_tile(self, track: Any) -> ft.Container:
+    def _track_tile(self, track: DuelLevel) -> ft.Container:
         selected = track.key == self.track
         first, second = track.colors
         look: dict[str, Any] = (
@@ -362,7 +386,7 @@ class RoomApp:
         )
         create = [
             self._heading("Criar uma sala"),
-            *[self._track_tile(track) for track in ROOM_TRACKS],
+            *[self._track_tile(track) for track in DUEL_LEVELS],
             s.pill_button("CRIAR SALA", ft.Icons.ADD_ROUNDED, self._create, height=54),
         ]
         join = [
@@ -410,7 +434,7 @@ class RoomApp:
             SuggestionForm(self.page, self.on_suggestion).open()
 
     def _waiting_panel(self, room: Room) -> ft.Control:
-        track = next(t for t in ROOM_TRACKS if t.key == room.track)
+        track = LEVELS_BY_KEY[room.track]
         return self._panel(
             [
                 self._title(),

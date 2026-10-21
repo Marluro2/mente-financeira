@@ -14,14 +14,15 @@ from fastapi.testclient import TestClient
 
 from fakes import FakeHub, FakePage, walk
 from mente_financeira.content.memory_deck import load_memory_deck
-from mente_financeira.sala.app import RoomApp, SessionStore, code_from_route, new_lobby, room_qr_path
+from mente_financeira.sala.app import DUEL_LEVELS, LEVELS_BY_KEY, RoomApp, SessionStore, code_from_route, new_lobby, room_qr_path
 from mente_financeira.sala.ranking import DUEL, FairRanking
 from mente_financeira.sala.salas import ANIMALS, Lobby, NicknameError, RoomError, clean_nickname, normalize_code
 from mente_financeira.storage import Settings
 from mente_financeira.ui import memory_screen as memory_module
 from mente_financeira.ui.memory_screen import MemoryScreen
-from mente_financeira.ui.tracks import FUNDAMENTAL, FUNDAMENTAL_1, MEDIO
 import servidor_sala
+
+FUNDAMENTAL_LEVEL, MEDIO, SUPERIOR = (level.key for level in DUEL_LEVELS)
 
 
 @pytest.fixture(autouse=True)
@@ -102,24 +103,24 @@ def test_codes_are_easy_to_type() -> None:
 
 def test_create_and_join_a_room() -> None:
     lobby = _lobby()
-    room = lobby.create_room("a", "Ana", FUNDAMENTAL_1)
+    room = lobby.create_room("a", "Ana", MEDIO)
     word, number = room.code.split("-")
     assert word in ANIMALS and 10 <= int(number) <= 99
     match = lobby.join("b", "Bia", room.code.lower().replace("-", ""))
-    assert [p.nickname for p in match.players] == ["Ana", "Bia"] and match.track == FUNDAMENTAL_1
+    assert [p.nickname for p in match.players] == ["Ana", "Bia"] and match.track == MEDIO
     assert match.game.players == ["Ana", "Bia"] and match.game.active
     assert lobby.matches["a"] is lobby.matches["b"] is match and not lobby.rooms
-    ids = {c.id for c in load_memory_deck("memoria_fundamental1").concepts}
-    assert {c.id for c in match.game.cards} <= ids  # baralho da trilha de quem criou
+    ids = {c.id for c in load_memory_deck("memoria").concepts}
+    assert {c.id for c in match.game.cards} <= ids  # baralho do nível de quem criou
     with pytest.raises(RoomError):
         lobby.join("c", "Caio", room.code)  # a sala já começou
     with pytest.raises(ValueError):
-        lobby.create_room("d", "Duda", MEDIO)  # trilha ainda sem jogo
+        lobby.create_room("d", "Duda", "fundamental1")  # trilha do site, não é nível do Duelo online
 
 
 def test_wrong_code_and_own_room_are_refused() -> None:
     lobby = _lobby()
-    room = lobby.create_room("a", "Ana", FUNDAMENTAL)
+    room = lobby.create_room("a", "Ana", FUNDAMENTAL_LEVEL)
     with pytest.raises(RoomError, match="Não achei a sala"):
         lobby.join("b", "Bia", "ZEBRA-11" if room.code != "ZEBRA-11" else "PATO-12")
     with pytest.raises(RoomError, match="sua"):
@@ -128,13 +129,13 @@ def test_wrong_code_and_own_room_are_refused() -> None:
 
 def test_codes_do_not_repeat() -> None:
     lobby = _lobby()
-    codes = {lobby.create_room(str(i), "Jogador", FUNDAMENTAL).code for i in range(200)}
+    codes = {lobby.create_room(str(i), "Jogador", FUNDAMENTAL_LEVEL).code for i in range(200)}
     assert len(codes) == 200
 
 
 def test_leaving_forgets_the_player() -> None:
     lobby = _lobby()
-    room = lobby.create_room("a", "Ana", FUNDAMENTAL)
+    room = lobby.create_room("a", "Ana", FUNDAMENTAL_LEVEL)
     lobby.leave("a")
     assert not lobby.rooms and not lobby.matches
     with pytest.raises(RoomError):
@@ -145,8 +146,8 @@ def test_leaving_forgets_the_player() -> None:
 def test_start_screen_asks_only_for_a_nickname() -> None:
     ana = _join(FakeHub(), _lobby(), "a")
     texts = _texts(ana.page)
-    assert {"Criar uma sala", "Entrar numa sala", "Ensino Fundamental 1", "Ensino Fundamental 2"} <= set(texts)
-    assert "Ensino Médio" not in texts
+    assert {"Criar uma sala", "Entrar numa sala", "Ensino Fundamental", "Ensino Médio", "Ensino Superior"} <= set(texts)
+    assert "Ensino Fundamental 1" not in texts and "Engenharia de Produção" not in texts
     assert texts.index("Criar uma sala") < texts.index("Entrar numa sala")
     assert ana.name_field.label == "Seu apelido" and ana.name_field.max_length == 16
     assert any("ranking do estande" in t and "nada fica gravado" in t for t in texts)
@@ -163,13 +164,13 @@ def test_qr_code_link_fills_the_room_code() -> None:
 def test_waiting_screen_shows_code_and_qr() -> None:
     hub, lobby = FakeHub(), _lobby()
     ana = _join(hub, lobby, "a")
-    ana._choose_track(SimpleNamespace(control=SimpleNamespace(data=FUNDAMENTAL_1)))
+    ana._choose_track(SimpleNamespace(control=SimpleNamespace(data=SUPERIOR)))
     code = _create(ana, hub, "Ana")
     texts = _texts(ana.page)
     assert code in texts and "Olá, Ana! Sua sala é:" in texts
     images = [c.src for c in walk(ana.page.controls[-1]) if isinstance(c, ft.Image)]
     assert room_qr_path(code) in images
-    assert lobby.room_of("a").track == FUNDAMENTAL_1
+    assert lobby.room_of("a").track == SUPERIOR
     ana._cancel()
     assert not lobby.rooms and ana.name_field.value == "Ana"
 
@@ -191,7 +192,7 @@ def test_second_player_starts_the_match_on_both_screens() -> None:
     assert isinstance(ana.game_screen, MemoryScreen) and isinstance(bia.game_screen, MemoryScreen)
     assert ana.game_screen.game is bia.game_screen.game
     assert (ana.game_screen.online.seat, bia.game_screen.online.seat) == (0, 1)
-    assert "Nível 1 • Duelo em sala" in _texts(ana.page)
+    assert "Ensino Fundamental • Duelo em sala" in _texts(ana.page)  # o nível da sala, não "Nível 1"
     # Só a tela de quem começa conta o tempo; não há "nova partida" online.
     assert any(task[0] == ana.game_screen._clock for task in ana.page.tasks)
     assert not any(task[0] == bia.game_screen._clock for task in bia.page.tasks)
@@ -285,7 +286,7 @@ def test_finished_duel_goes_to_the_fair_ranking() -> None:
     top = ranking.top(DUEL)
     assert min(game.points) > 0
     assert {(e.nickname, e.points) for e in top} == {("Ana", game.points[0]), ("Bia", game.points[1])}
-    assert all(e.detail == "Ensino Fundamental 2" for e in top)
+    assert all(e.detail == "Ensino Fundamental" for e in top)
     assert len(ranking.recorded) == 1  # as duas telas avisam, a partida conta uma vez
 
 

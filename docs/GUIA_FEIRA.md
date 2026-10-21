@@ -42,10 +42,13 @@ ranking do cartaz até o servidor fechar; a partida some quando a pessoa sai.
 
 1. Conectar no Wi-Fi do estande.
 2. Escanear o QR code da mesa (ou digitar o endereço).
-3. Digitar um apelido. Uma pessoa toca em **Criar sala**, escolhendo a
-   trilha (Fundamental 1, Fundamental 2 ou Engenharia de Produção), e mostra
+3. Digitar um apelido. Uma pessoa toca em **Criar sala**, escolhendo o
+   nível (Ensino Fundamental, Ensino Médio ou Ensino Superior), e mostra
    o código ou o QR code da sala. A outra escaneia esse QR code ou digita o
    código e toca em **Entrar**.
+
+No Duelo em sala as perguntas são só de conceito, sem contas, para mostrar a
+ideia do jogo em poucos minutos (`mente_financeira/content/banco_duelo_online.toml`).
 
 ## Quiz ao vivo (para o grupo todo)
 

@@ -196,7 +196,7 @@ def test_online_duel_gives_no_medals() -> None:
         game,
         on_home=lambda: None,
         on_level2=lambda: None,
-        online=SimpleNamespace(seat=0, changed=lambda: None),  # type: ignore[arg-type]
+        online=SimpleNamespace(seat=0, title="Ensino Médio", changed=lambda: None),  # type: ignore[arg-type]
         medals=lambda g, labels: called.append("medalhas") or [],
     )
     screen._show_result()
