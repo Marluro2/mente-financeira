@@ -25,7 +25,7 @@ então funciona sem internet. O cartaz com o QR code da mesa fica em
 **Quiz ao vivo:** o notebook abre `http://localhost:8000/?quiz=apresentar` e
 vira o telão (QR code, perguntas, relógio, placar e pódio). O público entra
 pelo QR code e responde pelo celular; quem acerta mais rápido ganha mais
-pontos. As perguntas vêm do Desafio Relâmpago da trilha escolhida.
+pontos. As perguntas são as do Duelo em sala, só de conceito, no nível escolhido (Fundamental, Médio ou Superior).
 
 **Ranking do dia:** o cartaz da mesa mostra os 5 melhores apelidos do Duelo
 e do Quiz. Fica só na memória do notebook (`mente_financeira/sala/ranking.py`)

@@ -1,9 +1,10 @@
-"""Desafio Relâmpago do Duelo online da feira: só perguntas de conceito.
+"""Desafio Relâmpago do Duelo online e do quiz do telão da feira: só conceito.
 
-O Duelo em sala (servidor_sala.py) tem três níveis: Ensino Fundamental, Médio
-e Superior. Cada um sorteia do seu pedaço de content/banco_duelo_online.toml,
-com perguntas simples, sem contas, pensadas para demonstrar o jogo. O sorteio
-é o mesmo da Engenharia: sem repetir e alternando os assuntos.
+O Duelo em sala (servidor_sala.py) e o quiz do telão têm três níveis: Ensino
+Fundamental, Médio e Superior. Cada um sorteia do seu pedaço de
+content/banco_duelo_online.toml, com perguntas simples, sem contas, pensadas
+para demonstrar o jogo. O sorteio é o mesmo da Engenharia: sem repetir e
+alternando os assuntos.
 """
 
 from __future__ import annotations

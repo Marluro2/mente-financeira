@@ -59,8 +59,8 @@ Quem acerta mais rápido ganha mais pontos, e o placar aparece a cada pergunta.
 1. No notebook, abra `http://localhost:8000/?quiz=apresentar` (a janela preta
    mostra esse endereço, e o cartaz da mesa tem o botão **Abrir o Quiz ao
    vivo**). Essa tela só abre no próprio notebook.
-2. Escolha a trilha das perguntas (Fundamental 1, Fundamental 2 ou Engenharia
-   de Produção).
+2. Escolha o nível das perguntas (Ensino Fundamental, Ensino Médio ou Ensino
+   Superior). Como no Duelo em sala, as perguntas são só de conceito, sem contas.
 3. O público conecta no Wi-Fi do estande, escaneia o QR code da tela e digita
    um apelido. Os apelidos aparecem na tela do notebook.
 4. Clique em **Começar o quiz**. São 8 perguntas de 30 segundos. A resposta

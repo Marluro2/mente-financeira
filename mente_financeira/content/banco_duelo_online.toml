@@ -1,8 +1,9 @@
-# Banco de questões — Duelo online da feira (só conceitos, sem contas)
+# Banco de questões — Duelo online e quiz do telão da feira (só conceitos, sem contas)
 #
-# O Duelo online (Duelo em sala, servidor_sala.py) tem três níveis:
+# O Duelo online (Duelo em sala, servidor_sala.py) e o quiz do telão têm três níveis:
 #   1 = Ensino Fundamental, 2 = Ensino Médio, 3 = Ensino Superior.
-# A cada par formado sai uma questão do nível da sala, sem repetir até acabarem.
+# A cada par formado sai uma questão do nível da sala, sem repetir até acabarem;
+# o quiz sorteia as suas 8 perguntas do nível escolhido no telão.
 # São perguntas simples, de ideia, para demonstrar o jogo: nenhuma pede cálculo.
 #
 # Mesmo formato do banco_engenharia.toml:

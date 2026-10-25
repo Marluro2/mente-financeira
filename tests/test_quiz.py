@@ -12,7 +12,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from fakes import FakeHub, FakePage, walk
-from mente_financeira.core.engineering_challenge import BANK
+from mente_financeira.core.concept_challenge import BANK as CONCEPT_BANK
 from mente_financeira.core.percent_challenge import PERCENT_KIT
 from mente_financeira.sala import quiz_app
 from mente_financeira.sala.app import RoomApp, new_lobby
@@ -29,7 +29,7 @@ from mente_financeira.sala.quiz import (
 from mente_financeira.sala.quiz_app import PLAY, PRESENT, QUIZ_QR_PATH, QuizHost, QuizPhone, is_local, new_quiz, quiz_role
 from mente_financeira.sala.ranking import QUIZ, FairRanking
 from mente_financeira.sala.salas import NicknameError
-from mente_financeira.ui.tracks import ENGENHARIA, FUNDAMENTAL, FUNDAMENTAL_1
+from mente_financeira.ui.tracks import FUNDAMENTAL
 import servidor_sala
 
 
@@ -67,7 +67,7 @@ def test_questions_do_not_repeat_and_come_from_every_track() -> None:
         assert len(questions) == 8, key
         assert len({q.question for q in questions}) == 8
         assert all(len(q.options) == 4 for q in questions)
-    assert set(new_quiz().kits) == {FUNDAMENTAL_1, FUNDAMENTAL, ENGENHARIA}
+    assert set(new_quiz().kits) == {"fundamental", "medio", "superior"}  # os níveis do Duelo em sala
 
 
 def test_join_asks_only_for_a_nickname_and_refuses_repeated_ones(quiz: Quiz) -> None:
@@ -167,13 +167,13 @@ def test_track_changes_only_in_the_lobby_and_restart_keeps_people(clock: Clock) 
     quiz = new_quiz()
     quiz.clock = clock
     with pytest.raises(QuizError):
-        quiz.choose_track("medio")
-    quiz.choose_track(ENGENHARIA)
+        quiz.choose_track("engenharia")  # trilha do site, não é nível do quiz
+    quiz.choose_track("superior")
     quiz.join("a", "Ana")
     quiz.start()
-    assert quiz.question is not None and quiz.question.label in {t.label for t in {q.topic for q in BANK}}
-    quiz.choose_track(FUNDAMENTAL)
-    assert quiz.track == ENGENHARIA
+    assert quiz.question is not None and quiz.question.label in {q.topic.label for q in CONCEPT_BANK if q.level == 3}
+    quiz.choose_track("fundamental")
+    assert quiz.track == "superior"
     quiz.answer("a", _right(quiz))
     quiz.reveal(1)
     quiz.restart()
@@ -252,7 +252,7 @@ def test_phone_join_errors_and_typing_is_not_erased(quiz: Quiz) -> None:
     bia._join()
     hub.flush()
     assert "Você está no quiz, Bia! 🎉" in _texts(bia.page)
-    assert "3 pessoas no quiz • Ensino Fundamental 2" in _texts(bia.page)
+    assert "3 pessoas no quiz • Ensino Fundamental" in _texts(bia.page)
 
 
 def test_full_round_between_notebook_and_phones(quiz: Quiz, clock: Clock) -> None:
@@ -325,7 +325,7 @@ def test_each_finished_round_goes_to_the_fair_ranking(quiz: Quiz) -> None:
         host._next()  # clicar de novo no pódio não soma outra vez
         best = max(best, quiz.players["a"].score)
         # Bia não pontuou: fica fora do ranking.
-        assert [(e.nickname, e.points, e.detail) for e in ranking.top(QUIZ)] == [("Ana", best, "Ensino Fundamental 2")]
+        assert [(e.nickname, e.points, e.detail) for e in ranking.top(QUIZ)] == [("Ana", best, "Ensino Fundamental")]
         host._restart()
         hub.flush()
     assert len(ranking.recorded) == 2
