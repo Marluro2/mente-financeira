@@ -2,8 +2,8 @@
 #
 # 120 questões objetivas: 40 por nível, 10 por assunto. A cada par formado no
 # jogo da memória (Solo e Duelo) sai uma questão do nível escolhido, sem
-# repetir até acabarem as 40; no Duelo online e no quiz do telão, que não têm
-# nível, as 120 se misturam.
+# repetir até acabarem as 40; sem nível escolhido, as 120 se misturam. (O Duelo
+# online e o quiz do telão da feira usam o banco_duelo_online.toml.)
 #
 # Base: banco de questões em PDF feito para o projeto, com cenários variados,
 # alternativas revistas e uma explicação curta para cada questão.

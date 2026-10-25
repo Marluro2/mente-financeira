@@ -15,25 +15,20 @@ from urllib.parse import parse_qs, urlparse
 
 import flet as ft
 
-from mente_financeira.sala.app import Messenger, SessionStore
+from mente_financeira.sala.app import DUEL_LEVELS, LEVELS_BY_KEY, Messenger, SessionStore
 from mente_financeira.sala.quiz import Phase, Quiz, QuizError
 from mente_financeira.sala.ranking import QUIZ, FairRanking
 from mente_financeira.sala.salas import NICKNAME_MAX, NicknameError
 from mente_financeira.sugestoes import Suggestion
 from mente_financeira.ui import style as s
-from mente_financeira.ui.shell import MEMORY_TRACKS
 from mente_financeira.ui.sounds import SoundEffects
 from mente_financeira.ui.suggestion_form import SuggestionForm, suggestion_button, suggestion_qr
-from mente_financeira.ui.tracks import FUNDAMENTAL, TRACKS
 
 QUIZ_TOPIC = "quiz"
 PRESENT, PLAY = "apresentar", "jogar"  # ?quiz=apresentar (notebook) e ?quiz=jogar (celular)
 QUIZ_QR_PATH = "/qr/quiz.png"  # desenhado pelo servidor, aponta para ?quiz=jogar
 CLOCK_STEP_SECONDS = 0.25
 LOCAL_IPS = ("127.0.0.1", "::1", "::ffff:127.0.0.1", "localhost")
-
-# O quiz do telão segue com as trilhas do jogo (o Duelo online tem os seus níveis).
-ROOM_TRACKS = tuple(t for t in TRACKS if t.key in MEMORY_TRACKS)
 
 LETTERS = "ABCD"
 OPTION_COLORS = ("#E0306F", "#1F6FE0", "#D98200", "#14A06E")
@@ -42,7 +37,8 @@ DARK_TEXT = "#0B1E3F"
 
 
 def new_quiz() -> Quiz:
-    return Quiz({t.key: MEMORY_TRACKS[t.key][1] for t in ROOM_TRACKS}, FUNDAMENTAL)
+    # Os mesmos níveis do Duelo em sala, com perguntas só de conceito (content/banco_duelo_online.toml).
+    return Quiz({level.key: level.challenges for level in DUEL_LEVELS}, DUEL_LEVELS[0].key)
 
 
 def quiz_role(route: str | None) -> str | None:
@@ -68,7 +64,7 @@ def points_text(points: int) -> str:
 
 
 def track_title(key: str) -> str:
-    return next(t.title for t in ROOM_TRACKS if t.key == key)
+    return LEVELS_BY_KEY[key].title
 
 
 def _letter(index: int, *, size: float = 40) -> ft.Container:
@@ -326,8 +322,8 @@ class QuizHost(QuizScreen):
         setup = s.glass(
             ft.Column(
                 [
-                    self._heading("Trilha das perguntas"),
-                    *[self._track_tile(track) for track in ROOM_TRACKS],
+                    self._heading("Nível das perguntas"),
+                    *[self._track_tile(track) for track in DUEL_LEVELS],
                     ft.Container(height=4),
                     self._heading(f"Jogadores: {len(players)}"),
                     names,

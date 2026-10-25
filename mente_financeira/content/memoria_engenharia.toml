@@ -6,8 +6,8 @@
 # empresa ou da vida pessoal. Confira as contas ao editar.
 #
 # `level` diz em qual nível da Engenharia a carta aparece (página de níveis):
-# cada nível precisa de pelo menos `pairs` cartas. O Duelo online e o quiz do
-# telão, que não têm nível, usam todas as cartas.
+# cada nível precisa de pelo menos `pairs` cartas. O nível Ensino Superior do
+# Duelo online usa todas as cartas.
 #
 # Ilustrações: assets/cartas/engenharia/ (SVG de 200 × 200).
 

@@ -1,8 +1,8 @@
 """Desafio Relâmpago da Engenharia de Produção: banco de questões por nível.
 
 As questões vêm de content/banco_engenharia.toml (40 por nível). Cada nível
-escolhido na página de níveis tem o seu kit; o Duelo online e o quiz do telão,
-que não têm escolha de nível, usam as 120 misturadas.
+escolhido na página de níveis tem o seu kit; sem nível, valem as 120 misturadas.
+O Duelo online e o quiz do telão da feira usam core/concept_challenge.py.
 
 As questões saem sem repetir: só depois de usar todas é que uma volta, e a
 ordem alterna os assuntos, para uma partida não trazer três de payback seguidas.
@@ -96,4 +96,4 @@ def _kit(topic: str, questions: Iterable[BankQuestion]) -> ChallengeKit:
 
 BANK = load_question_bank()
 ENGINEERING_LEVEL_KITS = {level: _kit(topic, (q for q in BANK if q.level == level)) for level, topic in LEVEL_TOPICS.items()}
-ENGINEERING_KIT = _kit("de engenharia econômica", BANK)  # sem nível: Duelo online e quiz do telão
+ENGINEERING_KIT = _kit("de engenharia econômica", BANK)  # sem nível escolhido
